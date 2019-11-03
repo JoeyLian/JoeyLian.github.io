@@ -397,7 +397,7 @@ valine:
   appkey: oJDn2YiwR6lrmrceMSXfXSqm # your leancloud app key
   notify: true # mail notifier , https://github.com/xCss/Valine/wiki
   verify: true # Verification code
-  placeholder: Please write down your any idea~
+  placeholder: Please write down your any idea~\n You will receive a message when you receive a response if you fill out the email.
   avatar: wavatar  # gravatar style
   meta: name, email, ling # custom comment header
   pageSize: 8 # pagination size
