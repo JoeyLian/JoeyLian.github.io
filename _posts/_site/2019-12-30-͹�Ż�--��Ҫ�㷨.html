@@ -1,0 +1,53 @@
+<head>
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            tex2jax: {
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            inlineMath: [['$','$']]
+            }
+        });
+    </script>
+</head>
+
+<h1 id="凸优化主要算法">凸优化–主要算法</h1>
+
+<h3 id="凸优化">凸优化</h3>
+
+<p>凸优化问题的标准形式：</p>
+
+<script type="math/tex; mode=display">\min f_0(x)\\
+\mathbf{s.t.} f_i(x)\le0, i=1,...,m\\
+a_i^Tx = b_i, i = 1,...,p</script>
+
+<p>其中 $f_0, …, f_m $ 为凸函数。(且等式约束函数必须是仿射的)</p>
+
+<ul>
+  <li>关于凸优化的定义，遇到过一个问题：以下问题</li>
+</ul>
+
+<script type="math/tex; mode=display">\min y-x\\
+\mathbf{s.t.} -xy+9 \le 0\\
+0\le y\le 6\\
+1\le x\le 2</script>
+
+<p><strong>局部最优解与全局最优解</strong></p>
+
+<p>凸优化问题的一个基础性质是其任意局部最优解也是(全局)最优解。 设 $x$ 是凸优化问题的局部最优解，即 $x$ 是可行的并且对于某些 $R&gt; 0$， 有 <script type="math/tex">f_0(x) = \inf \{f_0(z\vert z可行, \vert\vert z-x\vert\vert_2 \le R\}</script> 。现在假设 $x$  不是全局最优解，即存在一个可行的 $y$  使得 $f_0(y)&lt; f_0(x)$。显然 $\vert\vert y-x\vert\vert_2&gt;R$ 。考虑由</p>
+
+<script type="math/tex; mode=display">z = (1 - \theta )x +\theta y, \theta=\frac{R}{2\vert\vert y-x\vert\vert_2}</script>
+
+<p>给出的点 $z$， 我们有 $\vert\vert z - x\vert\vert_2 = R/2 &lt; R$。根据可行集的凸性， $z$ 是可行的。根据 $f_0$ 的凸性，我们有  $f_0(z)\le (1-\theta)f_0(x)+\theta f_0(y)&lt; f_0(x)$，出现矛盾。因此不存在满足 $f_0(y)&lt; f_0(x)$的可行解 $y$ ，即 $x$ 是全局最优解。</p>
+
+<p><strong>可微函数 $f_0$ 的最优性准则</strong></p>
+
+<p>设凸优化问题的目标函数 $f_0$ 是可微的，对于所有的 $x,y\in \mathbf{dom}f_0$有</p>
+
+<script type="math/tex; mode=display">f_0(y)\ge f_0(x) + \nabla f_0(x)^T(y-x)</script>
+
+<p>令 X 表示其可行集，那么 ， $x$ 是最优解，当且仅当 $x\in X$ 且</p>
+
+<script type="math/tex; mode=display">\nabla f_0(x)^T(y-x)\ge 0, \forall y\in X</script>
+
+<p>这个最优性准则可以从几何上进行理解: 如果$\nabla f_0(x)\neq 0$，那么意味着 $\nabla f_0(x)$ 在 $x$ 处定义了可行集的一个支撑超平面。</p>
+

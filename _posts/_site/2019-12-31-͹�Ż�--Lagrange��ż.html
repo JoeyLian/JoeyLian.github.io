@@ -1,0 +1,203 @@
+<head>
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            tex2jax: {
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            inlineMath: [['$','$']]
+            }
+        });
+    </script>
+</head>
+
+<h1 id="凸优化lagrange对偶">凸优化–Lagrange对偶</h1>
+
+<h3 id="定义">定义</h3>
+
+<p>考虑标准形式的优化问题
+<script type="math/tex">\min f_0(x)\\
+\mathbf{s.t.} f_i(x)\le0, i=1,...,m\\
+h_i(x) = 0, i = 1,...,p</script>
+其中自变量 $x\in \mathbb{R}^n$, 定义域 <script type="math/tex">\cal{D} = \bigcap_{i = 1} ^ m\mathbf{dom} f_i \cap \bigcap_{i = 1}^p \mathbf{dom}h_i</script> 非空，问题最优值为 $p^*$</p>
+
+<p>Lagrange 对偶的基本思想是把约束条件放在目标函数中考虑，添加约束条件的加权和，得到增广的目标函数。</p>
+
+<h5 id="lagrange-函数"><strong>Lagrange 函数</strong></h5>
+
+<p>$L: \mathbb{R}^n \times  \mathbb{R}^m \times\mathbb{R}^p→ \mathbb{R}$ 为
+<script type="math/tex">L(x,\lambda, \nu) = f_0(x) + \sum_{i = 1}^m \lambda_if_i(x) + \sum_{i = 1}^p \nu_ih_i(x)</script>
+其中定义域为 $\mathbf{dom} L = \cal{D}\times  \mathbb{R}^m \times\mathbb{R}^p $。 $\lambda_i$ 和 $\nu_i$ 称为对应约束的 Lagrange 乘子，向量 $\lambda$ 和 $\nu$ 称为对偶变量或Lagrange 乘子向量。</p>
+
+<h5 id="lagrange-对偶函数"><strong>Lagrange 对偶函数</strong></h5>
+
+<p>$g: \mathbb{R}^m \times\mathbb{R}^p→ \mathbb{R}$ 为 Lagrange 函数关于 $x$  取得的最小值, 即:
+<script type="math/tex">g(\lambda, \nu) = \inf_{x\in \cal{D}} L(x,\lambda, \nu) = \inf_{x\in \cal{D}} \left(f_0(x) + \sum_{i = 1}^m \lambda_if_i(x) + \sum_{i = 1}^p \nu_ih_i(x)\right)</script></p>
+
+<p>Lagrange对偶函数构成了原问题最优值的下界:即对任意 $\lambda \ge0$ 和 $\nu$ 下式成立
+<script type="math/tex">g(\lambda, \nu) \le p^*</script>
+这个性质我们放在后面验证。我们可以通过这个性质最大化 $g(\lambda, \nu)$ 求原问题的一个下界，即原问题的最小值不可能小于 $g(\lambda, \nu)$ 的最大值。</p>
+
+<p>这有什么用呢，我们发现 Lagrange对偶函数 是一个凹函数：如果 Lagrange 函数关于 $x$ 无下界，则对偶函数取值为$-\infty$。因为对偶函数是一族关于 $\lambda, \nu$ 的仿射函数的逐点下确界(即对于所有的 $x$)，所以即使原问题不是凸的，对偶函数也是凹函数。因此，可以通过一个凸优化问题求得任意的优化问题下界。</p>
+
+<h5 id="lagrange-对偶问题"><strong>Lagrange 对偶问题</strong></h5>
+
+<p>对于任意一组$\lambda, \nu $，其中$\lambda \ge 0 $， Lagrange 对偶函数给出了优化问题最优值的一个下界。一个自然的问题是: 从 Lagrange 函数能够得到的最好下界是什么? 可以将这个问题表述为优化问题</p>
+
+<script type="math/tex; mode=display">\max g(\lambda, \nu)\\
+\mathbf{s.t.} \lambda \ge 0</script>
+
+<p>上述问题称为原问题的Lagrange 对偶问题。对偶可行：即描述满足 $\lambda \ge 0 $ 和 $g(\lambda， \nu) &gt; -\infty$的一组 $(\lambda, \nu)$。如果$(\lambda^<em>, \nu^</em>)$是对偶问题的最优解，则称它是对偶最优解或者是最优 Lagrange 乘子。</p>
+
+<p>Lagrange 对偶问题是一个凸优化问题，这是因为极大化的目标函数是凹函 数，且约束集合是凸集。</p>
+
+<p>对偶问题可以通过等价得到一个显示表示约束的问题。以标准形式线性规划 (只含有等数约束) 为例子：</p>
+
+<script type="math/tex; mode=display">\min c^Tx\\
+\mathbf{s.t.} Ax = b\\
+x\ge 0</script>
+
+<p>它的Lagrange 函数为：
+<script type="math/tex">L(x,\lambda, \nu) = c^Tx + \lambda(-x) + \nu(Ax-b)^T = -b^T\nu + (A^T\nu -\lambda + c)x</script>
+若 $A^T\nu -\lambda + c \neq 0$, 关于 $x$ 的最小值为 $-\infty$  , 对偶可行需要使对偶函数有界，因此这是对偶问题的隐式约束。对偶问题可以改为
+<script type="math/tex">\max -b^t\nu\\
+\mathbf{s.t.}A^T\nu -\lambda + c = 0\\
+\lambda \ge 0</script>
+或：
+<script type="math/tex">\max -b^t\nu\\
+\mathbf{s.t.}A^T\nu + c \ge 0</script>
+可以得到，标准形式线性规划的对偶问题是只含有不等式约束的线性规划问题， 反之亦然。</p>
+
+<h3 id="理解">理解</h3>
+
+<h5 id="惩罚">惩罚</h5>
+
+<p>一个自然的想法是把约束放到目标函数中，会让约束变松，我们来讨论一下这种理解：首先将原问题描述为一个无约束问题</p>
+
+<script type="math/tex; mode=display">\min F(x) = f_0(x) + \sum_{i = 1}^m I\_(f_i(x)) + \sum_{i=1}^pI_0(h_i(x))</script>
+
+<p>其中</p>
+
+<p><script type="math/tex">% <![CDATA[
+\begin{equation}
+I\_(u)
+\begin{cases}
+0& u\le0\\
+\infty& u>0
+\end{cases}
+\end{equation} %]]></script>
+<script type="math/tex">% <![CDATA[
+\begin{equation}
+I_0(u)
+\begin{cases}
+0& u=0\\
+\infty& u\neq 0
+\end{cases}
+\end{equation} %]]></script></p>
+
+<p>对于 $I$ 函数，我们可以理解为一种惩罚：在原问题中，不满足约束的 $x$ 是无效的，因此惩罚为无穷大。而在 Lagrange 函数 中，我们用  Lagrange 乘子代替了这种强硬的惩罚。此时原来的 “硬”约束变成了 “软”约束。当约束不满足时会受到惩罚，且违背越多惩罚越大。当约束还有裕量时，还会有奖励 (得到一个负的量)。</p>
+
+<p>这种替代是不能等价的。但我们可以看到，对于任意的 $\lambda \ge 0$ , 对任意 $x$ 有 $L(x,\lambda, \nu) \le F(x) $, 即 Lagrange 函数可以看出原问题的无约束问题的一个下估计。当 $x$ 可行时不会受到惩罚，在软约束中则可能收到奖励使函数值更小；当 $x$ 不可行时，软约束的惩罚会少于硬约束，函数值也会较小。</p>
+
+<p>在 Lagrange  对偶函数中， 我们找到了关于 $x$ 的下确界，即对任意可行的 $x$，</p>
+
+<script type="math/tex; mode=display">g(\lambda, \nu) \le L(x,\lambda, \nu) \le F(x) = f_0(x)</script>
+
+<p>由于$x$ 是任意的，我们也验证了 $g(\lambda, \nu) \le p^*$ 。</p>
+
+<p>对于 Lagrange 对偶函数，可以理解为 $\lambda, \nu$ 给出了一种惩罚方案， Lagrange 对偶函数我给出了对于惩罚方案的评价标准：在原问题的定义域中 $f_0(x)$ 与损失 $\sum_{i = 1}^m \lambda_if_i(x) + \sum_{i = 1}^p \nu_ih_i(x)$ 之和的最小值。之所以把后面称为损失，是因为我们本来的意图是惩罚不可行解，但对于可行解我们需要给他们一定的奖励，对于我们而言就是一种损失。</p>
+
+<p>也就是说，我们希望得到使得在函数值与损失最小的解，即在函数值较小时损失也较小。单纯令损失减小是没有意义的，因为损失最小的时候不一定可以得到原问题的最优解。我们最后求的最优解，损失可能很大。</p>
+
+<p>（对于惩罚与损失的理解可以在线性规划的对偶中进行更加具体的解释）</p>
+
+<p>而对偶问题则是希望的到一个最好的惩罚方案，使得它的评价最好。</p>
+
+<h3 id="性质">性质</h3>
+
+<h5 id="弱对偶性">弱对偶性</h5>
+
+<p>弱对偶性：Lagrange 对偶问题的最优值 $d^<em>$ 满足 $ d^</em>\le g^*$。即使原问题不是凸问题，不等式亦成立。</p>
+
+<p>同时，如果原问题无下界，为了保证弱对偶性成立，必须 Lagrange 对偶问题不可行。若对偶问题无上界，为了保证弱对偶性成立，必须有原问题不可行。</p>
+
+<p><strong>最优对偶间隙</strong>：差值 $p^* - d^*$ 。它给出了原问题最优值以及通过 Lagrange 对偶函数所能得到的最好下界之间的差值。</p>
+
+<p>当原问题很难求解时，弱对偶不等式可以给出原问题最优值的一个下界: 对偶问题总是凸问题，在很多情况下都可以进行有效的求解得到 $d^*$。</p>
+
+<h5 id="强对偶性">强对偶性</h5>
+
+<p>如果等式$p^* = d^*$ 成立，即最优对偶间隙为零，那么强对偶性成立。对于一般情况，强对偶性不成立。如果原问题是凸问题，强对偶性通常(但不总是)成立。有很多研究成果给 出了强对偶性成立的条件(除了凸性条件以外)，这些条件称为约束准则。</p>
+
+<p><strong>Slater 定理</strong>: 一个简单的约束准则是 <strong>Slater 条件</strong>: 存在一点 $x\in \mathbf{relint}\cal{D}$(定义域的相对内部) 使得 $f_i(x)&lt;0.i = 1,…,m, Ax = b $ 成立，满足上述条件的点有时称为严格可行，这是因为不等式约束严格成立。 Slater 定理说明，当 Slater 条件成立且原问题是凸问题时，<strong>强对偶性</strong>成立。</p>
+
+<p>这里证明先不写了，有空补充 ：）</p>
+
+<h3 id="最优性条件">最优性条件</h3>
+
+<p>对任意优化问题，我们有对偶问题函数值 $ d\le g$，若得到对偶间隙为0，即$d = g$，就得到了最优解 $d^<em>,g^</em>$ 且此时强对偶性成立。</p>
+
+<h5 id="互补松弛性">互补松弛性</h5>
+
+<p>若强对偶性成立，我们有</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{align}
+f_0(x*) &= g(\lambda^*, \nu^*)\\
+&= \inf_x \left(f_0(x) + \sum_{i = 1}^m \lambda_i^*f_i(x) + \sum_{i = 1}^p \nu_i^*h_i(x)\right)\\
+&\le f_0(x^*) + \sum_{i = 1}^m \lambda_i^*f_i(x^*) + \sum_{i = 1}^p \nu_i^*h_i(x^*)\\
+&\le f_0(x^*)
+
+\end{align} %]]></script>
+
+<p>即小于等于号必须取等号，从最后两个可以看出需要满足</p>
+
+<script type="math/tex; mode=display">\lambda_i^*f_i(x^*)  = 0, i = 1,...,m</script>
+
+<p>这个条件称为互补松弛性。当强对偶性成立时，它对任意原问题最优解 $x^<em>$ 以及对偶问题最优解$(\lambda^</em>, \nu^*)$ 都成立。这个条件意味着在最优点处，除了第 $i$ 个约束取等号的情况，最优 Lagrange 乘 子的第 $i$ 项都为零。</p>
+
+<p>观察第二三行，我们还可以得到，当强对偶性成立时，$L(x,\lambda^<em>, \nu^</em>)$ 关于 $x$ 求极小时任意原问题最优点处取得最小值。此时，我们还可以通过求解$L(x,\lambda^<em>, \nu^</em>)$函数求原问题的最优点。</p>
+
+<h5 id="kkt-最优性条件">KKT 最优性条件</h5>
+
+<p>现在假设函数 $f_0, f_1,…, f_m, h_1, …,h_p$ 可微</p>
+
+<p>若强对偶性满足，$L(x,\lambda^<em>, \nu^</em>)$关于 $x$ 求极小在 $x^<em>$ 处取得最小值，函数在 $x^</em>$ 处的导数必须为零。因此，我们有：</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{align}
+f_i(x^*) &\le 0,i=1,...,m\\
+h_i(x^*) &= 0,i=1,...,p\\
+\lambda_i^* &\ge 0,i=1,...,m\\
+\lambda_i^*f_i(x^*) &= 0,i=1,...,m\\
+\nabla f_0(x^*) + \sum_{i = 1}^m \lambda_i^*\nabla f_i(x^*) + \sum_{i = 1}^p \nu_i^*\nabla h_i(x^*) &=0
+\end{align} %]]></script>
+
+<p>这些条件称为 <strong>Karush-Kuhn-Tucker(KKT) 条件</strong>。对于目标函数和约束函数可微的任意优化问题，如果强对偶性成立，那么原问题最优解和对偶问题最优解必须满足 KKT 条件。</p>
+
+<h5 id="凸问题的-kkt-条件">凸问题的 KKT 条件</h5>
+
+<ul>
+  <li>
+    <p>当原问题是凸问题时，满足 KKT 条件的点也是原、对偶最优解。</p>
+
+    <p>KKT条件中前两个条件说明了$x^<em>$是原问题的可行解。因为 $\lambda^</em> \ge 0$, $L(x,\lambda^<em>,\nu^</em>)$是 $x$ 的凸函数:最后一个 KKT 条件说明在 $x^<em>$处， Lagrange 函数的导数为零。因此， $L(x,\lambda^</em>,\nu^<em>)$关于 $x$ 求极小在 $x^</em>$处取得最小值。我们得出结论</p>
+  </li>
+</ul>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{align}
+g(\lambda^*, \nu^*)&=  L(x^*,\lambda^*, \nu^*)\\
+&= f_0(x^*) + \sum_{i = 1}^m \lambda_i^*f_i(x^*) + \sum_{i = 1}^p \nu_i^*h_i(x^*)\\
+&= f_0(x^*)
+\end{align} %]]></script>
+
+<ul>
+  <li>
+    <p>若某个凸优化问题具有可微的目标函数和约束函数，且满足 Slater 条件，那么 KKT 条件是最优性的充要条件。</p>
+
+    <p>Slater 条件意味着最优对偶间隙为零且对偶最优解可以达到，因此 $x^*$ 是原问题最优解，当且仅当存在 $(\lambda,\nu)$ ，二者满足 KKT 条件。</p>
+  </li>
+</ul>
+
+<p>也就是说，对于凸优化问题，满足 KKT 条件的点一定是最优解，但不一定存在满足 KKT 条件的点。若问题满足Slater 条件，则这个点一定存在。</p>
+
