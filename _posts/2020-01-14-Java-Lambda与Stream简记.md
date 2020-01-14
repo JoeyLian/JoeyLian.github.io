@@ -57,7 +57,7 @@ features.forEach(n -> System.out.println(n));	//foreach 后面介绍
 
 - `Function<T, R>：R apply(T t)；` 输入类型T返回类型R。
 - `Consumer<T>：void accept(T t)；` 输入类型T，消费掉，无返回。
-- `Predicate<T>：boolean test(T t)；` 输入类型T，并进行条件判断，返回true|false。
+- `Predicate<T>：boolean test(T t)；` 输入类型T，并进行条件判断，返回true 或 false。
 - `Supplier<T>：T get()；` 无输入，产生一个T类型的返回值。
 
 **使用**
