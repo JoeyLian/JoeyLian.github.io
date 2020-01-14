@@ -97,6 +97,7 @@ public static void filter(List names, Predicate condition) {
 
 ``` java
 final List<String> strings = Arrays.asList("ab", "a", "abc", "b", "bc");
+//串行
 long count1 = strings.stream()
             .filter(s -> {
                     System.out.println("thread:" + Thread.currentThread().getId());
@@ -104,6 +105,14 @@ long count1 = strings.stream()
              })
             .count();
 System.out.println(count1);
+//并行
+long count2 = strings.parallelStream()
+       .filter(s -> {
+                    System.out.println("thread:" + Thread.currentThread().getId());
+                    return s.startsWith("a");
+        })
+        .count();
+System.out.println(count2);
 ```
 
 ##### 1. map  --  处理序列 -- 参数为 Function 类型
