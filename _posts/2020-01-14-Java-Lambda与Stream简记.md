@@ -25,7 +25,7 @@ typora-copy-images-to: ..\images
 
 
 
-## Java-Lambda与Stream简记
+
 
 手册向简记 Java8 中的Lambda表达式与Stream。
 
