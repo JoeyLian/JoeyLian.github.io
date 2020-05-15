@@ -1,6 +1,6 @@
 ---
 title: LowerBound分析
-date: 2019-11-03
+date: 2020-04-30
 categories:
 - DAA
 tags:
@@ -43,17 +43,21 @@ Decision tree 的主要想法是将所有可能的结果作为树的叶子，树
 + 当结果为 = 是，得到一个叶节点：输出问题答案
 + 当结果为 < 或 > 时，得到一个分支，进行下一次比较
 
-![image-20200430174720082](C:\Users\13353\OneDrive\note\JoeyLian.github.io\images\image-20200430174720082.png)
+![image-20200430174720082](\images\image-20200430174720082.png)
 
 每个内部节点有两个不是叶子的分支和一个叶节点。因此，在第 $k$ 层最多有 个 $2^k$ 节点。$k$ 层的决策树的叶节点树为
+
 $$
 n \le 2^0 + 2^1+...+2^{k-1} = 2^k-1
 $$
+
 需要比较的次数即为决策树的高度：
+
 $$
 2^k-1 \ge n\\
 k \ge \log_2(n+1)
 $$
+
 因此，有序数列中查找的一个 Lower Bound 为 $\lceil log_2(n+1) \rceil$ ，这也是二分查找的时间复杂度。
 
 ### 排序问题
@@ -61,10 +65,12 @@ $$
 先找一个 Lower Bound：
 
 每次比较会形成两个分支。对于排序问题，比较的结果只需要分为大于和小于等于（或 大于等于和小于）（相等的两个元素可以随意排列）叶节点都在最后一层，当决策树有 $k$ 层时，有 $2^k$ 个叶节点。对于 $n$  个元素的排序问题， 一共有 $A_n^n= n!$ 种可能的结果。因此，需要比较的次数即为决策树的高度：
+
 $$
 2^k \ge n!\\
 k \ge \log_2(n!)
 $$
+
 因此，排序问题的一个 Lower Bound 为 $\lceil log_2(n!) \rceil$ 
 
 一个常见的排序方法是插入排序，由于每次插入操作都是一次有序数列中的查找操作，因此他的时间复杂度为 $\sum_{k=1}^n \log_2k$ . 在 $n=5$ 时， 插入排序需要 8 次比较，而前面我们得到的下界为 $\lceil log_2(5!) \rceil =7$ 次比较。
@@ -73,11 +79,11 @@ $$
 
 + 比较 $(a_1, a_2)$ 中的最大值和 $(a_3,a_4)$ 中的最大值 （3次排序）
 
-  ![image-20200511210234796](C:\Users\13353\OneDrive\note\JoeyLian.github.io\images\image-20200511210234796.png)
+  ![image-20200511210234796](\images\image-20200511210234796.png)
 
 + 将元素 $y$ 插入到其中：先与 $a_2$ 比较，再与 $a_1$ 或 $a_4$ 比较（2次比较）
 
-  ![image-20200511210512589](C:\Users\13353\OneDrive\note\JoeyLian.github.io\images\image-20200511210512589.png)
+  ![image-20200511210512589](\images\image-20200511210512589.png)
 
 +  将元素 $x$ 插入到其中：先与 $\beta_2$ 比较，再与 $\beta_1$ 或 $\beta_3$ 比较（2次比较）
 
@@ -108,17 +114,23 @@ $$
 第二大的元素一定直接和最大的元素比较过 (是一个direct  loser)：否则，存在另一个元素大于 "第二大的元素" 而小于最大的元素，矛盾。
 
 对于任意的算法，可以通过 Adversary strategy 使得最大的元素的 direct  losers 最多：对于每次 x,y 之间的比较，令 losers (即所有已知的比它小的元素) 更多的元素更大，这样，每次直接比较最多使得它的 losers 变成原来的两倍，$k$ 次直接比较最多有 $2^k$ 个losers。要得到最大元素，至少需要 $k$ 次直接比较：
+
 $$
 2^k \ge n\\
 k \ge \lceil log_2n\rceil
 $$
+
 第二大的元素即为这 k 个 $direct  losers$ 中的最大值，至少需要 $k-1 = \lceil log_2n\rceil-1$ 次比较。
 
-因此，找到第二大的元素的算法的一个 Lower bound 为：$n-1+\lceil log_2n\rceil-1 = n+\lceil log_2n\rceil-2$
+因此，找到第二大的元素的算法的一个 Lower bound 为：
+
+$$
+n-1+\lceil log_2n\rceil-1 = n+\lceil log_2n\rceil-2
+$$
 
 达到这个 Lower bound 的一个算法为：
 
-![image-20200511223330368](C:\Users\13353\OneDrive\note\JoeyLian.github.io\images\image-20200511223330368.png)
+![image-20200511223330368](\images\image-20200511223330368.png)
 
 97 是最大元素，第二大元素则是绿色圈出来的元素的最大值。
 
@@ -196,7 +208,7 @@ Adversary strategy 的主要思想，就是对于任何的比较方法，定义�
 
 有序的矩阵满足：
 
-![image-20200514201640276](C:\Users\13353\OneDrive\note\JoeyLian.github.io\images\image-20200514201640276.png)
+![image-20200514201640276](\images\image-20200514201640276.png)
 
 需要查找元素 X 是否在矩阵中：
 
@@ -204,7 +216,7 @@ Adversary strategy 的主要思想，就是对于任何的比较方法，定义�
 
 下面说明 $2n-1$ 是这个问题的一个 Lower bound 。在下面的矩阵中，任何一个等于6或8的元素均可以改为 7，而不改变矩阵有序。
 
-![image-20200514201917612](C:\Users\13353\OneDrive\note\JoeyLian.github.io\images\image-20200514201917612.png)
+![image-20200514201917612](\images\image-20200514201917612.png)
 
 因此如果查找 7 这个元素，至少需要把所有等于 6 和 8 的元素访问过，需要 $2n-1$ 次比较。
 
@@ -255,7 +267,7 @@ Adversary strategy 构造出一个连通图。在算法的运行中维持两张�
 
 Adversary strategy 构造一个不含有子串01的序列 111,...,10,...,000。在算法中维持两个编号 s<t
 
-![image-20200515093131729](C:\Users\13353\OneDrive\note\JoeyLian.github.io\images\image-20200515093131729.png)
+![image-20200515093131729](\images\image-20200515093131729.png)
 
 + 所有小于 s 的字符需要被查询，因为他们可能为 0 
 + 所有大于 t 的字符需要被查询，因为他们可能为 1
