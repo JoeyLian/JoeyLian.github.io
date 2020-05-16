@@ -19,11 +19,11 @@ baseurl:
 permalink: pretty
 
 # Pagination
-paginate: 50
+paginate: 10
 #paginate_path: "/page:num/"
-#archive:
-  #paginate: 10
-  #paginate_path: "/page:num/"
+archive:
+  paginate: 100
+  paginate_path: "/page:num/"
 #category:
   #paginate: 10
   #paginate_path: "/page:num/"
