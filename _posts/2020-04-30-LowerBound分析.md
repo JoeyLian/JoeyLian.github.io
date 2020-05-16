@@ -2,7 +2,7 @@
 title: LowerBound分析
 date: 2020-04-30
 categories:
-- DAA
+- 算法设计
 tags:
 - Lower_Bound
 - 算法下界
