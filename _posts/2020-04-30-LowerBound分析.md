@@ -204,7 +204,7 @@ Adversary strategy 的主要思想，就是对于任何的比较方法，定义�
 
 因此，找到 max&min 的一个 Lower bound 为 $n/2+2n-2-n = 3n/2-2$
 
-#### Find X in a Sorted Matrix
+### Find X in a Sorted Matrix
 
 有序的矩阵满足：
 
