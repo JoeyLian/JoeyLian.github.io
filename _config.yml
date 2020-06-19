@@ -393,8 +393,8 @@ disqus:
 # more info please open https://valine.js.org
 valine:
   enable: true
-  appid:  XRUskpQ3UhC1vOc8H7tUNGRM-gzGzoHsz # your leancloud app id
-  appkey: oJDn2YiwR6lrmrceMSXfXSqm # your leancloud app key
+  appid:  YVX1vCcT5NCft48r7C3lembr-gzGzoHsz # your leancloud app id
+  appkey: TU2XncaymWVWr4yoliI0BHbB # your leancloud app key
   notify: true # mail notifier , https://github.com/xCss/Valine/wiki
   verify: true # Verification code
   placeholder: Please write down your any idea~\n You will receive a message when you receive a response if you fill out the email.
