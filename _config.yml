@@ -392,7 +392,7 @@ disqus:
 # You can get your appid and appkey from https://leancloud.app
 # more info please open https://valine.js.org
 valine:
-  enable: false
+  enable: true
   appid:  XRUskpQ3UhC1vOc8H7tUNGRM-gzGzoHsz # your leancloud app id
   appkey: oJDn2YiwR6lrmrceMSXfXSqm # your leancloud app key
   notify: false # mail notifier , https://github.com/xCss/Valine/wiki
@@ -541,8 +541,8 @@ rating:
 # Show number of visitors to each article.
 # You can visit https://leancloud.cn get AppID and AppKey.
 
-#leancloud_visitors:
-#  enable: false
+leancloud_visitors:
+  enable: false
 #  app_id:  YVX1vCcT5NCft48r7C3lembr-gzGzoHsz # your leancloud app id
 #  app_key: TU2XncaymWVWr4yoliI0BHbB # your leancloud app key
   # app_id:  StmG7IenJSpR1D48uBYw1J2b-9Nh9j0Va
