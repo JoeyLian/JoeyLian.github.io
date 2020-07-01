@@ -401,7 +401,7 @@ valine:
   avatar: wavatar  # gravatar style
   meta: name, email, ling # custom comment header
   pageSize: 8 # pagination size
-  visitor: false
+  visitor: true
   # path: window.location.pathname
 
 
@@ -541,7 +541,7 @@ rating:
 # Show number of visitors to each article.
 # You can visit https://leancloud.cn get AppID and AppKey.
 leancloud_visitors:
-  enable: true
+  enable: false
   app_id:  YVX1vCcT5NCft48r7C3lembr-gzGzoHsz # your leancloud app id
   app_key: TU2XncaymWVWr4yoliI0BHbB # your leancloud app key
   # app_id:  StmG7IenJSpR1D48uBYw1J2b-9Nh9j0Va
