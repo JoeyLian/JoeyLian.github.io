@@ -1,0 +1,106 @@
+<head>
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            tex2jax: {
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            inlineMath: [['$','$']]
+            }
+        });
+    </script>
+</head>
+
+<h2 id="贪心算法">贪心算法</h2>
+
+<p>基本定义： 独立集系统 $(E,\mathscr{F})$ E有限基本元素集合  $\mathscr{F} \subseteq 2^E$</p>
+
+<p>满足：</p>
+<ol>
+  <li>$ \phi \in \mathscr{F}$</li>
+  <li>若 $Y\in \mathscr{F}$ , Y的子集属于F
+F 中的元素成为独立集</li>
+</ol>
+
+<p>$F\subseteq E $上的极大独立集， 称为F的一个基</p>
+
+<p>$2^E \backslash\mathscr{F}$ 中的元素称为相关集</p>
+
+<p>圈： 极小相关集</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>秩  $ r(F) = \max{</td>
+      <td>Y</td>
+      <td>, Y\subseteq F, Y\in \mathscr{F}}$</td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <tbody>
+    <tr>
+      <td>下秩 $ \rho (F) = \min{</td>
+      <td>Y</td>
+      <td>, Y\subseteq F, Y是F上的基}$</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>秩商  $\mathscr{q}(E,\mathscr{F}) = \min_{F\subseteq E} \frac{\rho(F)}{r(F)}$</p>
+
+<p>优化问题 $(E, \mathscr{F}, C), C: \mathscr{F}\rightarrow R$
+求 $\mathscr{F}$ 中的一个独立集X使得 C(X) 最大或最小</p>
+
+<p>极大化问题$(E,\mathscr{F},C)$
+寻找权重最大的独立集</p>
+
+<p>极小化问题 $(E,\mathscr{F},C)$
+寻找权重最小的极大独立集</p>
+
+<p>最短路问题
+E 边集
+$\mathscr{F}$ 一条s到t路径的子弧</p>
+
+<p>$(E,\mathscr{F},C)$ 极大化问题的贪心算法</p>
+
+<p>定理：对于极大化问题 $E,\mathscr{F},C$有
+<script type="math/tex">q(E,\mathscr{F}) \le \frac{G(E,\mathscr{F},C)}{OPT(E,\mathscr{F},C)} \le 1</script></p>
+
+<h4 id="one">one</h4>
+<p>$F = \phi$
+for $ i $ = 1 to n
+	if   $F\cup e_{i} \in \mathscr{F}$
+		$F := F\cup e_{i}$ ($c_1 \ge c_2\ge … \ge c_n$)</p>
+
+<p>证明：
+$E_j = {e_1, e_2, …, e_ j}$     C:$E\rightarrow R^+ ,\quad c_1 \ge c_2\ge …\ge c_n$
+贪心算法解：$G_n,\quad G_j = G_n\cap E_j$
+最优解：$O_n,\quad O_j = O_n\cap E_j$</p>
+
+<script type="math/tex; mode=display">C(G_n) = \sum^n_{j=1} (|G_j|-|G_{j-1}|)c_j \\
+= \sum^n_{j=1} |G_j|(c_j-c_{j+1})\\
+\ge \sum^n_{j=1} \rho(E_j)(c_j-c_{j+1})\\
+\ge q \sum^n_{j=1}  r(E_j) (c_j-c_{j+1})\\
+\ge q \sum^n_{j=1}  |O_j| (c_j-c_{j+1})\\
+= q C(O_n)</script>
+
+<script type="math/tex; mode=display">q \le \frac{C(G_n)}{O(G_n)}</script>
+
+<p>紧的：
+存在 F 等号成立
+构造</p>
+
+<h4 id="two">two</h4>
+<p>$F=E$
+for $i$ = 1 to n
+	if $F\backslash{e_i} $ 含基
+		$F := F\backslash{e_i}$ ($c_1 \le c_2\le … \le c_n$)</p>
+
+<p>独立集系统的对偶</p>
+
+<p>$(E, \mathscr{F}) \rightarrow (E, \mathscr{F}^<em>) $
+$ \mathscr{F}^</em> = { X \subseteq E | \mathscr{F} 的一个基B 使得 X\cap  B = \phi} $</p>
+
+<h2 id="十--bin-packing-的近似算法">十  Bin Packing 的近似算法</h2>
+
