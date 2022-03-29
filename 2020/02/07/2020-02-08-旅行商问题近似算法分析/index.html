@@ -1,0 +1,291 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>旅行商问题近似算法分析 | OneTime</title><meta name="keywords" content="近似算法,旅行商问题,TSP"><meta name="author" content="Joey Lian"><meta name="copyright" content="Joey Lian"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="问题定义TSP问题： 无向图 $ G &#x3D; (V,E)$，其中，$d:E\rightarrow \mathbb{Z}^+$  表示每条边的权重，求费用最小的哈密尔顿回路。 TSP问题近似比TSP问题是一个NP-hard 问题。而普通的 TSP 问题甚至没有很好的近似比的多项式时间算法。下面证：当定点数为 $n$ ，输入规模为 $n$ 的多项式，TSP 问题不存在近似比为 $O(2^{\ma">
+<meta property="og:type" content="article">
+<meta property="og:title" content="旅行商问题近似算法分析">
+<meta property="og:url" content="http://joeylian.github.io/2020/02/07/2020-02-08-%E6%97%85%E8%A1%8C%E5%95%86%E9%97%AE%E9%A2%98%E8%BF%91%E4%BC%BC%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/index.html">
+<meta property="og:site_name" content="OneTime">
+<meta property="og:description" content="问题定义TSP问题： 无向图 $ G &#x3D; (V,E)$，其中，$d:E\rightarrow \mathbb{Z}^+$  表示每条边的权重，求费用最小的哈密尔顿回路。 TSP问题近似比TSP问题是一个NP-hard 问题。而普通的 TSP 问题甚至没有很好的近似比的多项式时间算法。下面证：当定点数为 $n$ ，输入规模为 $n$ 的多项式，TSP 问题不存在近似比为 $O(2^{\ma">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://joeylian.github.io/images/AOR.png">
+<meta property="article:published_time" content="2020-02-07T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-29T12:57:04.720Z">
+<meta property="article:author" content="Joey Lian">
+<meta property="article:tag" content="近似算法">
+<meta property="article:tag" content="旅行商问题">
+<meta property="article:tag" content="TSP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://joeylian.github.io/images/AOR.png"><link rel="shortcut icon" href="/img/me.jpeg"><link rel="canonical" href="http://joeylian.github.io/2020/02/07/2020-02-08-%E6%97%85%E8%A1%8C%E5%95%86%E9%97%AE%E9%A2%98%E8%BF%91%E4%BC%BC%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '旅行商问题近似算法分析',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-03-29 20:57:04'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.1.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/me.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 总览</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/images/top.jpeg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">OneTime</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 总览</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">旅行商问题近似算法分析<a class="post-edit-link" href="https://github.com/JoeyLian/githubio/edit/master/source/_posts/2020-02-08-旅行商问题近似算法分析.md" title="编辑" target="_blank"><i class="fas fa-pencil-alt"></i></a></h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-02-07T16:00:00.000Z" title="发表于 2020-02-08 00:00:00">2020-02-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-03-29T12:57:04.720Z" title="更新于 2022-03-29 20:57:04">2022-03-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/AOR/">AOR</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="旅行商问题近似算法分析"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/2020/02/07/2020-02-08-%E6%97%85%E8%A1%8C%E5%95%86%E9%97%AE%E9%A2%98%E8%BF%91%E4%BC%BC%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/#post-comment"><span class="gitalk-comment-count"></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h3 id="问题定义"><a href="#问题定义" class="headerlink" title="问题定义"></a>问题定义</h3><p>TSP问题： 无向图 $ G &#x3D; (V,E)$，其中，$d:E\rightarrow \mathbb{Z}^+$  表示每条边的权重，求费用最小的哈密尔顿回路。</p>
+<h3 id="TSP问题近似比"><a href="#TSP问题近似比" class="headerlink" title="TSP问题近似比"></a>TSP问题近似比</h3><p>TSP问题是一个NP-hard 问题。而普通的 TSP 问题甚至没有很好的近似比的多项式时间算法。下面证：当定点数为 $n$ ，输入规模为 $n$ 的多项式，TSP 问题不存在近似比为 $O(2^{\mathrm{ploy}(n)})$ 的多项式时间算法，其中， $\mathrm{ploy}(n)$表示 $n$ 的多项式：</p>
+<p>对无向图  $ G &#x3D; (V,E)$，若存在近似比为 $O(2^{\mathrm{ploy}(n)})$ 的多项式时间算法，构造新的无向图   $ G’ &#x3D; (V,E’)$，新图的输入规模仍是 $n$ 的多项式，其中边的权重定义为：</p>
+<p>$$<br>w(e’) &#x3D; \begin{cases} 1 &amp; e’ \in E \\ 2^{\mathrm{poly}(n)}n &amp; e’ \not\in E \end{cases}<br>$$</p>
+<p>对新的图使用假设的多项式时间算法，算法不会选取  $e’ \not\in E$ 的边（否则不是权重最小）因此，算法找到了原图 $G$ 中的哈密尔顿回路。然而，找无向图的哈密尔顿回路是一个 NPC 问题，矛盾。</p>
+<p>因此，普通无向图上 TSP 问题的近似算法无法取得较好的解。因此我们给问题一些限制。</p>
+<h3 id="满足三角不等式的TSP问题"><a href="#满足三角不等式的TSP问题" class="headerlink" title="满足三角不等式的TSP问题"></a>满足三角不等式的TSP问题</h3><p>设无向图的权重满足： $$ d(i,j) \le d(i,k)+d(k,j) ,\ \forall i,j,k \in V$$ </p>
+<h4 id="近似比为-2-的近似算法"><a href="#近似比为-2-的近似算法" class="headerlink" title="近似比为 2 的近似算法"></a>近似比为 2 的近似算法</h4><ol>
+<li><p>计算无向图的最小生成树  $T^*$   【图 (b)】</p>
+<p>$$ d(T^*)\le d(OPT)$$ : 哈密尔顿回路是一个圈，因此权重一定大于最小生成树。</p>
+</li>
+<li><p>将最小生成树每条边重复一次，可以得到一个欧拉回路   【图 (c)】</p>
+<p>$$ d(\widetilde{G})&#x3D;2 d(T^*)$$ </p>
+</li>
+<li><p>沿着欧拉回路，如果一个顶点已被访问，则跳过直接访问下一个顶点，由于满足三角不等式，新访问的边权重一定小于等于欧拉图中的多条边权重之和。得到哈密尔顿回路  【图 (d)】</p>
+<p>$$ d(H)\le d(\widetilde{G})&#x3D;2 d(T^*)\le2d(OPT)$$</p>
+</li>
+</ol>
+<p>图 (e) 为最优解</p>
+<p><img src="/images/image-20200208102220360.png" alt="image-20200208102220360"></p>
+<h4 id="近似比为-1-5-的近似算法"><a href="#近似比为-1-5-的近似算法" class="headerlink" title="近似比为 1.5 的近似算法"></a>近似比为 1.5 的近似算法</h4><ol>
+<li>计算无向图的最小生成树  $T^*$</li>
+<li>找出 $T^*$ 的奇度点（偶数个），找到权重最⼩的完美匹配 $M$</li>
+<li>$T^*\cup M$ 是⼀个欧拉回路</li>
+<li>延着欧拉回路，如果一个顶点已被访问，则直接访问下一个顶点，得到哈密尔顿回路</li>
+</ol>
+<p>记奇度点为 $u_1,u_2,…,u_{2k}$ 。由于无向图满足三角不等式，一定可以得到一个奇度点组成的圈，使得，圈的权重小于权重最小的哈密尔顿回路：奇度点的数量一定少于哈密尔顿回路中点的数量，将哈密尔顿回路中的偶度点去掉，权重将减小。</p>
+<p>由奇度点组成的圈对于两个匹配，因此，权重最⼩的完美匹配 $M$ 满足  $ d(M)\le\frac{1}{2}d(OPT)$$<br>$$<br>d(H)\le d(T^*)+ d(M)\le 1.5d(OPT)<br>$$</p>
+<h3 id="最短哈密尔顿路"><a href="#最短哈密尔顿路" class="headerlink" title="最短哈密尔顿路"></a>最短哈密尔顿路</h3><p>没有满足三角不等式条件的最短哈密尔顿路问题同样无法用多项式时间算法得到较好的近似。对于满足三角不等式条件的有 0、1、2 个固定顶点的最短哈密尔顿路问题，可以向最小生成树中加入匹配，使固定点为奇度点，非固定点为偶度点，从而得到一个满足条件的欧拉路，通过欧拉路进行 short-cutting 得到哈密尔顿路。</p>
+<p>可以用近似算法求解：</p>
+<ol>
+<li>计算无向图的最小生成树  $T^*$</li>
+<li>记点集 $S$ 为：固定点中的偶度点，非固定点中的奇度点；</li>
+<li>求 $S$ 的最小匹配 $M$，使得恰有 2 个奇度点，且固定点在这 2 个点里；</li>
+<li>$T^* \cup M$ 可以得到欧拉路，从而得到哈密尔顿路。</li>
+</ol>
+<p><strong>证明</strong></p>
+<p>这里的主要证明是的最小匹配 $M$ 的权重，需要注意的是这里需要和最短哈密尔顿路进行比较，而不能和哈密尔顿回路比较。</p>
+<ul>
+<li>有 0、1 个固定点时，可以得到近似比为1.5的多项式时间算法</li>
+<li>有 2 个固定点时，可以得到近似比为 5&#x2F;3 的多项式时间算法</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Joey Lian</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://joeylian.github.io/2020/02/07/2020-02-08-%E6%97%85%E8%A1%8C%E5%95%86%E9%97%AE%E9%A2%98%E8%BF%91%E4%BC%BC%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/">http://joeylian.github.io/2020/02/07/2020-02-08-%E6%97%85%E8%A1%8C%E5%95%86%E9%97%AE%E9%A2%98%E8%BF%91%E4%BC%BC%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://joeylian.github.io" target="_blank">OneTime</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%BF%91%E4%BC%BC%E7%AE%97%E6%B3%95/">近似算法</a><a class="post-meta__tags" href="/tags/%E6%97%85%E8%A1%8C%E5%95%86%E9%97%AE%E9%A2%98/">旅行商问题</a><a class="post-meta__tags" href="/tags/TSP/">TSP</a></div><div class="post_share"><div class="social-share" data-image="/images/AOR.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/02/08/2020-02-09-%E9%A1%B6%E7%82%B9%E8%A6%86%E7%9B%96%E9%97%AE%E9%A2%98-%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E6%9D%BE%E5%BC%9B/"><img class="prev-cover" src="/images/AOR.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">原始对偶方法近似-最小顶点覆盖问题</div></div></a></div><div class="next-post pull-right"><a href="/2020/01/28/2020-01-29-%E8%A3%85%E7%AE%B1%E9%97%AE%E9%A2%98%E8%BF%91%E4%BC%BC%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/"><img class="next-cover" src="/images/AOR.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">装箱问题近似算法分析</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2020/01/28/2020-01-29-%E8%A3%85%E7%AE%B1%E9%97%AE%E9%A2%98%E8%BF%91%E4%BC%BC%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/" title="装箱问题近似算法分析"><img class="cover" src="/images/AOR.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-01-29</div><div class="title">装箱问题近似算法分析</div></div></a></div><div><a href="/2020/02/08/2020-02-09-%E9%A1%B6%E7%82%B9%E8%A6%86%E7%9B%96%E9%97%AE%E9%A2%98-%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E6%9D%BE%E5%BC%9B/" title="原始对偶方法近似-最小顶点覆盖问题"><img class="cover" src="/images/AOR.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-02-09</div><div class="title">原始对偶方法近似-最小顶点覆盖问题</div></div></a></div><div><a href="/2020/02/09/2020-02-10-%E5%B9%B3%E8%A1%8C%E6%9C%BA%E8%B0%83%E5%BA%A6%E9%97%AE%E9%A2%98-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E9%97%AE%E9%A2%98/" title="平行机调度问题-负载均衡问题"><img class="cover" src="/images/AOR.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-02-10</div><div class="title">平行机调度问题-负载均衡问题</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/me.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Joey Lian</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/joeylian" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:lianjy9976@163.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E5%AE%9A%E4%B9%89"><span class="toc-number">1.</span> <span class="toc-text">问题定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TSP%E9%97%AE%E9%A2%98%E8%BF%91%E4%BC%BC%E6%AF%94"><span class="toc-number">2.</span> <span class="toc-text">TSP问题近似比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BB%A1%E8%B6%B3%E4%B8%89%E8%A7%92%E4%B8%8D%E7%AD%89%E5%BC%8F%E7%9A%84TSP%E9%97%AE%E9%A2%98"><span class="toc-number">3.</span> <span class="toc-text">满足三角不等式的TSP问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%91%E4%BC%BC%E6%AF%94%E4%B8%BA-2-%E7%9A%84%E8%BF%91%E4%BC%BC%E7%AE%97%E6%B3%95"><span class="toc-number">3.1.</span> <span class="toc-text">近似比为 2 的近似算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%91%E4%BC%BC%E6%AF%94%E4%B8%BA-1-5-%E7%9A%84%E8%BF%91%E4%BC%BC%E7%AE%97%E6%B3%95"><span class="toc-number">3.2.</span> <span class="toc-text">近似比为 1.5 的近似算法</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E7%9F%AD%E5%93%88%E5%AF%86%E5%B0%94%E9%A1%BF%E8%B7%AF"><span class="toc-number">4.</span> <span class="toc-text">最短哈密尔顿路</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" title="【EffectiveC++】构造/析构/赋值运算"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】构造/析构/赋值运算"/></a><div class="content"><a class="title" href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" title="【EffectiveC++】构造/析构/赋值运算">【EffectiveC++】构造/析构/赋值运算</a><time datetime="2021-12-29T16:00:00.000Z" title="发表于 2021-12-30 00:00:00">2021-12-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/" title="【EffectiveC++】让自己习惯C++"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】让自己习惯C++"/></a><div class="content"><a class="title" href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/" title="【EffectiveC++】让自己习惯C++">【EffectiveC++】让自己习惯C++</a><time datetime="2021-12-27T16:00:00.000Z" title="发表于 2021-12-28 00:00:00">2021-12-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】设计与声明"/></a><div class="content"><a class="title" href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明">【EffectiveC++】设计与声明</a><time datetime="2021-01-22T16:00:00.000Z" title="发表于 2021-01-23 00:00:00">2021-01-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="【EffectiveC++】资源管理"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】资源管理"/></a><div class="content"><a class="title" href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="【EffectiveC++】资源管理">【EffectiveC++】资源管理</a><time datetime="2021-01-21T16:00:00.000Z" title="发表于 2021-01-22 00:00:00">2021-01-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/" title="C++右值引用与移动语义"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C++右值引用与移动语义"/></a><div class="content"><a class="title" href="/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/" title="C++右值引用与移动语义">C++右值引用与移动语义</a><time datetime="2020-08-01T16:00:00.000Z" title="发表于 2020-08-02 00:00:00">2020-08-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/images/top.jpeg')"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2022 By Joey Lian</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.2
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container:not\([display]\)').forEach(node => {
+            const target = node.parentNode
+            if (target.nodeName.toLowerCase() === 'li') {
+              target.parentNode.classList.add('has-jax')
+            } else {
+              target.classList.add('has-jax')
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd9d8e97d1c1701a3d53b',
+      clientSecret: '52ab8c95467a938ecb0cfb1c3ca318d6574a806d',
+      repo: 'JoeyLian.github.io',
+      owner: 'JoeyLian',
+      admin: ['JoeyLian'],
+      id: 'f858e51d8844a64a055fca84d6013ede',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !false) {
+  if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = false;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

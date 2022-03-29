@@ -1,0 +1,345 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>函数式编程与流 | OneTime</title><meta name="keywords" content="函数式编程,流计算,Stream"><meta name="author" content="Joey Lian"><meta name="copyright" content="Joey Lian"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="发现还是好多没懂orz 先记一些概念后面学一门语言看看吧 函数式编程先放一下 wiki  In computer science, functional programming is a programming paradigm—a style of building the structure and elements of computer programs—that treats compu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="函数式编程与流">
+<meta property="og:url" content="http://joeylian.github.io/2020/01/21/2020-01-22-%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E4%B8%8E%E6%B5%81/index.html">
+<meta property="og:site_name" content="OneTime">
+<meta property="og:description" content="发现还是好多没懂orz 先记一些概念后面学一门语言看看吧 函数式编程先放一下 wiki  In computer science, functional programming is a programming paradigm—a style of building the structure and elements of computer programs—that treats compu">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://joeylian.github.io/images/PPL.png">
+<meta property="article:published_time" content="2020-01-21T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-29T12:57:04.720Z">
+<meta property="article:author" content="Joey Lian">
+<meta property="article:tag" content="函数式编程">
+<meta property="article:tag" content="流计算">
+<meta property="article:tag" content="Stream">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://joeylian.github.io/images/PPL.png"><link rel="shortcut icon" href="/img/me.jpeg"><link rel="canonical" href="http://joeylian.github.io/2020/01/21/2020-01-22-%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E4%B8%8E%E6%B5%81/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '函数式编程与流',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-03-29 20:57:04'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.1.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/me.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 总览</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/images/top.jpeg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">OneTime</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 总览</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">函数式编程与流<a class="post-edit-link" href="https://github.com/JoeyLian/githubio/edit/master/source/_posts/2020-01-22-函数式编程与流.md" title="编辑" target="_blank"><i class="fas fa-pencil-alt"></i></a></h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-01-21T16:00:00.000Z" title="发表于 2020-01-22 00:00:00">2020-01-22</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-03-29T12:57:04.720Z" title="更新于 2022-03-29 20:57:04">2022-03-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/PPL/">PPL</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="函数式编程与流"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/2020/01/21/2020-01-22-%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E4%B8%8E%E6%B5%81/#post-comment"><span class="gitalk-comment-count"></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>发现还是好多没懂orz 先记一些概念后面学一门语言看看吧</p>
+<h3 id="函数式编程"><a href="#函数式编程" class="headerlink" title="函数式编程"></a>函数式编程</h3><p>先放一下 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Functional_programming#Comparison_to_imperative_programming">wiki</a></p>
+<blockquote>
+<p>In computer science, <strong>functional programming</strong> is a programming paradigm—a style of building the structure and elements of computer programs—that treats computation as the evaluation of mathematical functions and avoids changing-state and mutable data. It is a declarative programming paradigm in that programming is done with expressions or declarations instead of statements. In functional code, the output value of a function depends only on its arguments, so calling a function with the same value for an argument always produces the same result. </p>
+</blockquote>
+<p>函数式编程是一种编程范式，将计算视为对数学函数的评估，避免状态变化和可变数据的发生。 它是声明式编程范例，使用表达式或声明而不是语句来完成编程。 在函数式编程中，函数的输出值仅取决于其参数，用相同的参数调用函数始终会产生相同的结果。</p>
+<p>也就是说，函数式编程是一种无状态的编程。</p>
+<p>举个例子，我们希望得到一个计算余额的程序。下面的代码就是简单的实现，然而它是命令式编程：引入了局部变量balance， 使得用相同的参数调用函数始会产生不同的结果。</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">define</span> (<span class="name">make-simplified-withdraw</span> balance)</span><br><span class="line">  (<span class="name">lambda</span> (<span class="name">amount</span>)</span><br><span class="line">    (<span class="name">set!</span> balance (<span class="name">-</span> balance amount))</span><br><span class="line">    balance))</span><br><span class="line"></span><br><span class="line">(<span class="name">define</span> W (<span class="name">make-simplified-withdraw</span> <span class="number">25</span>))</span><br><span class="line"></span><br><span class="line">(<span class="name">W</span> <span class="number">10</span>)</span><br><span class="line"><span class="number">15</span></span><br><span class="line">(<span class="name">W</span> <span class="number">10</span>)</span><br><span class="line"><span class="number">5</span></span><br></pre></td></tr></table></figure>
+
+<p>纯函数式编程应该写为：</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">define</span> (<span class="name">make-decrementer</span> balance)</span><br><span class="line">  (<span class="name">lambda</span> (<span class="name">amount</span>)</span><br><span class="line">    (<span class="name">-</span> balance amount)))</span><br><span class="line"></span><br><span class="line">(<span class="name">define</span> D (<span class="name">make-decrementer</span> <span class="number">25</span>))</span><br><span class="line"></span><br><span class="line">(<span class="name">D</span> <span class="number">10</span>)</span><br><span class="line"><span class="number">15</span></span><br><span class="line">(<span class="name">D</span> <span class="number">10</span>)</span><br><span class="line"><span class="number">15</span></span><br></pre></td></tr></table></figure>
+
+<p>当然这就不能实现我们想要得功能了，想要用函数式编程处理这些问题，可能需要引入可变变量或通过 Monad 进行封装（我还不会emmm）。</p>
+<p>不看函数式编程产生的结果，它最大的特点在于函数式编程更倾向于通过是什么解决问题，而命令式编程通过怎么做解决问题。</p>
+<p>举个例子，一个经典的换零钱问题：</p>
+<p>总数为a的现金换成n中硬币的不同方式的数目等于</p>
+<ul>
+<li>将现金数 $a$ 换成除第一种硬币之外的所有其他硬币的不同方式数，加上</li>
+<li>将现金数 $a-d$ 换成所有种类的硬币的不同方式数，其中 $d$ 是第一种硬币的币值。</li>
+</ul>
+<p>这就是一种函数式编程的思想，没有考虑解决问题的过程，而仅仅表达了问题是什么。换句话说，函数式编程是通过函数描述从输入到输出的直接映射。</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">define</span> (<span class="name">count-change</span> amount)</span><br><span class="line">  (<span class="name">cc</span> amount <span class="number">5</span>))</span><br><span class="line">(<span class="name">define</span> (<span class="name">cc</span> amount kinds-of-coins)</span><br><span class="line">  (<span class="name">cond</span> ((<span class="name">=</span> amount <span class="number">0</span>) <span class="number">1</span>)</span><br><span class="line">        ((<span class="name">or</span> (<span class="name">&lt;</span> amount <span class="number">0</span>) (<span class="name">=</span> kinds-of-coins <span class="number">0</span>)) <span class="number">0</span>)</span><br><span class="line">        (<span class="name">else</span> (<span class="name">+</span> (<span class="name">cc</span> amount</span><br><span class="line">                     (<span class="name">-</span> kinds-of-coins <span class="number">1</span>))</span><br><span class="line">                 (<span class="name">cc</span> (<span class="name">-</span> amount</span><br><span class="line">                        (<span class="name">first-denomination</span> kinds-of-coins))</span><br><span class="line">                     kinds-of-coins)))))</span><br><span class="line">(<span class="name">define</span> (<span class="name">first-denomination</span> kinds-of-coins)</span><br><span class="line">  (<span class="name">cond</span> ((<span class="name">=</span> kinds-of-coins <span class="number">1</span>) <span class="number">1</span>)</span><br><span class="line">        ((<span class="name">=</span> kinds-of-coins <span class="number">2</span>) <span class="number">5</span>)</span><br><span class="line">        ((<span class="name">=</span> kinds-of-coins <span class="number">3</span>) <span class="number">10</span>)</span><br><span class="line">        ((<span class="name">=</span> kinds-of-coins <span class="number">4</span>) <span class="number">25</span>)</span><br><span class="line">        ((<span class="name">=</span> kinds-of-coins <span class="number">5</span>) <span class="number">50</span>)))</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Conventional-Interfaces"><a href="#Conventional-Interfaces" class="headerlink" title="Conventional Interfaces"></a>Conventional Interfaces</h3><p>不知道应该怎么翻译emmm 就是将程序分解成不同功能的部分，通过组合达到需要的效果。或者说，<strong>将程序抽象</strong>，从而产生一个序列。</p>
+<p>考虑两个问题：</p>
+<ul>
+<li>输入一棵树，求值为奇数的叶子的平方和</li>
+<li>构造出偶数的斐波那契数 $Fib(k)$ 的表，其中 $k\le n$</li>
+</ul>
+<p>将程序抽象为枚举器，过滤器，映射，累积器。</p>
+<p><img src="/images/image-20200124115320662.png" alt="image-20200124115320662"></p>
+<blockquote>
+<p>要组织好这些程序，使之能够更清晰地反应上面信号流的结构，最关键的一点就是将注意力集中在处理过程中从一个步骤流向下一个步骤的 “信号”。如果我们用一些表来表示这些信号，那么就可以利用表操作实现每一步骤的处理。</p>
+</blockquote>
+<p>为什么要说 ‘如果’ 呢？因为后面介绍的流就不是这样的 hhh</p>
+<p>用表来表示信号是简单的, 以过滤器为例子</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">define</span> (<span class="name">filter</span> predicate sequence)</span><br><span class="line">  (<span class="name">cond</span> ((<span class="name">null</span>? sequence) <span class="literal">nil</span>)    <span class="comment">;; 空表</span></span><br><span class="line">        ((<span class="name">predicate</span> (<span class="name">car</span> sequence))</span><br><span class="line">         (<span class="name">cons</span> (<span class="name">car</span> sequence)<span class="comment">;; 第一项符合，构建新表，继续检查</span></span><br><span class="line">               (<span class="name">filter</span> predicate (<span class="name">cdr</span> sequence))))</span><br><span class="line">        (<span class="name">else</span> (<span class="name">filter</span> predicate (<span class="name">cdr</span> sequence)))))</span><br><span class="line">              <span class="comment">;; 第一项不符合，检查下一项</span></span><br><span class="line">(<span class="name">filter</span> odd? (<span class="name">list</span> <span class="number">1</span> <span class="number">2</span> <span class="number">3</span> <span class="number">4</span> <span class="number">5</span>))</span><br><span class="line">(<span class="number">1</span> <span class="number">3</span> <span class="number">5</span>)</span><br></pre></td></tr></table></figure>
+
+<p>构造出偶数的斐波那契数 $Fib(k)$ 的表, 只需：</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">define</span> (<span class="name">even-fibs</span> n)</span><br><span class="line">  (<span class="name">accumulate</span> cons</span><br><span class="line">              <span class="literal">nil</span></span><br><span class="line">              (<span class="name">filter</span> even?</span><br><span class="line">                      (<span class="name">map</span> fib</span><br><span class="line">                           (<span class="name">enumerate-interval</span> <span class="number">0</span> n)))))</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="惰性求值与流"><a href="#惰性求值与流" class="headerlink" title="惰性求值与流"></a>惰性求值与流</h3><p>考虑我们刚刚构建的序列，事实上它是低效的：在工作的每一步都必须构造或记录整个表。</p>
+<p>举个例子：我们需要程序计算一个区间内所有质数的和。使用序列的实现，我们需要构造出整个区间的表，得到整个区间内的质数后再计算他们的和。而传统的迭代风格则是对每个数判断是否为质数，若是质数则加到和中。可以看到，用序列实现需要使用很多额外的空间。</p>
+<p>一个很好的解决方式是<strong>惰性求值</strong>。惰性求值是指：表达式不是在绑定到变量时立即计算，而是在求值程序需要产生表达式的值时进行计算。</p>
+<p>假设各种组成是一个个的方框，数据是一条线</p>
+<p><img src="/images/image-20200124133045909.png" alt="image-20200124133045909"></p>
+<p>那么之前的实现方式就是将整条线一次穿过各个方框；</p>
+<p><img src="/images/image-20200124133054790.png" alt="image-20200124133054790"></p>
+<p><img src="/images/image-20200124133112207.png" alt="image-20200124133112207"></p>
+<p>而<strong>惰性求值</strong>则是在累加器需要时在最后拉线，从而使线依次穿过方框。</p>
+<p> <img src="/images/image-20200124133123534.png" alt="image-20200124133123534"></p>
+<p><img src="/images/image-20200124133130863.png" alt="image-20200124133130863"></p>
+<p><strong>流</strong>（Stream）就是使用惰性求值的方法来实现的序列，可以看成一种延迟的表。</p>
+<p>Java 8 API添加了一个新的抽象：流Stream，可以以声明的方式处理数据，就有惰性求值的特性。</p>
+<h3 id="流的实现"><a href="#流的实现" class="headerlink" title="流的实现"></a>流的实现</h3><p>流的特点是惰性求值。</p>
+<h4 id="一种实现-SICP"><a href="#一种实现-SICP" class="headerlink" title="一种实现 [SICP]"></a>一种实现 [SICP]</h4><p>将流的 cdr  [lisp中表示一个表除了第一项之外的项] 求值等到访问它的时候再做，而不是构造流的时候做。使用基于 delay 的特殊形式，对于 (delay &lt;exp&gt;) 的求值将不对表达式 &lt;exp&gt; 求值，而是返回一个延时对象，可以看作对未来的某个时刻求值的许诺。而 force 过程则以一个延时对象为参数，执行相应的求值工作。</p>
+<p>定义流和它的car，cdr</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">define</span> cons-stream &lt;a&gt; &lt;b&gt;</span><br><span class="line">	cons &lt;a&gt; (<span class="name">delay</span> &lt;b&gt;))</span><br><span class="line">(<span class="name">define</span> (<span class="name">stream-car</span> stream) (<span class="name">car</span> stream))</span><br><span class="line">(<span class="name">define</span> (<span class="name">stream-cdr</span> stream) (<span class="name">force</span> (<span class="name">cdr</span> stream)))</span><br></pre></td></tr></table></figure>
+
+<p>当我们需要流后面的内容时，通过 stream-cdr 进行求值，而在构造流时不进行求值。</p>
+<p>下面通过一个例子来看流的运行过程：求10000-1000000中的第二个质数, 也就是10000-1000000所有质数的表中除了第一项之外 <em>cdr</em>的第一项<em>car</em>。</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">stream-car</span></span><br><span class="line"> (<span class="name">stream-cdr</span></span><br><span class="line">  (<span class="name">stream-filter</span> prime?</span><br><span class="line">                 (<span class="name">stream-enumerate-interval</span> <span class="number">10000</span> <span class="number">1000000</span>))))</span><br></pre></td></tr></table></figure>
+
+<p>在之前的实现中，我们需要求出10000-100000中的所有质数，然后取表中的第二个，这显然是低效的。下面看stream的运行：</p>
+<p>首先，<code>(stream-enumerate-interval 10000 1000000)</code> 会返回从10000到1000000的流，但不会显式的表现出来，而是10000和一个延时对象：</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">define</span> (<span class="name">stream-enumerate-interval</span> low high)</span><br><span class="line">  (<span class="name">if</span> (<span class="name">&gt;</span> low high)</span><br><span class="line">      the-empty-stream</span><br><span class="line">      (<span class="name">cons-stream</span></span><br><span class="line">       low</span><br><span class="line">       (<span class="name">stream-enumerate-interval</span> (<span class="name">+</span> low <span class="number">1</span>) high))))</span><br><span class="line"></span><br><span class="line">(<span class="name">cons</span> <span class="number">10000</span> (<span class="name">delay</span> (<span class="name">stream-enumerate-interval</span> <span class="number">10001</span> <span class="number">1000000</span>)))</span><br></pre></td></tr></table></figure>
+
+<p>之后，<code>stream-filter</code> 检查得到的流中的 car ，发现他不是一个质数，于是继续检查流的 cdr。调用 stream-cdr 也就是需要流对下一项进行求值，于是通过force得到下一个数即 10001。</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">define</span> (<span class="name">stream-filter</span> pred stream)</span><br><span class="line">  (<span class="name">cond</span> ((<span class="name">stream-null</span>? stream) the-empty-stream)</span><br><span class="line">        ((<span class="name">pred</span> (<span class="name">stream-car</span> stream))</span><br><span class="line">         (<span class="name">cons-stream</span> (<span class="name">stream-car</span> stream)</span><br><span class="line">                      (<span class="name">stream-filter</span> pred</span><br><span class="line">                                     (<span class="name">stream-cdr</span> stream))))</span><br><span class="line">        (<span class="name">else</span> (<span class="name">stream-filter</span> pred (<span class="name">stream-cdr</span> stream)))))</span><br></pre></td></tr></table></figure>
+
+<p>知道得到 10007，检查发现它是一个质数，于是stream-filter返回一个流：</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">cons</span> <span class="number">10007</span> (<span class="name">delay</span></span><br><span class="line">              (<span class="name">stream-filter</span> prime?</span><br><span class="line">                (<span class="name">cons</span> <span class="number">10008</span> (<span class="name">delay</span></span><br><span class="line">                 (<span class="name">stream-enumerate-interval</span> <span class="number">10009</span>  <span class="number">1000000</span>))))))</span><br></pre></td></tr></table></figure>
+
+<p>这个结果送到程序中的 stream-cdr， 于是它需要继续寻找下一个质数，直到返回 10009，程序结束。</p>
+<p>也就是说，在这种实现中，我们只对流的第一项进行计算，流的后续作为一个延时的许诺返回，在需要时再进行计算，从而减少额外空间时间的使用。</p>
+<p>delay和force的实现其实也很简单：</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">define</span> (<span class="name">delay</span> &lt;exp&gt;)</span><br><span class="line">  (<span class="name">lambda</span> () &lt;exp&gt;))</span><br><span class="line"></span><br><span class="line">(<span class="name">define</span> (<span class="name">force</span> delayed-object)</span><br><span class="line">  (<span class="name">delayed-object</span>))</span><br></pre></td></tr></table></figure>
+
+<p>我们还能得到无穷流：如无穷正整数流：</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">define</span> (<span class="name">integers-starting-from</span> n)</span><br><span class="line">  (<span class="name">cons-stream</span> n (<span class="name">integers-starting-from</span> (<span class="name">+</span> n <span class="number">1</span>))))</span><br><span class="line"></span><br><span class="line">(<span class="name">define</span> integers (<span class="name">integers-starting-from</span> <span class="number">1</span>))</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="另一种实现"><a href="#另一种实现" class="headerlink" title="另一种实现"></a>另一种实现</h4><p>期末考试需要用自己的函数式编程语言写流的实现，然后不会 T T</p>
+<p>首先定义终断操作：即一个流的最后操作，这个操作会返回一个表或一个值。而非终断操作则会继续返回一个流。</p>
+<p>我们已经知道，流和表最大的区别就是流的惰性求值，在前面中也看到，返回的流中包含了中间的操作。在非终断操作中，如果直接将表传入进行操作生成另一个表不符合流的基本思想。</p>
+<p>因此，一种想法是将非终断操作延时进行。换句话说，就是 map，filter 等函数不对数据进行处理，而是将传入的函数包装在传递的流中。直到遇到一个终断操作，再对流中的数据进行处理。</p>
+<p>在上面的例子中，只有 stream-car 是一个终断操作， stream-cdr 依然是非终断操作。</p>
+<p>等我学一门语言再来实现orz</p>
+<p>参考资料：</p>
+<p>Structure and Interpretation of Computer Programs</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Joey Lian</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://joeylian.github.io/2020/01/21/2020-01-22-%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E4%B8%8E%E6%B5%81/">http://joeylian.github.io/2020/01/21/2020-01-22-%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E4%B8%8E%E6%B5%81/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://joeylian.github.io" target="_blank">OneTime</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/">函数式编程</a><a class="post-meta__tags" href="/tags/%E6%B5%81%E8%AE%A1%E7%AE%97/">流计算</a><a class="post-meta__tags" href="/tags/Stream/">Stream</a></div><div class="post_share"><div class="social-share" data-image="/images/PPL.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/01/24/2020-01-25-%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95%E4%B8%8E%E7%8B%AC%E7%AB%8B%E9%9B%86%E7%B3%BB%E7%BB%9F/"><img class="prev-cover" src="/images/AOR.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">贪心算法与独立集系统</div></div></a></div><div class="next-post pull-right"><a href="/2020/01/13/2020-01-14-BNF%E4%B8%8EEBNF/"><img class="next-cover" src="/images/PPL.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">BNF与EBNF</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2020/01/13/2020-01-14-Java-Lambda%E4%B8%8EStream%E7%AE%80%E8%AE%B0/" title="Java-Lambda与Stream简记"><img class="cover" src="/images/PPL.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-01-14</div><div class="title">Java-Lambda与Stream简记</div></div></a></div><div><a href="/2020/01/13/2020-01-14-%E9%80%92%E5%BD%92%E4%B8%8E%E5%B0%BE%E9%80%92%E5%BD%92/" title="递归与尾递归"><img class="cover" src="/images/PPL.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-01-14</div><div class="title">递归与尾递归</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/me.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Joey Lian</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/joeylian" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:lianjy9976@163.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B"><span class="toc-number">1.</span> <span class="toc-text">函数式编程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Conventional-Interfaces"><span class="toc-number">2.</span> <span class="toc-text">Conventional Interfaces</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%83%B0%E6%80%A7%E6%B1%82%E5%80%BC%E4%B8%8E%E6%B5%81"><span class="toc-number">3.</span> <span class="toc-text">惰性求值与流</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%81%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-number">4.</span> <span class="toc-text">流的实现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%80%E7%A7%8D%E5%AE%9E%E7%8E%B0-SICP"><span class="toc-number">4.1.</span> <span class="toc-text">一种实现 [SICP]</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%A6%E4%B8%80%E7%A7%8D%E5%AE%9E%E7%8E%B0"><span class="toc-number">4.2.</span> <span class="toc-text">另一种实现</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" title="【EffectiveC++】构造/析构/赋值运算"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】构造/析构/赋值运算"/></a><div class="content"><a class="title" href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" title="【EffectiveC++】构造/析构/赋值运算">【EffectiveC++】构造/析构/赋值运算</a><time datetime="2021-12-29T16:00:00.000Z" title="发表于 2021-12-30 00:00:00">2021-12-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/" title="【EffectiveC++】让自己习惯C++"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】让自己习惯C++"/></a><div class="content"><a class="title" href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/" title="【EffectiveC++】让自己习惯C++">【EffectiveC++】让自己习惯C++</a><time datetime="2021-12-27T16:00:00.000Z" title="发表于 2021-12-28 00:00:00">2021-12-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】设计与声明"/></a><div class="content"><a class="title" href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明">【EffectiveC++】设计与声明</a><time datetime="2021-01-22T16:00:00.000Z" title="发表于 2021-01-23 00:00:00">2021-01-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="【EffectiveC++】资源管理"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】资源管理"/></a><div class="content"><a class="title" href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="【EffectiveC++】资源管理">【EffectiveC++】资源管理</a><time datetime="2021-01-21T16:00:00.000Z" title="发表于 2021-01-22 00:00:00">2021-01-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/" title="C++右值引用与移动语义"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C++右值引用与移动语义"/></a><div class="content"><a class="title" href="/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/" title="C++右值引用与移动语义">C++右值引用与移动语义</a><time datetime="2020-08-01T16:00:00.000Z" title="发表于 2020-08-02 00:00:00">2020-08-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/images/top.jpeg')"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2022 By Joey Lian</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.2
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container:not\([display]\)').forEach(node => {
+            const target = node.parentNode
+            if (target.nodeName.toLowerCase() === 'li') {
+              target.parentNode.classList.add('has-jax')
+            } else {
+              target.classList.add('has-jax')
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd9d8e97d1c1701a3d53b',
+      clientSecret: '52ab8c95467a938ecb0cfb1c3ca318d6574a806d',
+      repo: 'JoeyLian.github.io',
+      owner: 'JoeyLian',
+      admin: ['JoeyLian'],
+      id: '69856276325d7144bf1890b44967b243',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !false) {
+  if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = false;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

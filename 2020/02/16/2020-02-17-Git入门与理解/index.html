@@ -1,0 +1,401 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Git入门与理解 | OneTime</title><meta name="keywords" content="Git,Github"><meta name="author" content="Joey Lian"><meta name="copyright" content="Joey Lian"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="MathJax.Hub.Config({             tex2jax: {             skipTags: [&#39;script&#39;, &#39;noscript&#39;, &#39;style&#39;, &#39;textarea&#39;, &#39;pre&#39;],             inlineMath: [[&#39;$&#39;,&#39;$&#39;]]             }         });">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git入门与理解">
+<meta property="og:url" content="http://joeylian.github.io/2020/02/16/2020-02-17-Git%E5%85%A5%E9%97%A8%E4%B8%8E%E7%90%86%E8%A7%A3/index.html">
+<meta property="og:site_name" content="OneTime">
+<meta property="og:description" content="MathJax.Hub.Config({             tex2jax: {             skipTags: [&#39;script&#39;, &#39;noscript&#39;, &#39;style&#39;, &#39;textarea&#39;, &#39;pre&#39;],             inlineMath: [[&#39;$&#39;,&#39;$&#39;]]             }         });">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://joeylian.github.io/images/git2.png">
+<meta property="article:published_time" content="2020-02-16T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-29T12:57:04.720Z">
+<meta property="article:author" content="Joey Lian">
+<meta property="article:tag" content="Git">
+<meta property="article:tag" content="Github">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://joeylian.github.io/images/git2.png"><link rel="shortcut icon" href="/img/me.jpeg"><link rel="canonical" href="http://joeylian.github.io/2020/02/16/2020-02-17-Git%E5%85%A5%E9%97%A8%E4%B8%8E%E7%90%86%E8%A7%A3/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Git入门与理解',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-03-29 20:57:04'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.1.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/me.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 总览</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/images/top.jpeg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">OneTime</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 总览</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Git入门与理解<a class="post-edit-link" href="https://github.com/JoeyLian/githubio/edit/master/source/_posts/2020-02-17-Git入门与理解.md" title="编辑" target="_blank"><i class="fas fa-pencil-alt"></i></a></h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-02-16T16:00:00.000Z" title="发表于 2020-02-17 00:00:00">2020-02-17</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-03-29T12:57:04.720Z" title="更新于 2022-03-29 20:57:04">2022-03-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%93%8D%E4%BD%9C%E7%AC%94%E8%AE%B0/">操作笔记</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Git入门与理解"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/2020/02/16/2020-02-17-Git%E5%85%A5%E9%97%A8%E4%B8%8E%E7%90%86%E8%A7%A3/#post-comment"><span class="gitalk-comment-count"></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><head>
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            tex2jax: {
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            inlineMath: [['$','$']]
+            }
+        });
+    </script>
+</head>
+
+
+
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>Wiki：</p>
+<blockquote>
+<p> Git is a distributed version-control system for tracking changes in source code during software development.</p>
+</blockquote>
+<p>Git 是一个常见的版本控制工具，在软件开发中普遍使用，也用来分工协作。</p>
+<p>此文章适用于对Git有所了解，但<del>（多次）</del> 希望入门 Git 却一直无法入门的人 <del>（比如我）</del>，主要从理解上解决不知道为什么就不能切换分支，不能merge，不能push等等问题。此外，文章不对命令的各种参数进行详细介绍（需要翻翻手册就好啦~</p>
+<p>推荐阅读（可以先把他们过一遍，可能就不用看这篇了：）</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2015/12/git-cheat-sheet.html">常用 Git 命令清单</a>   作者：阮一峰</p>
+<p><a target="_blank" rel="noopener" href="https://learngitbranching.js.org/">Learn Git Branching</a>  关卡式的有趣教程，对 Git 的分支与版本有一个形象的展示，了解命令之间的不同</p>
+</blockquote>
+<p>启动了Git的文件夹中包括三个空间：**工作区 [Workspace]<strong>，</strong>暂存区 [Index &#x2F; Stage]<strong>，</strong>本地仓库 [Repository]**。三个空间相互独立，通过 Git 命令进行文件在不同区之间的转化控制。</p>
+<p>工作区即直接打开文件的地方。对文件的修改均在工作区中进行。通过将工作区的文件添加到区域从而产生备份[历史]。而可以根据暂存区或本地仓库中重置工作区的文件从而实现版本控制的效果 [即回退]。</p>
+<p>此外，Git 的主要功能还有远程协作，因此还有一个**远程仓库 [Remote]**。</p>
+<p>图源：<a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2015/12/git-cheat-sheet.html">常用 Git 命令清单</a>  [侵删]</p>
+<p><img src="/images/image-20200217170241279.png" alt="image-20200217170241279"></p>
+<p>下面根据 <strong>暂存区 [Index &#x2F; Stage]<strong>，</strong>本地仓库 [Repository]<strong>，</strong>远程仓库 [Remote]</strong> 的主要操作进行介绍。</p>
+<h3 id="暂存区"><a href="#暂存区" class="headerlink" title="暂存区"></a>暂存区</h3><p>和暂存区相关的主要操作即为 <code>git add</code>, <code>git commit</code>以及撤销回退操作。</p>
+<p>如上图所示，<code>git add</code>将修改提交到暂存区后，<code>git commit</code>将暂存区中的修改提交到本地仓库。</p>
+<p>为什么需要有暂存区？知乎有一个问题：《<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/19946553">为什么要先 git add 才能 git commit ？</a>》而我个人的理解是，暂存区是本地仓库之前的一个暂时备份。在一些情况下，我们希望可以保存当前的修改，若之后的修改不满意可以回退，又认为当前的修改还不够完善，不应该作为一次版本提交，此时可以使用暂存区暂存。</p>
+<p>需要注意的是，暂存区和工作区是基于一个 commit 存在的。在当前的 commit 与暂存区或工作区中的内容不同时，无法切换到其他的 commit。为什么这里说的是 commit 而不是分支呢？因为分支实际上是通过指针实现的。当两个分支指向同一个 commit 时，可以带着当前的暂存区和工作区切换分支。</p>
+<p>下面通过图解介绍一些常用的命令：</p>
+<h4 id="提交命令"><a href="#提交命令" class="headerlink" title="提交命令"></a>提交命令</h4><p>首先，我们通过 <code>git init</code> 初始化 git，然后新建了a.txt 文件，并写入 “Test 1”，此时状态为：</p>
+<p><img src="/images/image-20200217204702014.png" alt="image-20200217204702014"></p>
+<p>命令 <code>git add .</code>之后：</p>
+<p><img src="/images/image-20200217204652107.png" alt="image-20200217204652107"></p>
+<p>命令 <code>git commit -m &quot;a&quot;</code>之后：</p>
+<p><img src="/images/image-20200217204637553.png" alt="image-20200217204637553"></p>
+<p>可以简单知道， <code>git add .</code>将修改从工作区放入暂存区，<code>git commit -m &quot;a&quot;</code>将修改从暂存区放入本地仓库。</p>
+<p>下面测试一些函数：我们在 a.txt 文件中添加 “Test 2”，执行 <code>git add .</code>，再在 a.txt 文件中添加 “Test 3”，此时的状态为：</p>
+<p><img src="/images/image-20200217204606402.png" alt="image-20200217204606402"></p>
+<h4 id="查看命令"><a href="#查看命令" class="headerlink" title="查看命令"></a>查看命令</h4><p>使用命令 <code>git status</code>: 可以看到，有修改需要commit，也有修改需要 add</p>
+<p><img src="/images/image-20200217203501110.png" alt="image-20200217203501110"></p>
+<p>命令 <code>git diff</code>: 显示了暂存区与工作区的区别</p>
+<p><img src="/images/image-20200217203720725.png" alt="image-20200217203720725"></p>
+<p>命令 <code>git diff HEAD</code>: 显示了工作区与当前的 commit 的区别 [HEAD 表示的是当前所在的commit]</p>
+<p><img src="/images/image-20200217203811422.png" alt="image-20200217203811422"></p>
+<h4 id="撤销命令"><a href="#撤销命令" class="headerlink" title="撤销命令"></a>撤销命令</h4><p>命令 <code>git checkout .</code>：恢复暂存区的所有文件到工作区 （当然也可以只恢复一个文件</p>
+<p><img src="/images/image-20200217204617610.png" alt="image-20200217204617610"></p>
+<p>命令 <code>git reset</code> ：重置暂存区的指定文件，与上一次commit保持一致，但工作区不变。注意现在直接看文件时看不到重置的，因为看的是工作区的内容。也可以同时修改暂存区和工作区[–hard]。</p>
+<p><img src="/images/image-20200217205406324.png" alt="image-20200217205406324"></p>
+<p>到这里暂存区的概念大概就懂了：）<del>剩下的就是背命令了</del></p>
+<h4 id="切换分支"><a href="#切换分支" class="headerlink" title="切换分支"></a>切换分支</h4><p>接下来是第一个坑：<strong>无法切换分支</strong>。更准确的说法是：当工作区或暂存区有修改时，无法切换 commit。</p>
+<p>继续我们的实验：此时，新建并切换到一个新的分支 <code> git checkout -b other</code> 。这里是可以成功的：我们并没有切换 commit ，而是多了一个指向当前 commit 的指针：other。暂存区和工作区的内容也没有改变。</p>
+<p><img src="/images/image-20200217210709830.png" alt="image-20200217210709830"></p>
+<p>通过  <code>git add .</code>和<code>git commit -m &quot;a&quot;</code> 新建一个提交后，Master 和 other 分支会指向不同的 commit ：</p>
+<p><img src="/images/image-20200217211027399.png" alt="image-20200217211027399"></p>
+<p>接着修改 a.txt，尝试切换为 master 分支，失败：因为需要切换 commit</p>
+<p><img src="/images/image-20200217211151753.png" alt="image-20200217211151753"></p>
+<p>通过  <code>git add .</code>和<code>git commit -m &quot;a&quot;</code>将修改提交。可以顺利切换到 master 分支。此时执行 merge 操作：<code>git merge other</code> 由于 master 分支指向的 commit 的是 other 分支所指向的 commit 父节点，因此 merge 操作简单的将 master 分支的指针移动到  other 分支所指向的 commit 父节点。也就是说：他们又指向了同一个 commit 。此时即使修改工作区或暂存区的内容，也可以直接切换到 other 分支。[关于 merge ，下面会说到]</p>
+<p>当暂存区有修改又希望切换分支时，可以使用 <code> git stash</code> 系列命令，将当前的工作隐藏起来，这里不展开。</p>
+<p>关于暂存区暂时就到这，接下来是更奇怪的本地仓库</p>
+<h3 id="本地仓库"><a href="#本地仓库" class="headerlink" title="本地仓库"></a>本地仓库</h3><p>本地仓库中的版本是根据 commit 存储的，而不是根据分支。事实上，大多数命令中出现分支的名字都是用于指定一个 commit，可以用其他指定 commit 的方法替代。指定 commit 的方法有很多：</p>
+<ol>
+<li>分支：最常用的显然是分支的名称。分支表示的是一个指向 commit 的指针，分支很容易被人为移动，并且当有新的提交时，它也会移动。因此，分支很容易被改变。</li>
+<li>标签：由于分支容易改变，有时候我们希望可以给一次commit 打上永久的标识，这就是标签，用 <code>git tag </code> 等命令可以创建和查看、删除标签。</li>
+<li>相对位置：可以在一个指定的 commit 后添加符号表示相对它的位置。有两个表示相对位置的符号 ‘^’, ‘<del>‘。其中，’</del>‘ 表示父节点，后面可以加数字表示往上寻找的第几个父节点，比如 ‘~2’ 表示爷爷节点。’^’也表示父节点，后面加数字表示多个父节点中的第几个父亲，如在 merge 后，’^2’ 表示不是原本分支的另一个分支（我也不知道还有什么情况有多个父节点）。在使用相对位置时， head 表示当前所在的 commit 。</li>
+<li>commit 序号：每创建一个commit ，Git都会自动生成一个唯一的序号指定这个commit。不过 Git自动生成的序号都是一段很长的编码，难以记录。如果一定要使用，只需要用前几个字符即可代表一个commit</li>
+</ol>
+<p>下面的图解用 <a target="_blank" rel="noopener" href="https://learngitbranching.js.org/">Learn Git Branching</a> 提供的沙盒生成，解释参考该教程，侵删。图解中，一个圆点表示一个commit</p>
+<h4 id="合并分支"><a href="#合并分支" class="headerlink" title="合并分支"></a>合并分支</h4><p>合并分支 (commit) 主要有两种方式：merge，rebase</p>
+<h5 id="Git-merge"><a href="#Git-merge" class="headerlink" title="Git merge"></a>Git merge</h5><p>merge合并两个分支时会产生一个新的提交记录，它有两个父节点。当merge的分支是当前分支的子节点时，只是简单的移动当前分支。</p>
+<p>还是实例：在 master 分支下<code>git merge other</code> ，会形成图二的 commit [HEAD^ 表示的是 C3 这个commit，HEAD^2 表示的是C2]。切换到 other 分支，<code>git merge master</code> ，形成图三，other 的指针移动，没有产生新的 commit。</p>
+<p><img src="/images/image-20200217223739515.png" alt="image-20200217223739515"></p>
+<h5 id="Git-rebase"><a href="#Git-rebase" class="headerlink" title="Git rebase"></a>Git rebase</h5><p>Rebase 实际上是取出一系列的提交记录，“复制”到需要的分支上。Rebase 的优势是可以创造线性的提交历史。</p>
+<p>在 master 分支下<code>git rebase other</code> ，即将 master 分支上进行的变动复制到 other 分支上，从而使 master 分支合并 other 分支的修改。切换到 other 分支，<code>git rebase master</code> ，形成图三，other 的指针移动，没有产生新的 commit。这里 other 分支原来的 commit 已经没有指针指向它，但在一定时间内他还是存在的，可以通过 commit 序号指定。</p>
+<p><img src="/images/image-20200218091005159.png" alt="image-20200218091005159"></p>
+<h5 id="Git-merge-与-Git-rebase-的比较"><a href="#Git-merge-与-Git-rebase-的比较" class="headerlink" title="Git merge 与 Git rebase 的比较"></a>Git merge 与 Git rebase 的比较</h5><p>参考：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/c17472d704a0">简书：闲谈 git merge 与 git rebase 的区别</a></p>
+<ul>
+<li><p>merge 是一个合并操作，会将两个分支的修改合并在一起，提交合并中修改的内容。merge 的提交历史忠实地记录了实际发生过什么，关注点在真实的提交历史上面。</p>
+</li>
+<li><p>rebase 并没有进行合并操作，只是提取了当前分支的修改，将其复制在了目标分支的提交后面。rebase 的提交历史反映了项目过程中发生了什么，关注点在开发过程上面。</p>
+</li>
+</ul>
+<p>merge 与 rebase 都是非常强大的合并命令，没有优劣之分，使用哪一个应由项目和团队的开发需求决定</p>
+<h5 id="冲突处理"><a href="#冲突处理" class="headerlink" title="冲突处理"></a>冲突处理</h5><p><strong>git merge</strong> </p>
+<p>遇见冲突后会直接停止，等待手动解决冲突并重新提交 commit ，才能再次 merge。merge中遇到的冲突会在文件中标记出来。整个流程为：</p>
+<ol start="0">
+<li>假设我们在 master 分支上执行了 <code>git merge other</code>，此时，提示出现冲突无法自动合并</li>
+<li>当前暂存区和工作区未成功合并的文件已被标记  “&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD  \n … \n &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; \n … \n&gt;&gt;&gt;&gt;&gt;&gt;&gt;  “, 还未生成新的 commit ，命令行中的分支名变为 “ other| MERGING” （这里突然不想 merge 了怎么办？用 git reset [–hard] 将暂存区与工作区恢复为 commit 的内容。）</li>
+<li>按照需要修改完未成功合并的文件后</li>
+<li>进行一次 <code>git add , git commit</code> 操作，此时生成的 commit 即为合并后的 commit。也就是说，一般不需要在进行 merge。这里 Git 的判定成功合并是出现了<code>git add , git commit</code>的操作，而无关修改了多少（完全可以带着奇怪的标识符完成 merge （然后编译出错（</li>
+</ol>
+<p><strong>git rebase</strong></p>
+<p> 遇见冲突后会暂停当前操作，开发者可以选择手动解决冲突，然后 <code>git rebase --continue</code> 继续，或者 <code>--skip</code> 跳过（注意此操作中当前分支的修改会直接覆盖目标分支的冲突部分），或者 <code>--abort</code> 直接停止该次 rebase 操作。整个流程为：假设我们在 master 分支上执行了 <code>git rebase other</code>，此时，提示出现冲突无法自动合并：</p>
+<ol start="0">
+<li>当前暂存区和工作区未成功合并的文件已被标记, 命令行中的分支名变为 “ other|REBASE x&#x2F;x” （<strong>当前所处的commit 为 other 分支所在的 commit</strong>  ）</li>
+<li>按照需要修改完未成功合并的文件后，进行一次 <code>git add , git commit</code> 操作，即可用 <code>git rebase --continue</code> 继续合并。</li>
+<li><code>git rebase --skip</code> 跳过合并，则 other 分支的修改会覆盖 master 分支中冲突部分。</li>
+<li><code>git rebase --abort</code> 停止合并，返回 master 分支指向的commit</li>
+</ol>
+<h4 id="移动-commit"><a href="#移动-commit" class="headerlink" title="移动 commit"></a>移动 commit</h4><p>上面的两个操作主要是应用在分支间的操作，而下面的操作则是对commit 进行操作</p>
+<h5 id="Git-Cherry-pick"><a href="#Git-Cherry-pick" class="headerlink" title="Git Cherry-pick"></a>Git Cherry-pick</h5><p><code>git cherry-pick [commit]</code>将提交复制到当前所在的位置下面。如在master下进行命令：<code>git cherry-pick C2 C4</code> （这里C2 C4 表示 commit 的序号）。<code>Git Cherry-pick</code> 也可以完成分支合并的工作，但它的主要特点是可以提取特定的 commit ，而不是整个分支。</p>
+<p><img src="/images/image-20200218103903136.png" alt="image-20200218103903136"></p>
+<h5 id="Git-rebase-i"><a href="#Git-rebase-i" class="headerlink" title="Git rebase -i"></a>Git rebase -i</h5><p><code>-i</code> 是<code> --interactive</code> 的缩写，也就是交互式 rebase。<code>Git rebase -i [commit]</code> 可以对从指定 commit 到当前commit 直接的 commit 进行排序，合并或删除等。在 Git 中，会通过 vim 打开一个文件，可以在文件中进行调整。<code>Git rebase -i</code>  的主要功能在于调整一个分支上的 commit 。(具体就不介绍了（x</p>
+<p><img src="/images/image-20200218104658494.png" alt="image-20200218104658494"></p>
+<h4 id="撤销命令-1"><a href="#撤销命令-1" class="headerlink" title="撤销命令"></a>撤销命令</h4><p>这里关注的是撤销一个commit ，与前面撤销暂存区和工作区的修改不同。主要有 <code>git reset</code>和 <code>git revert</code></p>
+<h5 id="Git-reset"><a href="#Git-reset" class="headerlink" title="Git reset"></a>Git reset</h5><p><code>git reset [commit]</code> 通过把分支回退到指定 commit 来实现撤销改动。如<code>git reset head^</code> [图二]</p>
+<h5 id="Git-revert"><a href="#Git-revert" class="headerlink" title="Git revert"></a>Git revert</h5><p><code>git revert [commit]</code> 通过新建一个 commit，这个 commit 包含了可以撤销前一个 commit 提交的更改。如<code>git revert head</code> [图三]</p>
+<p><img src="/images/image-20200218111408784.png" alt="image-20200218111408784"></p>
+<h3 id="远程仓库"><a href="#远程仓库" class="headerlink" title="远程仓库"></a>远程仓库</h3><p>远程仓库实际上只是你的仓库在另个一台计算机上的拷贝。你可以通过因特网与这台计算机通信 。a）远程仓库是一个强大的备份。有了远程仓库以后，即使丢失了本地所有数据, 你仍可以通过远程仓库拿回你丢失的数据。b）还有就是, 远程让代码社交化了，可以更方便的进行协作。</p>
+<p>最简单的连接本地仓库和远程仓库的命令是：<code>git clone</code> ，在本地创建一个远程仓库的拷贝。当然也有其他的方式，这里不详细介绍。</p>
+<p>在本地仓库中，分为本地分支指针和远程分支指针，两者可以相互关联，绑定的指针不需要同名，也可以指向不同的 commit。远程分支通过 pull，push等命令进行更新。</p>
+<h4 id="Git-fetch"><a href="#Git-fetch" class="headerlink" title="Git fetch"></a>Git fetch</h4><p><code>git fetch</code> 将本地仓库中的远程分支更新成了远程仓库相应分支最新的状态，完成了:</p>
+<ul>
+<li>从远程仓库下载本地仓库中缺失的提交记录</li>
+<li>更新远程分支指针(如 <code>origin/master</code>)</li>
+</ul>
+<p>如：进行命令 <code>git fetch</code> 之后（虚线表示远程仓库中的内容）</p>
+<p><img src="/images/image-20200218113837994.png" alt="image-20200218113837994"></p>
+<p><code>git fetch</code> 并不会改变本地的状态。不会更新本地的 <code>master</code> 分支，不会改变当前所在的分支，也不会修改你磁盘上的文件。可以将 <code>git fetch</code> 的理解为单纯的下载操作。</p>
+<h4 id="Git-pull"><a href="#Git-pull" class="headerlink" title="Git pull"></a>Git pull</h4><p>在<code>git fetch</code> 之后，本地仓库就有了远程分支，这时候需要把本地分支与远程分支合并，自然就用到了 merge 或 rebase 命令。由于 fetch 之后经常会进行这两个操作，因此有了一个更简便的命令： <code>git pull</code></p>
+<ul>
+<li><code>git pull</code> &#x3D; <code>git fetch</code> + <code>git merge</code></li>
+<li><code>git pull --rebase</code>  &#x3D; <code>git fetch</code> + <code>git rebase</code></li>
+</ul>
+<p>应该不难理解：</p>
+<p><code>git pull</code> &#x3D; <code>git fetch</code> + <code>git merge origin/master</code></p>
+<p><img src="/images/image-20200218123344897.png" alt="image-20200218123344897"></p>
+<p><code>git pull --rebase</code>  &#x3D; <code>git fetch</code> + <code>git rebase</code></p>
+<p><img src="/images/image-20200218123443546.png" alt="image-20200218123443546"></p>
+<h4 id="Git-push"><a href="#Git-push" class="headerlink" title="Git push"></a>Git push</h4><p><code>git push</code> 负责将本地变更上传到指定的远程仓库，并在远程仓库上合并你的新提交记录。</p>
+<p>当希望上次的本地分支是基于远程分支的旧版进行，与远程仓库最新的代码不匹配时，push 请求会被拒绝。Git 要求需要push 的分支先合并远程最新的代码，也就是使工作基于最新的远程分支，才能进行push。</p>
+<p> 在下面中进行 <code>git push</code>，系统回复失败：因为最新提交的 <code>C3</code> 基于远程分支中的 <code>C1</code>。而远程仓库中该分支已经更新到 <code>C2</code> 了。</p>
+<p><img src="/images/image-20200218124632347.png" alt="image-20200218124632347"></p>
+<p>此时，需要用 <code>git pull [--rebase] </code> 命令将本地分支与最新的远程分支合并，在进行 <code>git push</code></p>
+<p><code>git pull, git push</code></p>
+<p><img src="/images/image-20200218125219913.png" alt="image-20200218125219913"></p>
+<p><code>git pull --rebase, git push</code></p>
+<p><img src="/images/image-20200218125447896.png" alt="image-20200218125447896"></p>
+<p>远程仓库主要用这几个命令就可以啦</p>
+<p>先写到这里（</p>
+<p>参考资料：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2015/12/git-cheat-sheet.html">常用 Git 命令清单</a>   </li>
+<li><a target="_blank" rel="noopener" href="https://learngitbranching.js.org/">Learn Git Branching</a>  </li>
+<li>知乎：<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/19946553">为什么要先 git add 才能 git commit ？</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/c17472d704a0">简书：闲谈 git merge 与 git rebase 的区别</a></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Joey Lian</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://joeylian.github.io/2020/02/16/2020-02-17-Git%E5%85%A5%E9%97%A8%E4%B8%8E%E7%90%86%E8%A7%A3/">http://joeylian.github.io/2020/02/16/2020-02-17-Git%E5%85%A5%E9%97%A8%E4%B8%8E%E7%90%86%E8%A7%A3/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://joeylian.github.io" target="_blank">OneTime</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Git/">Git</a><a class="post-meta__tags" href="/tags/Github/">Github</a></div><div class="post_share"><div class="social-share" data-image="/images/git2.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/04/04/2020-04-05-%E7%BD%91%E7%BB%9C%E6%B5%81(%E4%B8%80)-%E6%9C%80%E5%A4%A7%E6%B5%81%E4%B8%8E%E6%9C%80%E5%B0%8F%E5%89%B2%E9%97%AE%E9%A2%98/"><img class="prev-cover" src="/images/AlgDesign.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">网络流(一)-最大流与最小割问题</div></div></a></div><div class="next-post pull-right"><a href="/2020/02/09/2020-02-10-%E5%B9%B3%E8%A1%8C%E6%9C%BA%E8%B0%83%E5%BA%A6%E9%97%AE%E9%A2%98-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E9%97%AE%E9%A2%98/"><img class="next-cover" src="/images/AOR.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">平行机调度问题-负载均衡问题</div></div></a></div></nav><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/me.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Joey Lian</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/joeylian" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:lianjy9976@163.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9A%82%E5%AD%98%E5%8C%BA"><span class="toc-number">2.</span> <span class="toc-text">暂存区</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8F%90%E4%BA%A4%E5%91%BD%E4%BB%A4"><span class="toc-number">2.1.</span> <span class="toc-text">提交命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E5%91%BD%E4%BB%A4"><span class="toc-number">2.2.</span> <span class="toc-text">查看命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%92%A4%E9%94%80%E5%91%BD%E4%BB%A4"><span class="toc-number">2.3.</span> <span class="toc-text">撤销命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%87%E6%8D%A2%E5%88%86%E6%94%AF"><span class="toc-number">2.4.</span> <span class="toc-text">切换分支</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E4%BB%93%E5%BA%93"><span class="toc-number">3.</span> <span class="toc-text">本地仓库</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%88%E5%B9%B6%E5%88%86%E6%94%AF"><span class="toc-number">3.1.</span> <span class="toc-text">合并分支</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Git-merge"><span class="toc-number">3.1.1.</span> <span class="toc-text">Git merge</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Git-rebase"><span class="toc-number">3.1.2.</span> <span class="toc-text">Git rebase</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Git-merge-%E4%B8%8E-Git-rebase-%E7%9A%84%E6%AF%94%E8%BE%83"><span class="toc-number">3.1.3.</span> <span class="toc-text">Git merge 与 Git rebase 的比较</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%86%B2%E7%AA%81%E5%A4%84%E7%90%86"><span class="toc-number">3.1.4.</span> <span class="toc-text">冲突处理</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8-commit"><span class="toc-number">3.2.</span> <span class="toc-text">移动 commit</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Git-Cherry-pick"><span class="toc-number">3.2.1.</span> <span class="toc-text">Git Cherry-pick</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Git-rebase-i"><span class="toc-number">3.2.2.</span> <span class="toc-text">Git rebase -i</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%92%A4%E9%94%80%E5%91%BD%E4%BB%A4-1"><span class="toc-number">3.3.</span> <span class="toc-text">撤销命令</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Git-reset"><span class="toc-number">3.3.1.</span> <span class="toc-text">Git reset</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Git-revert"><span class="toc-number">3.3.2.</span> <span class="toc-text">Git revert</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93"><span class="toc-number">4.</span> <span class="toc-text">远程仓库</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Git-fetch"><span class="toc-number">4.1.</span> <span class="toc-text">Git fetch</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Git-pull"><span class="toc-number">4.2.</span> <span class="toc-text">Git pull</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Git-push"><span class="toc-number">4.3.</span> <span class="toc-text">Git push</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" title="【EffectiveC++】构造/析构/赋值运算"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】构造/析构/赋值运算"/></a><div class="content"><a class="title" href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" title="【EffectiveC++】构造/析构/赋值运算">【EffectiveC++】构造/析构/赋值运算</a><time datetime="2021-12-29T16:00:00.000Z" title="发表于 2021-12-30 00:00:00">2021-12-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/" title="【EffectiveC++】让自己习惯C++"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】让自己习惯C++"/></a><div class="content"><a class="title" href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/" title="【EffectiveC++】让自己习惯C++">【EffectiveC++】让自己习惯C++</a><time datetime="2021-12-27T16:00:00.000Z" title="发表于 2021-12-28 00:00:00">2021-12-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】设计与声明"/></a><div class="content"><a class="title" href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明">【EffectiveC++】设计与声明</a><time datetime="2021-01-22T16:00:00.000Z" title="发表于 2021-01-23 00:00:00">2021-01-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="【EffectiveC++】资源管理"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】资源管理"/></a><div class="content"><a class="title" href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="【EffectiveC++】资源管理">【EffectiveC++】资源管理</a><time datetime="2021-01-21T16:00:00.000Z" title="发表于 2021-01-22 00:00:00">2021-01-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/" title="C++右值引用与移动语义"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C++右值引用与移动语义"/></a><div class="content"><a class="title" href="/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/" title="C++右值引用与移动语义">C++右值引用与移动语义</a><time datetime="2020-08-01T16:00:00.000Z" title="发表于 2020-08-02 00:00:00">2020-08-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/images/top.jpeg')"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2022 By Joey Lian</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.2
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container:not\([display]\)').forEach(node => {
+            const target = node.parentNode
+            if (target.nodeName.toLowerCase() === 'li') {
+              target.parentNode.classList.add('has-jax')
+            } else {
+              target.classList.add('has-jax')
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd9d8e97d1c1701a3d53b',
+      clientSecret: '52ab8c95467a938ecb0cfb1c3ca318d6574a806d',
+      repo: 'JoeyLian.github.io',
+      owner: 'JoeyLian',
+      admin: ['JoeyLian'],
+      id: '26d05a5f15b56b3150b529f42e97e5bc',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !false) {
+  if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = false;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

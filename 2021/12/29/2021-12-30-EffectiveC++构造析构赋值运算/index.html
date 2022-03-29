@@ -1,0 +1,406 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>【EffectiveC++】构造/析构/赋值运算 | OneTime</title><meta name="keywords" content="C++,EffectiveC++"><meta name="author" content="Joey Lian"><meta name="copyright" content="Joey Lian"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="条款 05: 了解 C++默默编写并调用哪些函数编译器会为一个类声明(编译器版本的)一个 copy构造函数、一个 copy assignment操作符、一个 default构造函数和一个析构函数。  所有这些函数都是 public 且 inline (见条款 30) 。  惟有当这些函数被调用，它们才会被编译器创建出来。   构造函数&#x2F;析构函数 若你已经声明了一个构造函数，编译器不再为它">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【EffectiveC++】构造&#x2F;析构&#x2F;赋值运算">
+<meta property="og:url" content="http://joeylian.github.io/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/index.html">
+<meta property="og:site_name" content="OneTime">
+<meta property="og:description" content="条款 05: 了解 C++默默编写并调用哪些函数编译器会为一个类声明(编译器版本的)一个 copy构造函数、一个 copy assignment操作符、一个 default构造函数和一个析构函数。  所有这些函数都是 public 且 inline (见条款 30) 。  惟有当这些函数被调用，它们才会被编译器创建出来。   构造函数&#x2F;析构函数 若你已经声明了一个构造函数，编译器不再为它">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://joeylian.github.io/images/Cpp.png">
+<meta property="article:published_time" content="2021-12-29T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-29T12:57:04.720Z">
+<meta property="article:author" content="Joey Lian">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="EffectiveC++">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://joeylian.github.io/images/Cpp.png"><link rel="shortcut icon" href="/img/me.jpeg"><link rel="canonical" href="http://joeylian.github.io/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【EffectiveC++】构造/析构/赋值运算',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-03-29 20:57:04'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.1.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/me.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 总览</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/images/top.jpeg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">OneTime</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 总览</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">【EffectiveC++】构造/析构/赋值运算<a class="post-edit-link" href="https://github.com/JoeyLian/githubio/edit/master/source/_posts/2021-12-30-EffectiveC++构造析构赋值运算.md" title="编辑" target="_blank"><i class="fas fa-pencil-alt"></i></a></h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-12-29T16:00:00.000Z" title="发表于 2021-12-30 00:00:00">2021-12-30</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-03-29T12:57:04.720Z" title="更新于 2022-03-29 20:57:04">2022-03-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="【EffectiveC++】构造/析构/赋值运算"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/#post-comment"><span class="gitalk-comment-count"></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="条款-05-了解-C-默默编写并调用哪些函数"><a href="#条款-05-了解-C-默默编写并调用哪些函数" class="headerlink" title="条款 05: 了解 C++默默编写并调用哪些函数"></a>条款 05: 了解 C++默默编写并调用哪些函数</h2><p>编译器会为一个类声明(编译器版本的)一个 copy构造函数、一个 copy assignment操作符、一个 default构造函数和一个析构函数。</p>
+<ul>
+<li><p>所有这些函数都是 public 且 inline (见条款 30) 。</p>
+</li>
+<li><p>惟有当这些函数被调用，它们才会被编译器创建出来。</p>
+</li>
+</ul>
+<h3 id="构造函数-x2F-析构函数"><a href="#构造函数-x2F-析构函数" class="headerlink" title="构造函数&#x2F;析构函数"></a>构造函数&#x2F;析构函数</h3><ul>
+<li><p>若你已经声明了一个构造函数，编译器不再为它创建 default 构造函数。</p>
+</li>
+<li><p>编译器产出的析构函数是个 non-virtual (见条款 7) ，除非这个类的基类自身声明有 virtual 析构函数。</p>
+</li>
+</ul>
+<h3 id="拷贝构造函数-x2F-拷贝赋值操作符"><a href="#拷贝构造函数-x2F-拷贝赋值操作符" class="headerlink" title="拷贝构造函数&#x2F;拷贝赋值操作符"></a>拷贝构造函数&#x2F;拷贝赋值操作符</h3><ul>
+<li>对于 copy构造函数和 copy assignment操作符，编译器创建的版本只是单纯地将来源对象的每一个 non-static 成员变量拷贝到目标对象。</li>
+<li>只有当生出的代码合法且有意义，编译器才会构造  copy assignment 操作符。<ul>
+<li>如果打算在一个内含 reference 成员的 class 内支持赋值操作 (assignment) ，必须自己定义 copy assignment操作符。<strong>C++不允许让 reference 改指向不同对象。</strong></li>
+<li>面对内含 const成员的 classes, 编译器的反应也一样。</li>
+<li>如果某个基类将 copy assignment 操作符声明为 private, 编译器将拒绝为其派生类生成一个 copy assignment 操作符。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> <span class="title class_">T</span>&gt; <span class="keyword">class</span> <span class="title class_">NamedObject</span>&#123; </span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="built_in">NamedObject</span>(std::string&amp; name, <span class="type">const</span> T&amp; value); <span class="comment">//构造函数，</span></span><br><span class="line">                             <span class="comment">//编译器不会创建 default 构造函数</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  std::string&amp; nameValue;  <span class="comment">//reference</span></span><br><span class="line">  <span class="type">const</span> T objectValue;     <span class="comment">//const</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function">std::string <span class="title">newDog</span><span class="params">(<span class="string">&quot;Persephone&quot;</span>)</span></span>; </span><br><span class="line"><span class="function">NamedObject&lt;<span class="type">int</span>&gt; <span class="title">p</span><span class="params">(newDog, <span class="number">2</span>)</span></span>;</span><br><span class="line"><span class="function">NamedObject&lt;<span class="type">int</span>&gt; <span class="title">s</span><span class="params">(p)</span></span>;  <span class="comment">//正确，拷贝构造函数</span></span><br><span class="line">p = s ;                 <span class="comment">//错误，编译器不会创建 operator=</span></span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<ul>
+<li>编译器可以暗自为 class 创建 default 构造函数、 copy构造函数、 copy assignment 操作符，以及析构函数。</li>
+</ul>
+</blockquote>
+<h2 id="条款-06-若不想使用编译器自动生成的函数，就该明确拒绝"><a href="#条款-06-若不想使用编译器自动生成的函数，就该明确拒绝" class="headerlink" title="条款 06: 若不想使用编译器自动生成的函数，就该明确拒绝"></a>条款 06: 若不想使用编译器自动生成的函数，就该明确拒绝</h2><p>通常如果你不希望 class 支待某一特定机能，只要不声明对应函数就是了。但这个策略对 copy 构造函数和 copy assignment 操作符却不起作用，如果你不声明它们，而某些 人尝试调用它们，编译器会为你声明它们。</p>
+<h3 id="将相应的成员函数声明为-private-并且不予实现"><a href="#将相应的成员函数声明为-private-并且不予实现" class="headerlink" title="将相应的成员函数声明为 private 并且不予实现"></a>将相应的成员函数声明为 private 并且不予实现</h3><p>所有编译器产出的函数都是 public。为阻止这些函数被创建出来，可以自行声明它们，令这些函数为 private,  以阻止人们调用它。</p>
+<p>这个做法并不绝对安全，因为 member 函数和 friend 函数可以调用 private 函数。如果在这些函数中不慎调用，会获得一个连接错误 (linkage error) 。</p>
+<h3 id="使用-Uncopyable-的基类"><a href="#使用-Uncopyable-的基类" class="headerlink" title="使用 Uncopyable 的基类"></a>使用 Uncopyable 的基类</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Uncopyable</span> &#123;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">  <span class="built_in">Uncopyable</span>()&#123;&#125;                 <span class="comment">//允许derived对象构造和析构</span></span><br><span class="line">  ~<span class="built_in">Uncopyable</span>()&#123;&#125; </span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="built_in">Uncopyable</span>(<span class="type">const</span> Uncopyable&amp;); <span class="comment">//但阻止copying</span></span><br><span class="line">  Uncopyable&amp; <span class="keyword">operator</span>=(<span class="type">const</span> Uncopyable&amp;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//为阻止 HomeForSale 对象被拷贝，需要做的就是继承 Uncopyable</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">HomeForSale</span>: <span class="keyword">private</span> Uncopyable &#123; </span><br><span class="line">  ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<ul>
+<li>为驳回编译器自动提供的机能，可将相应的成员函数声明为 private 并且不予实现。使用像 Uncopyable 这样的基类也是一种做法。</li>
+</ul>
+</blockquote>
+<div class="note info flat"><p><strong>回忆: virtual 关键字</strong></p>
+<p>虚函数的作用，是实现多态性；用形象的语言来解释就是实现以共同的方法，但因个体差异，而采用不同的策略。</p>
+<p>一般会为多态基类中的函数定义为虚函数，在派生类中定义与基类函数具有相同的签名和返回类型的函数。对一个指向派生类的基类引用或指针，在调用虚函数时，它将被解析为派生程度最高的版本。 这种能力被称为多态性。</p>
+</div>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> std::string_view <span class="title">getName</span><span class="params">()</span> <span class="type">const</span> </span>&#123; <span class="keyword">return</span> <span class="string">&quot;Base&quot;</span>; &#125; <span class="comment">// note addition of virtual keyword</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derived</span>: <span class="keyword">public</span> Base &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> std::string_view <span class="title">getName</span><span class="params">()</span> <span class="type">const</span> </span>&#123; <span class="keyword">return</span> <span class="string">&quot;Derived&quot;</span>; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Derived derived;</span><br><span class="line">    Base&amp; rBase&#123; derived &#125;;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;rBase is a &quot;</span> &lt;&lt; rBase.<span class="built_in">getName</span>() &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//输出: rBase is a Derived</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="条款-07-为多态基类声明-virtual-析构函数"><a href="#条款-07-为多态基类声明-virtual-析构函数" class="headerlink" title="条款 07: 为多态基类声明 virtual 析构函数"></a>条款 07: 为多态基类声明 virtual 析构函数</h2><blockquote>
+<p>任何 class 只要带有 virtual 函数都几乎确定应该也有一个 virtual 析构函数。</p>
+</blockquote>
+<p>若基类的析构函数是 non-virtual，当删除一个经由基类指针返回的派生类对象时，编译器通常只调用基类的析构函数，对象的派生成分未被销毁。但其基类成分通常会被销 毁，造成一个诡异的局部销毁对象。这是形成资源泄漏、败坏之数据结构、在调试器上浪费许多时间的绝佳途径。</p>
+<p>消除这个问题的做法很简单: 给基类一个 virtual 析构函数。</p>
+<p>如果一个类不含 virtual 函数，通常表示它并不被意图用做一个基类。这是不应该令其析构函数为virtual。</p>
+<p>为了实现出 virtual 函数，对象必须携带某些信息，主要用来在运行期决定哪一个 virtual 函数该被调用。这些virtual函数会使对象体积增加。同时也可能使这个类不具有移植性。</p>
+<p>即使 class 完全不带 virtual 函数，由于 non-virtual 析构函数出现还是有可能的。举个例子，标准 string 不含任何 virtual 函数，但有时候程序员会错误地把它当做基类，此时用 string 指针删除一个派生类将导致问题</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">SpecialString</span>: <span class="keyword">public</span> std::string &#123; <span class="comment">//错误! std::string 有个 non-virtual析构函数</span></span><br><span class="line">  ...</span><br><span class="line">&#125;;</span><br><span class="line">SpecialString* pss = <span class="keyword">new</span> <span class="built_in">SpecialString</span>(<span class="string">&quot;Impending Doom&quot;</span>); </span><br><span class="line">std::string* ps;</span><br><span class="line">ps = pss;           <span class="comment">//SpecialString* =&gt; std::string*</span></span><br><span class="line"><span class="keyword">delete</span> ps;          <span class="comment">//未有定义!现实中*ps 的SpecialString资源会泄漏，因为 SpecialString析构函数没被调用。</span></span><br></pre></td></tr></table></figure>
+
+<p>相同的分析适用于任何不带 virtual 析构函数的类, 包括所有 STL 容器如 vector, list, set等等。</p>
+<p>有时候令类带一个 pure virtual 析构函数，可能颇为便利。一个类中若存在pure virtual 函数，则称它为抽象类，也就是不能被实体化的类。 然而有时候希望一个类是抽象类, 但没有合适的pure virtual函数，可以为它声明一个 pure virtual 析构函数。必须为这个 pure virtual 析构函数提供一份定义:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">AWOV</span> &#123;           <span class="comment">//AWOV= &quot;Abstractw/o Virtuals&quot; public:</span></span><br><span class="line">  <span class="keyword">virtual</span> ~<span class="built_in">AWOV</span>() = <span class="number">0</span>; <span class="comment">//声明purevirtual析构函数 </span></span><br><span class="line">&#125;;</span><br><span class="line">AWOV::~<span class="built_in">AWOV</span>()&#123; &#125;       <span class="comment">//pure virtual 析构函数的定义</span></span><br></pre></td></tr></table></figure>
+
+<p>析构函数的运作方式是，最深层派生的类的析构函数最先被调用，然后是其每一个基类的析构函数被调用。编译器会在 AWOV 的派生类的析构函数中创建一个对<code>~AWOV</code> 的调用动作，所以你必须为这个函数提供一份定义。</p>
+<blockquote>
+<ul>
+<li>polymorphic (带多态性质的) 基类应该声明一个 virtual 析构函数。如果一个类带有任何 virtual 函数，它就应该拥有一个 virtual 析构函数。</li>
+<li>如果类的设计目的如果不是作为基类使用，或不是为了具备多态性，就不该声明 virtual 析构函数。</li>
+</ul>
+</blockquote>
+<h2 id="条款-08-别让异常逃离析构函数"><a href="#条款-08-别让异常逃离析构函数" class="headerlink" title="条款 08: 别让异常逃离析构函数"></a>条款 08: 别让异常逃离析构函数</h2><p>若析构函数会抛出异常，抛出异常后后续程序将跳过，然而，定义的类仍应该被析构，此时可能会继续抛出异常。C++没有定义多个异常同时存在的情况。在两个异常同时存在的情况下，程序若不是结束执行就是导致不明确行为。</p>
+<p>但如果你的析构函数必须执行一个动作，而该动作可能会在失败时抛出异常，该怎么办?</p>
+<p>最直接的方法是在析构函数中捕捉异常，直接结束程序或吞下它们。</p>
+<ul>
+<li><p>如果抛出异常就结束程序。通常通过调用 abort完成:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">DBConn::~<span class="built_in">DBConn</span>() </span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">try</span> &#123; db.<span class="built_in">close</span>(); &#125;</span><br><span class="line">  <span class="built_in">catch</span> (...) &#123;</span><br><span class="line">    <span class="comment">//制作运转记录，记下对 close 的调用失败;</span></span><br><span class="line">    std::<span class="built_in">abort</span>() ;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>吞下发生的异常:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">DBConn::~<span class="built_in">DBConn</span>() </span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">try</span> &#123; db.<span class="built_in">close</span>(); &#125;</span><br><span class="line">  <span class="built_in">catch</span> (...) &#123;</span><br><span class="line">    <span class="comment">//制作运转记录，记下对 close 的调用失败;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>这些办法都没什么吸引力。问题在千两者都无法对抛出异常的情况做出反应。</p>
+<p>一个较佳策略是重新设计接口，使其客户有机会对可能出现的问题作出反应。</p>
+<p>例如 DBConn 自己可以提供一个 close 函数，因而赋予客户一个机会得以处理 “因该操作而发生的异常”。 DBConn 可以追踪所管理的 DBConnection 是否已被关闭，并在答案为否的情况下由其析构函数关闭。如果 DBConnection 析构函数调用 close 失败，我们又将退回“强迫结束程序” 或“吞下异常”的老路。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">DBConn</span> &#123; </span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">close</span><span class="params">()</span>     <span class="comment">//供客户使用的新函数</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    db.<span class="built_in">close</span>(); </span><br><span class="line">    closed= <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  ~<span class="built_in">DBConn</span>() </span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> (!closed)&#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        db.<span class="built_in">close</span>();</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="built_in">catch</span> (...) &#123;  <span class="comment">//如果关闭动作失败，</span></span><br><span class="line">        <span class="comment">//记录下来并结束程序或吞下异常。</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  DBConnection db; </span><br><span class="line">  <span class="type">bool</span> closed;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>由客户自己调用 close 并不会对他们带来负担，而是给他们一个处理错误的机会，否则他们没机会响应。如果他们不认为这个机会有用，可以忽略它，倚赖 DBConn析构函数去调用 close。如果真有错误发生而且 DBConn 吞下该异常或结束程序，客户没有立场抱怨。</p>
+<blockquote>
+<ul>
+<li>析构函数绝对不要吐出异常。如果一个被析构函数调用的函数可能抛出异常，析构函数应该捕捉任何异常，然后吞下它们(不传播)或结束程序。</li>
+<li>如果客户需要对某个操作函数运行期间抛出的异常做出反应，那么类应该提供一个普通函数 (而非在析构函数中) 执行该操作。</li>
+</ul>
+</blockquote>
+<h2 id="条款-09-绝不在构造和析构过程中调用-virtual-函数"><a href="#条款-09-绝不在构造和析构过程中调用-virtual-函数" class="headerlink" title="条款 09: 绝不在构造和析构过程中调用 virtual 函数"></a>条款 09: 绝不在构造和析构过程中调用 virtual 函数</h2><p>当创建一个派生类，它的构造函数被调用，但首先会调用基类的构造函数。派生类对象内的基类成分会在 派生类自身成分被构造之前先构造妥当。若基类的构造函数调用 virtual 函数，此时这个函数是基类中的版本，即使创建的是派生类对象。也就是说，基类构造期间 virtual 函数不会下降到派生类，对象的行为就像隶属于基类一样。非正式的说: <strong>在基类构造期间， virtual 函数不是 virtual 函数。</strong></p>
+<p>这一行为的理由是，当基类构造函数执行时 派生类 的成员变量尚未初始化。如果此期间调用的 virtual 函数下降至派生类阶层，派生类的成员变量尚未初始化。这将要求使用对象内部尚未初始化的成分。</p>
+<p>相同道理也适用于析构函数。一旦派生类析构函数开始执行，对象内的派生类员变量便呈现未定义值，进入基类析构函数后对象就成为一个基类对象。</p>
+<p><strong>确定构造函数和析构函数都没有调用 virtual 函数， 它们调用的所有函数也服从这一约束。</strong></p>
+<p>由于无法使用 virtual 函数从基类向下调用，在构造期间可以令派生类将必要的构造信息向上传递至基类构造函数加以弥补。</p>
+<blockquote>
+<ul>
+<li>在构造和析构期间不要调用 virtual 函数，因为这类调用从不下降至派生类 (比起当前执行构造函数和析构函数的那层)。</li>
+</ul>
+</blockquote>
+<h2 id="条款-10-令-operator-x3D-返回—个-reference-to-this"><a href="#条款-10-令-operator-x3D-返回—个-reference-to-this" class="headerlink" title="条款 10: 令 operator&#x3D; 返回—个 reference to *this"></a>条款 10: 令 operator&#x3D; 返回—个 reference to *this</h2><p>赋值可以写成连锁形式，赋值采用右结合律。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> x, y, z;</span><br><span class="line">x = y = z = <span class="number">15</span>;</span><br></pre></td></tr></table></figure>
+
+<p>为了实现连锁赋值，赋值操作符必须返回一个 reference 指向操作符的左侧实参。这是一个类 实现赋值操作符时应该遵循的协议:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> &#123; </span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  ...</span><br><span class="line">  Widget&amp; <span class="keyword">operator</span>=(<span class="type">const</span> Widget&amp; rhs) <span class="comment">//返回类型是个 referenc, 指向当前对象</span></span><br><span class="line">  &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">return</span>* <span class="keyword">this</span>;                      <span class="comment">//返回 this 的引用 </span></span><br><span class="line">  &#125;</span><br><span class="line">   ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>这个协议不仅适用于以上的标准赋值形式，也适用于所有赋值相关运算，如 <code>+=</code> , <code>-=</code> , <code>*=</code>。</p>
+<p>这是个协议，并无强制性。如果不遵循它，代码一样可通过编译。这份协议被所有内置类型和标准程序库提供的类型如 string, vector, complex 等共同遵守。</p>
+<blockquote>
+<ul>
+<li>令赋值 (assignment) 操作符返回一个 reference to *this</li>
+</ul>
+</blockquote>
+<h2 id="条款-11-在-operator-x3D-中处理自我赋值"><a href="#条款-11-在-operator-x3D-中处理自我赋值" class="headerlink" title="条款 11: 在 operator&#x3D; 中处理自我赋值"></a>条款 11: 在 operator&#x3D; 中处理自我赋值</h2><p>“自我赋值” 发生在对象被赋值给自己时:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> &#123;... &#125;; </span><br><span class="line">Widget w;</span><br><span class="line">...</span><br><span class="line">w = w;  <span class="comment">//赋值给自己</span></span><br><span class="line"><span class="comment">//潜在的自我赋值</span></span><br><span class="line">a[i] =a[j];</span><br><span class="line">*px = *py;</span><br></pre></td></tr></table></figure>
+
+<p>但如果尝试自行管理资源可能会在停止使用资源之前意外释放了它。但出现自我赋值时，operator&#x3D; 函数内的 *this 和 rhs 是同一个对象。 delete 销毁 rhs 的 bitmap。在函数未尾， Widget 持有一个指针指向一个已被删除的对象。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Widget&amp; Widget::<span class="keyword">operator</span>= (<span class="type">const</span> Widget&amp; rhs) <span class="comment">//不安全的 operator= 实现版本</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">delete</span> pb;                                   <span class="comment">//停止使用当前的 bitmap,</span></span><br><span class="line">  pb = <span class="keyword">new</span> <span class="built_in">Bitmap</span>(*rhs.pb);                    <span class="comment">//使用 rhs&#x27;s bitmap 的副本。</span></span><br><span class="line">  <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>传统做法是藉由 operator&#x3D;最前面的一个证同测试 (identity test) 达到自我赋值的检验目的:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Widget&amp; Widget::<span class="keyword">operator</span>= (<span class="type">const</span> Widget&amp; rhs)</span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">this</span> == &amp;rhs) <span class="keyword">return</span> *<span class="keyword">this</span>; <span class="comment">//证同测试: 如果是自我赋值，就不做任何事。</span></span><br><span class="line">  <span class="keyword">delete</span> pb;</span><br><span class="line">  pb = <span class="keyword">new</span> <span class="built_in">Bitmap</span>(*rhs.pb);</span><br><span class="line">  <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但这么写仍不具备“异常安全性” (条款 29)。具体地说，如果 <code>new Bitmap()</code> 导致异常, Widget 最终会持有一个指针指向一块被删除的 Bitmap。 让 operator&#x3D; 具备 “异常安全性”往往自动获得自我赋值安全。**许多时候精心安排语句的顺序就可以保证异常安全(以及自我赋值安全)**。例如以下代码，我们只需注意在复制 pb 所指东西之前别删除 pb:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Widget&amp; Widget::<span class="keyword">operator</span>=(<span class="type">const</span> Widget&amp; rhs)</span><br><span class="line">&#123;</span><br><span class="line">  Bitmap* pOrig = pb;        <span class="comment">//记住原先的 pb</span></span><br><span class="line">  pb = <span class="keyword">new</span> <span class="built_in">Bitmap</span>(*rhs.pb);  <span class="comment">//令 pb 指向 *pb 的一个副本</span></span><br><span class="line">  <span class="keyword">delete</span> pOrig;              <span class="comment">//删除原先的 pb</span></span><br><span class="line">  <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>它或许不是处理”自我赋值”的最高效办法，但它不会造成错误。手工排列语句的一个替代方案是使用 copy and swap 技术 (条款 29)。 </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Widget</span> &#123;</span><br><span class="line">...</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">swap</span><span class="params">(Widget&amp; rhs)</span></span>; <span class="comment">//交换*this 和 rhs 的数据; 详见条款 29</span></span><br><span class="line">&#125;;</span><br><span class="line">Widget&amp; Widget::<span class="keyword">operator</span>=(<span class="type">const</span> Widget&amp; rhs) </span><br><span class="line">&#123;</span><br><span class="line">  Widget <span class="built_in">temp</span>(rhs); <span class="comment">//为 rhs 数据制作一份副本 </span></span><br><span class="line">  <span class="built_in">swap</span>(temp) ;      <span class="comment">//将 *this 数据和上述副本的数据交换。 </span></span><br><span class="line">  <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//一个类的copy赋值操作符可能被声明为以 by value方式接受实参</span></span><br><span class="line"><span class="comment">//以 by value方式传递东西会创建一份副本(见条款20)</span></span><br><span class="line">Widget&amp; Widget::<span class="keyword">operator</span>=(Widget rhs) <span class="comment">//rhs 是被传对象的副本 </span></span><br><span class="line">&#123;                                     <span class="comment">//注意这里是 pass by value.</span></span><br><span class="line">  <span class="built_in">swap</span>(rhs);                          <span class="comment">//将 *this 的数据和副本的数据互换</span></span><br><span class="line">  <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<ul>
+<li>确保当对象自我赋值时 operator&#x3D; 有良好行为。其中技术包括比较 ”来源对象” 和 “目标对象” 的地址、精心周到的语句顺序、以及 copy-and-swap。</li>
+<li>确定任何函数如果操作一个以上的对象，而其中多个对象是同一个对象时，其行为仍然正确。</li>
+</ul>
+</blockquote>
+<h2 id="条款-12-复制对象时勿忘其每—个成分"><a href="#条款-12-复制对象时勿忘其每—个成分" class="headerlink" title="条款 12: 复制对象时勿忘其每—个成分"></a>条款 12: 复制对象时勿忘其每—个成分</h2><p>如果复制对象时只进行了局部拷贝（有一些对象没有复制），大多数编译器对此不会发出警告——即使在最高警告级别中(见条款 53)。</p>
+<p>一旦发生继承，可能会造成更严重的问题。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">PriorityCustomer</span>: <span class="keyword">public</span> Customer &#123; <span class="comment">//一个派生类</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="built_in">PriorityCustomer</span>(<span class="type">const</span> PriorityCus七omer&amp; rhs);</span><br><span class="line">  PriorityCustomer&amp; <span class="keyword">operator</span>=(<span class="type">const</span> PriorityCustomer&amp; rhs) ;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="type">int</span> priority;</span><br><span class="line">&#125;;</span><br><span class="line">PriorityCustomer::<span class="built_in">PriorityCustomer</span>(<span class="type">const</span> PriorityCustomer&amp; rhs)</span><br><span class="line"> : <span class="built_in">Customer</span>(rhs), <span class="built_in">priority</span>(rhs.priority) <span class="comment">//调用基类的 copy 构造函数</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">logCall</span>(<span class="string">&quot;PriorityCustomer copy constructor&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line">PriorityCustomer&amp; PriorityCustomer::<span class="keyword">operator</span>=(<span class="type">const</span> PriorityCustomer&amp; rhs)</span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">logCall</span>(<span class="string">&quot;PriorityCustorner copy assignment operator&quot;</span>); </span><br><span class="line">  Customer::<span class="keyword">operator</span>=(rhs); <span class="comment">//对基类成分进行赋值动作 </span></span><br><span class="line">  priority= rhs.priority;</span><br><span class="line">  <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当编写一个 copying 函数，请确保 (1) 复制所有 local 成员变量，(2) 调用所有基类内的适当的 copying 函数。</p>
+<p>拷贝构造函数和拷贝赋值函数往往有近似相同的实现本体，这可能会诱使你让某个函数调用另一个函数以避免代码重复。但是，令某个 copying 函数调用另一个 copying 函数无法让你达到你想要的目标。</p>
+<p>如果你发现你的拷贝构造函数和拷贝赋值操作符有相近的代码，消除重复代码的做法是<strong>建立一个新的成员函数给两者调用</strong>。这样的函数往往是 private 而且常被命名为 init。</p>
+<blockquote>
+<ul>
+<li>Copying函数应该确保复制对象内的所有成员变量及所有 baseclass成分。</li>
+<li>不要尝试以某个 copying 函数实现另一个 copying 函数。应该将共同机能放进第三个函数中，并由两个 coping 函数共同调用。</li>
+</ul>
+</blockquote>
+<hr>
+<blockquote>
+<p>读书笔记，来自 《Effective C++》第 3 版</p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Joey Lian</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://joeylian.github.io/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/">http://joeylian.github.io/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://joeylian.github.io" target="_blank">OneTime</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/C/">C++</a><a class="post-meta__tags" href="/tags/EffectiveC/">EffectiveC++</a></div><div class="post_share"><div class="social-share" data-image="/images/Cpp.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/"><img class="next-cover" src="/images/Cpp.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">【EffectiveC++】让自己习惯C++</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="【EffectiveC++】资源管理"><img class="cover" src="/images/Cpp.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-01-22</div><div class="title">【EffectiveC++】资源管理</div></div></a></div><div><a href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明"><img class="cover" src="/images/Cpp.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-01-23</div><div class="title">【EffectiveC++】设计与声明</div></div></a></div><div><a href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/" title="【EffectiveC++】让自己习惯C++"><img class="cover" src="/images/Cpp.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-28</div><div class="title">【EffectiveC++】让自己习惯C++</div></div></a></div><div><a href="/2020/07/26/2020-07-27-C++STL-Vector%E4%BB%8B%E7%BB%8D/" title="C++STL-Vector介绍"><img class="cover" src="/images/Cpp.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-07-27</div><div class="title">C++STL-Vector介绍</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/me.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Joey Lian</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/joeylian" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:lianjy9976@163.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E6%AC%BE-05-%E4%BA%86%E8%A7%A3-C-%E9%BB%98%E9%BB%98%E7%BC%96%E5%86%99%E5%B9%B6%E8%B0%83%E7%94%A8%E5%93%AA%E4%BA%9B%E5%87%BD%E6%95%B0"><span class="toc-number">1.</span> <span class="toc-text">条款 05: 了解 C++默默编写并调用哪些函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0-x2F-%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0"><span class="toc-number">1.1.</span> <span class="toc-text">构造函数&#x2F;析构函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8B%B7%E8%B4%9D%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0-x2F-%E6%8B%B7%E8%B4%9D%E8%B5%8B%E5%80%BC%E6%93%8D%E4%BD%9C%E7%AC%A6"><span class="toc-number">1.2.</span> <span class="toc-text">拷贝构造函数&#x2F;拷贝赋值操作符</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E6%AC%BE-06-%E8%8B%A5%E4%B8%8D%E6%83%B3%E4%BD%BF%E7%94%A8%E7%BC%96%E8%AF%91%E5%99%A8%E8%87%AA%E5%8A%A8%E7%94%9F%E6%88%90%E7%9A%84%E5%87%BD%E6%95%B0%EF%BC%8C%E5%B0%B1%E8%AF%A5%E6%98%8E%E7%A1%AE%E6%8B%92%E7%BB%9D"><span class="toc-number">2.</span> <span class="toc-text">条款 06: 若不想使用编译器自动生成的函数，就该明确拒绝</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%86%E7%9B%B8%E5%BA%94%E7%9A%84%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0%E5%A3%B0%E6%98%8E%E4%B8%BA-private-%E5%B9%B6%E4%B8%94%E4%B8%8D%E4%BA%88%E5%AE%9E%E7%8E%B0"><span class="toc-number">2.1.</span> <span class="toc-text">将相应的成员函数声明为 private 并且不予实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-Uncopyable-%E7%9A%84%E5%9F%BA%E7%B1%BB"><span class="toc-number">2.2.</span> <span class="toc-text">使用 Uncopyable 的基类</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E6%AC%BE-07-%E4%B8%BA%E5%A4%9A%E6%80%81%E5%9F%BA%E7%B1%BB%E5%A3%B0%E6%98%8E-virtual-%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0"><span class="toc-number">3.</span> <span class="toc-text">条款 07: 为多态基类声明 virtual 析构函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E6%AC%BE-08-%E5%88%AB%E8%AE%A9%E5%BC%82%E5%B8%B8%E9%80%83%E7%A6%BB%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0"><span class="toc-number">4.</span> <span class="toc-text">条款 08: 别让异常逃离析构函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E6%AC%BE-09-%E7%BB%9D%E4%B8%8D%E5%9C%A8%E6%9E%84%E9%80%A0%E5%92%8C%E6%9E%90%E6%9E%84%E8%BF%87%E7%A8%8B%E4%B8%AD%E8%B0%83%E7%94%A8-virtual-%E5%87%BD%E6%95%B0"><span class="toc-number">5.</span> <span class="toc-text">条款 09: 绝不在构造和析构过程中调用 virtual 函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E6%AC%BE-10-%E4%BB%A4-operator-x3D-%E8%BF%94%E5%9B%9E%E2%80%94%E4%B8%AA-reference-to-this"><span class="toc-number">6.</span> <span class="toc-text">条款 10: 令 operator&#x3D; 返回—个 reference to *this</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E6%AC%BE-11-%E5%9C%A8-operator-x3D-%E4%B8%AD%E5%A4%84%E7%90%86%E8%87%AA%E6%88%91%E8%B5%8B%E5%80%BC"><span class="toc-number">7.</span> <span class="toc-text">条款 11: 在 operator&#x3D; 中处理自我赋值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E6%AC%BE-12-%E5%A4%8D%E5%88%B6%E5%AF%B9%E8%B1%A1%E6%97%B6%E5%8B%BF%E5%BF%98%E5%85%B6%E6%AF%8F%E2%80%94%E4%B8%AA%E6%88%90%E5%88%86"><span class="toc-number">8.</span> <span class="toc-text">条款 12: 复制对象时勿忘其每—个成分</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" title="【EffectiveC++】构造/析构/赋值运算"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】构造/析构/赋值运算"/></a><div class="content"><a class="title" href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" title="【EffectiveC++】构造/析构/赋值运算">【EffectiveC++】构造/析构/赋值运算</a><time datetime="2021-12-29T16:00:00.000Z" title="发表于 2021-12-30 00:00:00">2021-12-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/" title="【EffectiveC++】让自己习惯C++"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】让自己习惯C++"/></a><div class="content"><a class="title" href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/" title="【EffectiveC++】让自己习惯C++">【EffectiveC++】让自己习惯C++</a><time datetime="2021-12-27T16:00:00.000Z" title="发表于 2021-12-28 00:00:00">2021-12-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】设计与声明"/></a><div class="content"><a class="title" href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明">【EffectiveC++】设计与声明</a><time datetime="2021-01-22T16:00:00.000Z" title="发表于 2021-01-23 00:00:00">2021-01-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="【EffectiveC++】资源管理"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】资源管理"/></a><div class="content"><a class="title" href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="【EffectiveC++】资源管理">【EffectiveC++】资源管理</a><time datetime="2021-01-21T16:00:00.000Z" title="发表于 2021-01-22 00:00:00">2021-01-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/" title="C++右值引用与移动语义"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C++右值引用与移动语义"/></a><div class="content"><a class="title" href="/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/" title="C++右值引用与移动语义">C++右值引用与移动语义</a><time datetime="2020-08-01T16:00:00.000Z" title="发表于 2020-08-02 00:00:00">2020-08-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/images/top.jpeg')"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2022 By Joey Lian</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.2
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container:not\([display]\)').forEach(node => {
+            const target = node.parentNode
+            if (target.nodeName.toLowerCase() === 'li') {
+              target.parentNode.classList.add('has-jax')
+            } else {
+              target.classList.add('has-jax')
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd9d8e97d1c1701a3d53b',
+      clientSecret: '52ab8c95467a938ecb0cfb1c3ca318d6574a806d',
+      repo: 'JoeyLian.github.io',
+      owner: 'JoeyLian',
+      admin: ['JoeyLian'],
+      id: '544f32176a03165e7d08b5b72570cfa0',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !false) {
+  if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = false;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

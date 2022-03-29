@@ -1,0 +1,381 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>贪心算法与独立集系统 | OneTime</title><meta name="keywords" content="应用运筹学,贪心算法,独立集系统,拟阵"><meta name="author" content="Joey Lian"><meta name="copyright" content="Joey Lian"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="独立集系统基本定义 独立集系统: 一个独立集系统是指： $(E,\mathscr{F})$ ，其中$E$ 是有限基本元素集合， $\mathscr{F} \subseteq 2^E$（$E$ 的幂集的子集，即 $E$ 中任意元素的集合），且满足： $ \emptyset \in \mathscr{F}$ 若 $Y\in \mathscr{F}$ , $Y$ 的子集属于$\mathscr{F}$">
+<meta property="og:type" content="article">
+<meta property="og:title" content="贪心算法与独立集系统">
+<meta property="og:url" content="http://joeylian.github.io/2020/01/24/2020-01-25-%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95%E4%B8%8E%E7%8B%AC%E7%AB%8B%E9%9B%86%E7%B3%BB%E7%BB%9F/index.html">
+<meta property="og:site_name" content="OneTime">
+<meta property="og:description" content="独立集系统基本定义 独立集系统: 一个独立集系统是指： $(E,\mathscr{F})$ ，其中$E$ 是有限基本元素集合， $\mathscr{F} \subseteq 2^E$（$E$ 的幂集的子集，即 $E$ 中任意元素的集合），且满足： $ \emptyset \in \mathscr{F}$ 若 $Y\in \mathscr{F}$ , $Y$ 的子集属于$\mathscr{F}$">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://joeylian.github.io/images/AOR.png">
+<meta property="article:published_time" content="2020-01-24T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-29T12:57:04.720Z">
+<meta property="article:author" content="Joey Lian">
+<meta property="article:tag" content="应用运筹学">
+<meta property="article:tag" content="贪心算法">
+<meta property="article:tag" content="独立集系统">
+<meta property="article:tag" content="拟阵">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://joeylian.github.io/images/AOR.png"><link rel="shortcut icon" href="/img/me.jpeg"><link rel="canonical" href="http://joeylian.github.io/2020/01/24/2020-01-25-%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95%E4%B8%8E%E7%8B%AC%E7%AB%8B%E9%9B%86%E7%B3%BB%E7%BB%9F/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '贪心算法与独立集系统',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-03-29 20:57:04'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.1.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/me.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 总览</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/images/top.jpeg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">OneTime</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 总览</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">贪心算法与独立集系统<a class="post-edit-link" href="https://github.com/JoeyLian/githubio/edit/master/source/_posts/2020-01-25-贪心算法与独立集系统.md" title="编辑" target="_blank"><i class="fas fa-pencil-alt"></i></a></h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-01-24T16:00:00.000Z" title="发表于 2020-01-25 00:00:00">2020-01-25</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-03-29T12:57:04.720Z" title="更新于 2022-03-29 20:57:04">2022-03-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/AOR/">AOR</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="贪心算法与独立集系统"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/2020/01/24/2020-01-25-%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95%E4%B8%8E%E7%8B%AC%E7%AB%8B%E9%9B%86%E7%B3%BB%E7%BB%9F/#post-comment"><span class="gitalk-comment-count"></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h3 id="独立集系统基本定义"><a href="#独立集系统基本定义" class="headerlink" title="独立集系统基本定义"></a>独立集系统基本定义</h3><ul>
+<li><strong>独立集系统</strong>: 一个独立集系统是指： $(E,\mathscr{F})$ ，其中$E$ 是有限基本元素集合， $\mathscr{F} \subseteq 2^E$（$E$ 的幂集的子集，即 $E$ 中任意元素的集合），且满足：<ol>
+<li>$ \emptyset \in \mathscr{F}$</li>
+<li>若 $Y\in \mathscr{F}$ , $Y$ 的子集属于$\mathscr{F}$</li>
+</ol>
+</li>
+<li><strong>独立集</strong>：$\mathscr{F}$ 中的元素称为独立集</li>
+</ul>
+<p>理解：独立集系统是一个空间，这个空间中有一些元素 ($E$ 中的元素) 以及一个规则 $\mathscr{F}$，通过这个规则判断元素的集合是不是独立集。上面定义中 $\mathscr{F}$ 是幂集的子集，通过集合是否属于 $\mathscr{F}$ 判断它是否是一个独立集，而在应用中， $\mathscr{F}$ 的定义通常是满足某一条件的集合，因此它可以看成是某种规则。</p>
+<p><em>举个例子</em>：设 $E$ 是一个有限点集， $$\mathscr{F} &#x3D; {T\subseteq E, \ \vert T\vert\le K}$$ ，可以简单验证它符合上面定义的两个条件，因此 $(E,\mathscr{F})$ 是一个独立集系统。可以看到，这个独立集系统中包含了有限点集和规则：点集集合的模不大于 $K$ 。满足这个规则的集合是独立集。</p>
+<ul>
+<li><strong>基</strong>：对于$E$ 的子集$F\subseteq E $， $T\subseteq F$ 是一个独立集，且任何一个元素 $x\in F,x\notin T$ 加进来 $T\cup{x}$ 就不是独立集，则称 $T$ 是 $F$ 上的极大独立集， 或称 $T$  是 $F$ 的一个基。</li>
+<li><strong>相关集</strong>：$2^E \backslash\mathscr{F}$  中的元素称为相关集，即在 $E$ 中元素构成的集合中不是独立集的集合</li>
+<li><strong>圈</strong>：极小相关集。若删掉相关集 $T$ 中的任意一个元素就可以得到独立集，则称 $T$ 为极小相关集，也称为圈。</li>
+</ul>
+<p>在上面那个例子中，基即为模等于 $K$ 的集合。相关集为任何模大于 $K$ 的集合。圈为模等于 $K+1$ 的集合。</p>
+<ul>
+<li><strong>秩</strong>(上秩):  $ \gamma(F) &#x3D; \max{\vert Y\vert, Y\subseteq F, Y\in \mathscr{F}}$</li>
+<li><strong>下秩</strong>: $ \rho (F) &#x3D; \min{\vert Y\vert, Y\subseteq F, Y是F上的基}$</li>
+<li><strong>秩商</strong>:    $$\mathscr{q}(E,\mathscr{F}) &#x3D; \min_{F\subseteq E} \frac{\rho(F)}{\gamma(F)}$$</li>
+</ul>
+<p>要注意的是，秩和下秩都是相对于$E$ 的子集$F\subseteq E $ 而言，在子集 $F$ 中，要找到模最大的独立集和模最小的极大独立集。对于秩而言，因为我们要找的是模最大的独立集，所以一定是一个极大独立集，也就是一个基。因此，秩商表示的是：找到集合 $E$ 的一个子集 $F$, 这个子集的模最小的基的模与模最大的基的模的比值最小 (也就是基的模的区间最大)，秩商表示这个比值。</p>
+<h3 id="优化问题"><a href="#优化问题" class="headerlink" title="优化问题"></a>优化问题</h3><p>大多数的优化问题都可以放到一个独立集系统中解决。</p>
+<p>记问题为  $(E, \mathscr{F}, C) $    其中 $ C: \mathscr{F}\rightarrow R$ 表示独立集系统中每个独立集的权重，求  $(E,\mathscr{F})$ 中的一个独立集 $X$使 得 $C(X)$  最大或最小。一般而言，$$C(X) &#x3D; \sum_{e\in X} C(e)$$ , 即独立集的权重是其元素的权重和。 </p>
+<ul>
+<li>极大化问题 $(E,\mathscr{F},C)$ ：寻找权重最大的独立集(当然最后的解也是极大独立集)</li>
+<li>极小化问题 $(E,\mathscr{F},C)$ ：寻找权重最小的极大独立集</li>
+</ul>
+<p><strong>例子</strong></p>
+<p>最短路问题：<br>$E$ 表示边集，$\mathscr{F}$ 表示一条s到t路径的子弧的集合。最短路问题是求权重最小的极大独立集。（这里极大独立集就是一条s到t的路径）</p>
+<p>最小生成树问题：<br>$E$ 表示边集，$\mathscr{F} &#x3D; {T\subseteq E,T是无圈子图}$ 。最小生成树问题是求权重最小的极大独立集。（这里极大独立集就是一棵树）</p>
+<p>背包问题：<br>$E$ 表示物品集合，$\mathscr{F}$ 表示能同时装入背包的物品的集合。背包问题是求权重最大的独立集。</p>
+<p>TSP问题：<br>$E$ 表示边集，$\mathscr{F}$ 表示哈密尔顿圈的子图 。TSP问题是求权重最小的极大独立集。（这里极大独立集就是一个哈密尔顿圈）</p>
+<p>最大匹配问题<br>$E$ 表示边集，$\mathscr{F}$ 表示任一匹配 。求权重最大的独立集。</p>
+<p>顶点覆盖问题<br>用对偶的思想解决：$E$  表示点集，$\mathscr{F} &#x3D; { T\subseteq E,E-T是一个覆盖}$  ，求权重最大的独立集。</p>
+<h3 id="贪⼼算法"><a href="#贪⼼算法" class="headerlink" title="贪⼼算法"></a>贪⼼算法</h3><p>对于  $(E,\mathscr{F},C)$ 上极大化问题的贪心算法，有 Best in 和 Worst out 两种</p>
+<h5 id="Best-in："><a href="#Best-in：" class="headerlink" title="Best in："></a>Best in：</h5><p>对权重进行排序： $c_1 \ge c_2\ge … \ge c_n$</p>
+<p>$F &#x3D; \phi $<br>for $ i $ &#x3D; 1 to n<br>    if   $F\cup e_{i} \in \mathscr{F}$<br>        $F :&#x3D; F\cup e_{i}$   </p>
+<h5 id="Worst-out"><a href="#Worst-out" class="headerlink" title="Worst out:"></a>Worst out:</h5><p>对权重进行排序：$c_1 \le c_2\le … \le c_n$</p>
+<p>$F&#x3D;E$<br>for $i$ &#x3D; 1 to n<br>    if $F\backslash{e_i} $ 含基<br>        $F :&#x3D; F\backslash{e_i}$ </p>
+<h5 id="定理"><a href="#定理" class="headerlink" title="定理"></a>定理</h5><p>对于极大化问题 $E,\mathscr{F},C$有  $$ q(E,\mathscr{F}) \le \frac{G(E,\mathscr{F},C)}{OPT(E,\mathscr{F},C)} \le 1$$ </p>
+<p>证明：（针对 Best in 方法，Worst out (应该) 类似 ）</p>
+<p>$E_j &#x3D; {e_1, e_2, …, e_ j}$     C: $E\rightarrow R^+ ,\quad c_1 \ge c_2\ge …\ge c_n$<br>贪心算法解：$G_n,\quad G_j &#x3D; G_n\cap E_j,\ j &#x3D; 1,2,…,n$<br>最优解：$O_n,\quad O_j &#x3D; O_n\cap E_j,\ j &#x3D; 1,2,…,n$</p>
+<p>$$<br>\begin{align}<br>C(G_n) &amp;&#x3D; \sum^n_{j&#x3D;1} (|G_j|-|G_{j-1}|)c_j \<br>&amp;&#x3D; \sum^n_{j&#x3D;1} |G_j|(c_j-c_{j+1})\<br>&amp;\ge \sum^n_{j&#x3D;1} \rho(E_j)(c_j-c_{j+1}) \quad[G_j是E_j的⼀个极大独立集]\<br>&amp;\ge q \sum^n_{j&#x3D;1}  r(E_j) (c_j-c_{j+1})  \quad[ q(E,\mathscr{F}) &#x3D; \min_{F\subseteq E}\frac{\rho(F)}{\gamma(F)}]\<br>&amp;\ge q \sum^n_{j&#x3D;1}  |O_j| (c_j-c_{j+1}) \quad[ \gamma(F) &#x3D; \max{|Y|, Y\subseteq F, Y\in \mathscr{F}} ]\<br>&amp;&#x3D; q\ C(O_n)​<br>\end{align}<br>$$</p>
+<p>在证下界是紧的：</p>
+<p>由秩商的定义， $$\exists F, \frac{\rho(F)}{\gamma(F)} &#x3D; q(E,\mathscr{F})$$，即 $\exists F$ , $F$ 的基 $B_1, B_2$ 满足 $$ \frac{\vert B_1\vert}{\vert B_2\vert} &#x3D; q(E, \mathscr{F})$$  </p>
+<p>定义权重：$c(e) &#x3D; 1, e\in F;\ c(e) &#x3D; 0, e\notin F$ 。把 $B_1$ 的元素排在前面 $e_1, e_2, …, e_{\vert B_1\vert},…$  。使用Best in，会选择前 $\vert B_1\vert$ 个元素，而最优解可以选 $\vert B_2\vert$ 个元素。</p>
+<p>因此贪心算法的近似比</p>
+<p>$$<br>q(E,\mathscr{F}) \le \frac{G(E,\mathscr{F},C)}{OPT(E,\mathscr{F},C)} \le 1<br>$$</p>
+<h3 id="独立集系统的对偶"><a href="#独立集系统的对偶" class="headerlink" title="独立集系统的对偶"></a>独立集系统的对偶</h3><p>$$<br>(E,\mathscr{F}) \rightarrow (E,\mathscr{F}^*)\<br>\mathscr{F}^* &#x3D; {X\subseteq E\ \vert\ \exists\mathscr{F}的一个基B，满足 X\cap B &#x3D; \emptyset }<br>$$</p>
+<p>性质</p>
+<ul>
+<li><p>$(E,\mathscr{F}^*)$ 是一个独立集系统：证明满足独立集系统的定义即可</p>
+</li>
+<li><p>$B$ 是  $$(E,\mathscr{F})$$ 的基， 当且仅当， $$E\backslash B$$  是 $$(E,\mathscr{F}^*)$$ 的基：<br>若 $A$ 是 $$(E,\mathscr{F}^*)$$ 的一个基，则 $$\exists B\in \mathscr{F},A\cap B &#x3D; \emptyset$$<br>由于 $A$ 是极大独立集， $$A &#x3D; E\backslash B$$  </p>
+</li>
+<li><p>$(E,\mathscr{F}^{**}) &#x3D; (E,\mathscr{F})$</p>
+<p>$$<br>\begin{align}<br>\forall X\in \mathscr{F}^{<em><em>} &amp;\Leftrightarrow \exists (E,\mathscr{F}^</em>)的一个基 B^</em>, X\cap B^* &#x3D; \emptyset\<br>&amp;\Leftrightarrow \exists (E,\mathscr{F})的一个基 B, X\cap (E\backslash  B) &#x3D; \emptyset\<br>&amp;\Leftrightarrow \exists (E,\mathscr{F})的一个基 B, X\subseteq B, X\subseteq\mathscr{F}<br>\end{align}<br>$$</p>
+</li>
+</ul>
+<p>独立集系统的对偶主要用于分析极小化问题，可以证明：</p>
+<p>$$<br>1\le  \frac{G(E,\mathscr{F},C)}{OPT(E,\mathscr{F},C)} \le \max_{F\neq \emptyset }\frac{\vert F\vert-\rho^*(F)}{\vert F\vert-\gamma^*(F)}<br>$$</p>
+<p>证明与极大化问题类似.</p>
+<h3 id="拟阵"><a href="#拟阵" class="headerlink" title="拟阵"></a>拟阵</h3><p>拟阵是一类特殊的独立集系统: $(E,\mathscr{F})$ 满足:</p>
+<ul>
+<li>(M1): $$ \emptyset \in \mathscr{F}$$</li>
+<li>(M2): 若 $X\in \mathscr{F},\ \forall Y\subseteq X,Y\in\mathscr{F}$ </li>
+<li>(M3): $ 若X, Y\in\mathscr{F},\vert X \vert &gt;\vert Y\vert ,则 \exists e\in X\backslash Y, Y\cup {e}\in\mathscr{F} $ , 也就是说 $Y$ 可扩充<br>(M3’): $ 若X, Y\in\mathscr{F},\vert X \vert &#x3D; \vert Y\vert +1,则 \exists e\in X\backslash Y, Y\cup {e}\in\mathscr{F} $<br>(M3”): $\forall F \subseteq E$, $F$ 上的任何基有相同的元素个数 (要注意这里不只是 $E$ 上的基，而是 $E$ 的任意子集上的基)<br>M3, M3’, M3” 是相互等价的，只要满足其中之一的独立集系统就是拟阵。</li>
+</ul>
+<p><strong>例子</strong>: </p>
+<ol>
+<li><p>向量矩阵<br>$$<br>E &#x3D; {v_1,v_2,…,v_m},\ \mathscr{F} &#x3D; {Z\subseteq E\vert Z 是线性无关组}<br>$$</p>
+</li>
+<li><p>一致拟阵<br>E 是有限集合，K 是一个给定的正整数, $$\mathscr{F} &#x3D; {X\subseteq E\vert\ \vert X\vert\le K} $$</p>
+</li>
+<li><p>图拟阵<br>$E$ 是无向图 $G$ 中的编辑, $\mathscr{F} &#x3D; {X\subseteq E, X 构成一个森林}$</p>
+</li>
+</ol>
+<p>waw 可以看到很多常见的体系都是一个拟阵，如矩阵与线性无关的概念，森林与树。又或者说，拟阵是这些体系的一个<strong>抽象</strong>，从而分析它们的共性。</p>
+<h3 id="拟阵与贪心算法"><a href="#拟阵与贪心算法" class="headerlink" title="拟阵与贪心算法"></a>拟阵与贪心算法</h3><p>可以简单得到，拟阵的秩商是 1，根据前面独立集系统的分析，贪心算法的近似比为1。因此，在拟阵中使用贪心算法可以得到最优解。[ 所以最小生成树问题贪心就可以得到最优解。]</p>
+<p>用秩商分析得到这个结论是显然的，下面用另一种方法证明拟阵上贪心算法可以得到最优解（来自算法导论）</p>
+<p><strong>引理1</strong>： (拟阵具有贪心选择性质)  假定 $M&#x3D;  ( S , I )$ 是一个加权拟阵，加权函数为 $ w$ , 且<br>$S$ 已按权重单调递减顺序排序． 令 $x$ 是S 中第一个满足 ${x}$ 独立的元素（ 如果存在）。如果存在这样的 $x$ ， 那么存在 $S$ 的一个最优子集 $A$ 包含$x$．</p>
+<p><strong>证明</strong>：</p>
+<ol>
+<li>如果不存在这样的 $x$ ， 唯一的独立子集是空集，引理显然成立。否则，令B 为任意非<br>空最优子集． 假定 $x\notin B$。  </li>
+<li>$B$ 中元素的权重都不大于 $w( x ) $: 我们观察到 $y\in B$ 意味 ${y} $是独立的，$x$ 是第一个形成独立集的元素，因此对任意 $y\in B$, 有 $w(x) \ge w(y) $。  </li>
+<li>构造集合 $A$ . 以 $A &#x3D; {x} $ 开始，集合 $A$ 是独立的。根据 (M3): 若$ X, Y\in\mathscr{F}$, $\vert X \vert &gt;\vert Y\vert $, 则$ \exists e\in X\backslash Y$,$ Y\cup {e}\in\mathscr{F} $， 反复寻找 $B$ 中一个可以加入 $A$ 中的新元素, 同时保持 $A$ 的独立性，直至 $\vert A \vert  &#x3D;\vert   B\vert $ . 此时， A 和B 的区别仅在 $A$ 包含 $x$ ，而 $B$ 包含另一个元素 $y$ . 由于 $w(x)\ge w(y)$ ,<br>$ w(A) &#x3D; w(B) - w(y) +w(x) \ge w(B)$ 。  </li>
+<li>由于集合B 是最优的，因此集合A 必然也是最优的，且包含 $x$。</li>
+</ol>
+<p><strong>引理2</strong>:   $M&#x3D; (S , I )$ 是一个拟阵． 如果 $x$ 是 $S$ 中一个元素， 且它不是 $\emptyset$ 的一个扩展．<br>那么它也不是 $S$ 的任何独立子集 $A$ 的扩展．</p>
+<p><strong>证明</strong>：由独立集的定义，独立集中的任何元素 $x$ 自身形成的集合 ${x}$ 也是一个独立集。因此若 ${x}$ 不是独立集，则 $A\cup{x}$ 也不是独立集。</p>
+<p>引理2表明， 任何元素如果首次不能用于构造独立集，则之后也不可能被用到。因此，贪心算法跳过 $S$  中那些不是 $\emptyset$ 的扩展的起始元素，不会导致错误结果。</p>
+<p><strong>引理3</strong>: （拟阵具有最优子结构性质）  $M&#x3D; (S , I )$ 是一个加权拟阵，$x$ 是 $S$ 中第一个被贪心算法选出的元素，则接下来寻找一个包含 $x$ 的最大权重独立子集的问题归结为寻找加权拟阵 $M’&#x3D;(S’,I’) $  的一个最大权重独立子集的问题， 其中</p>
+<p>$$<br>S’ &#x3D; {y\in S:(x,y)\in I}\<br>I’ &#x3D; {B\subseteq  S-{x}:B\cup{x}\in I}\<br>$$</p>
+<p>$M’$ 的权重函数就是 $M$ 的权重函数，但只局限于S’ 中元素． 我们称 $M’$ 为 $M$ 在元素 $x$ 上的收缩 ( contraction)  </p>
+<p><strong>证明</strong>: 若 $A$ 是 $M$ 的任意一个包含x 的最大权独立子集，则 $A’ &#x3D; A -{x}$ 是 $M’$ 的一个独立子集。同时，任何 $M’$ 的独立子集 $A$ 可生成 $M$ 的独立子集 $A &#x3D; A’\cup{x} $ . 均有 $w(A)&#x3D;w(A’)+w(x)$.因此 $M$ 的包含 $x$ 的最大权重独立子集必然生成 $M’$ 的最大权重独立子集．反之亦然．</p>
+<p><strong>定理</strong>: （拟阵上贪心算法的正确性） 若  $M&#x3D;  ( S , I )$ 是一个加权拟阵，加权函数为 $ w$ ．那么贪心算法返回一个最优子集</p>
+<p><strong>证明</strong>：由<strong>引理2</strong>, 贪心算法跳过 $S$  中那些不是 $\emptyset$ 的扩展的起始元素可永远丢弃． 因为这些元素不会被用到。一旦贪心算法选出第一个元素 $x$， <strong>引理 1</strong> 表明算法将 $x$加入 $A$  不会导致错误结果， 因为必然存在包含 $x$ 的最优子集。 <strong>引理 3</strong> 说明剩下的问题就是如何寻找拟阵 $M’$ 的最优子集， $M’$ 是 $M$ 在 $x$ 上的收缩。将 $A$ 设为 ${ x}$ 后．我们可以将之后的所有步骤解释为拟阵 $M’ &#x3D;(S’,I’)$上的操作,因为对所有集合 $B\in I’$ , $B$ 在 $M’$ 中独立当且仅当 $B\cup{x}$ 在 $M$ 中独立。因此， 贪心算法随后的操作将会找到M’ 的一个最大权重独立子集。而其所有操作的总体效果就是找到 $M$  的一个最大权重独立子集。</p>
+<h3 id="拟阵与独立集系统"><a href="#拟阵与独立集系统" class="headerlink" title="拟阵与独立集系统"></a>拟阵与独立集系统</h3><p>独立集系统的交： $(E,\mathscr{F}_1), (E,\mathscr{F}_2) $ 的交为 $(E,\mathscr{F}_1\cap\mathscr{F}_2)$</p>
+<h5 id="任何⼀个独⽴集系统⼀定是有限个拟阵的交"><a href="#任何⼀个独⽴集系统⼀定是有限个拟阵的交" class="headerlink" title="任何⼀个独⽴集系统⼀定是有限个拟阵的交"></a>任何⼀个独⽴集系统⼀定是有限个拟阵的交</h5><p>证：用构造法证明</p>
+<p>记独立集系统为 $(E,\mathscr{F})$ , 设独立集系统有 $k$  个圈： $c_1,c_2,…,c_k$</p>
+<p>令 $$\mathscr{F}_i &#x3D; {X\subseteq E\vert X\nsupseteq c_i}$$ , 可以证明 $(E,\mathscr{F}_i)$ 是一个独立集系统。</p>
+<p>[ 这里很容易弄晕，解释一下。前面说过独立集系统表示了一个集合与一个规则，在这里不同的 $\mathscr{F}_i$ 表示了不同的规则，因此形成了不同的独立集系统，每个独立集系统都确定了哪些是独立集哪些不是。  $(E,\mathscr{F}_i)$ 这个独立集系统表示的是：如果一个集合不包含 $c_i$ 中的所有元素，则它是一个独立集。对于第 $i$ 个独立集系统，独立集可以包含其他圈。圈的概念是极小相关集，但这里的相关集是独立集系统 $(E,\mathscr{F})$ 中的相关集，在当前的独立集系统中，包含 ‘圈’ 的集合仍可以是独立集 ]</p>
+<p>下证， $(E,\mathscr{F}_i)$ 是拟阵，用 M3”: $\forall F \subseteq E$, $F$ 上的任何基有相同的元素个数。对于 $\forall F \subseteq E$</p>
+<ol>
+<li>$ F \nsupseteq c_i$ ，则整个集合 $F$ 是一个独立集，因此它就是 $F$ 上的极大独立集， $F$ 上的基有相同的元素个数</li>
+<li>$ F \supseteq c_i$ ，对 $\forall e\in c_i$ , $F\backslash {e}$ 是极大独立集，  $F$ 上的基有相同的元素个数</li>
+</ol>
+<p>现证 $$ \mathscr{F} &#x3D; \cap_{i &#x3D; 1}^k \mathscr{F}_i$$ </p>
+<ul>
+<li><p>$$\mathscr{F} \subseteq \cap_{i &#x3D; 1}^k \mathscr{F}_i$$:<br> $$\forall X\in \mathscr{F},X$$ 不包含任何圈, $$X\in\mathscr {F}<em>i,i&#x3D;1,…,k \ \Rightarrow X\in \cap</em>{i &#x3D; 1}^k \mathscr{F}_i$$</p>
+</li>
+<li><p>$$ \mathscr{F} \supseteq \cap_{i &#x3D; 1}^k \mathscr{F}_i $$<br> $$\forall X\in \mathscr{F}<em>i,X$$不包含圈 $c_i$ 。$$\forall X\in\cap</em>{i &#x3D; 1}^k \mathscr{F}_i\Rightarrow  X$$不包含任何圈   $$ \Rightarrow X\in \mathscr{F}$$</p>
+</li>
+</ul>
+<p>[ 需要指出的是，这里只是用构造法说明了任何⼀个独⽴集系统都可以表示为有限个拟阵的交，但用这种构造不一定能分解为最少的拟阵，在实际应用中不一定能得到紧的解 ]</p>
+<p>少数的<strong>例子</strong>：</p>
+<p>对于二部图 $G&#x3D;(A\cup B,E) $, $(E,\mathscr{F})$ 表示图的匹配的独立集系统。</p>
+<p>$$<br>\mathscr{F}_1 &#x3D; {X\subseteq E, \vert\delta _X(u)\vert\le 1,\forall u\in A}\<br>\mathscr{F}_2 &#x3D; {Y\subseteq E, \vert\delta _Y(u)\vert\le 1,\forall u\in B}\<br>$$</p>
+<p>其中 $\delta_X(u)$ 表示 $u$ 的度数，只考虑 $X$ 中的边。可以证明， $(E,\mathscr{F}_1),(E,\mathscr{F}_2)$ 是拟阵且 $\mathscr{F} &#x3D; \mathscr{F}_1\cap \mathscr{F}_2$ 。</p>
+<h5 id="若独⽴集系统是-k-个拟阵的交，则贪⼼解的近似⽐至少为-1-x2F-k"><a href="#若独⽴集系统是-k-个拟阵的交，则贪⼼解的近似⽐至少为-1-x2F-k" class="headerlink" title="若独⽴集系统是 $k$ 个拟阵的交，则贪⼼解的近似⽐至少为 $1&#x2F;k$"></a>若独⽴集系统是 $k$ 个拟阵的交，则贪⼼解的近似⽐至少为 $1&#x2F;k$</h5><p>记独⽴集系统为  $(E，\mathscr{F})$，是 $k$ 个拟阵 $(E，\mathscr{F}_i)$ 的交。</p>
+<p>证：即证秩商 $q(E ,\mathscr{F}) \ge 1 &#x2F;k$ 。对 $\forall F\subseteq E$, 考虑 $(E ,\mathscr{F})$ 在 $F$ 上任意两个不同的极⼤独⽴集 $A, B$  $\vert B\vert \ge \vert A\vert $ , 只需证 $\vert B\vert \le k\vert A\vert  $</p>
+<p>$A_i$ 是 $$(E,\mathscr{F}<em>i)$$ 在 $A\cup B$ 上含 $A$ 的极⼤独⽴集，容易得 $A &#x3D; \bigcap</em>{i&#x3D;1}^k A_i$<br>$B_i$ 是 $$(E,\mathscr{F}<em>i)$$ 在 $A\cup B $ 上含 $B$ 的极⼤独⽴集，$B &#x3D; \bigcap</em>{i&#x3D;1}^k B_i$   </p>
+<p>$$\forall e \in B\backslash A$$, ，由于 $e\notin A$, 有 $$e\notin \bigcap_{i&#x3D;1}^k A_i$$, 则 $e$ 不可能同时在每个 $A_i$ , $e$ 最多同时出现在 $k-1$ 个 $A_i\backslash  A$ 中。每一个 $B\backslash A$ 中的元素最多在 $k-1$ 个 $A_i\backslash  A$ 中，因此有 $ \frac{1}{k-1}\sum_{i&#x3D;1}^k \vert A_i\backslash A\vert \le \vert B\backslash A\vert $ , 于是：</p>
+<p>$$<br>\sum_{i&#x3D;1}^k \vert A_i\backslash A\vert \le (k-1)\vert B\backslash A\vert \le (k-1)\vert B\vert\<br>\sum_{i&#x3D;1}^k \vert A_i\vert - k\vert A\vert\le (k-1)\vert B\vert<br>$$</p>
+<p>由于  $(E,\mathscr{F}_i)$  是拟阵， $A_i, B_i$ 是在 $A\cup B $ 上的基，有 $\forall i,\vert A_i\vert &#x3D; \vert B_i\vert$ .因此</p>
+<p>$$<br>k\vert B\vert \le\sum_{i&#x3D;1}^k\vert B_i\vert \le\sum_{i&#x3D;1}^k\vert A_i\vert \le k\vert A\vert+ (k-1)\vert B\vert\<br>\vert B\vert \le k\vert A\vert<br>$$</p>
+<p>对 $\forall F\subseteq E$,  $F$ 上任意两个不同的极⼤独⽴集$A, B$  有 $\vert A\vert \le \vert B\vert\le k\vert A\vert $， 因此秩商最小为 $1&#x2F;k$ ，贪⼼解的近似⽐至少为 $1&#x2F;k$ 。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>可以看到，独立集系统可以看成拟阵的扩充与平凡化，用秩商分析拟阵可以简洁地得出结论。而直接证明拟阵的贪心最优则显得略为复杂。</p>
+<p>然而，一个主要的问题是拟阵过于特殊，满足拟阵条件的问题较少。而独立集系统则过于普通，使得难以分析它的性质。虽然得到了独立集系统与拟阵的关系，然后只有少量问题可以自然的分解成拟阵的交，更多的问题并不能简单分解。</p>
+<p>但把拟阵的一些性质推广到独立集系统还是有意义的，似乎有一些研究在进行。慢慢学习 orz</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Joey Lian</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://joeylian.github.io/2020/01/24/2020-01-25-%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95%E4%B8%8E%E7%8B%AC%E7%AB%8B%E9%9B%86%E7%B3%BB%E7%BB%9F/">http://joeylian.github.io/2020/01/24/2020-01-25-%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95%E4%B8%8E%E7%8B%AC%E7%AB%8B%E9%9B%86%E7%B3%BB%E7%BB%9F/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://joeylian.github.io" target="_blank">OneTime</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%BA%94%E7%94%A8%E8%BF%90%E7%AD%B9%E5%AD%A6/">应用运筹学</a><a class="post-meta__tags" href="/tags/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/">贪心算法</a><a class="post-meta__tags" href="/tags/%E7%8B%AC%E7%AB%8B%E9%9B%86%E7%B3%BB%E7%BB%9F/">独立集系统</a><a class="post-meta__tags" href="/tags/%E6%8B%9F%E9%98%B5/">拟阵</a></div><div class="post_share"><div class="social-share" data-image="/images/AOR.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/01/28/2020-01-29-%E8%A3%85%E7%AE%B1%E9%97%AE%E9%A2%98%E8%BF%91%E4%BC%BC%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/"><img class="prev-cover" src="/images/AOR.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">装箱问题近似算法分析</div></div></a></div><div class="next-post pull-right"><a href="/2020/01/21/2020-01-22-%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E4%B8%8E%E6%B5%81/"><img class="next-cover" src="/images/PPL.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">函数式编程与流</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2019/11/02/2019-11-03-%E5%8E%9F%E5%A7%8B-%E5%AF%B9%E5%81%B6%E6%96%B9%E6%B3%95%E4%B8%8E%E6%9C%80%E7%9F%AD%E8%B7%AF%E7%AE%97%E6%B3%95/" title="原始-对偶方法与最短路算法"><img class="cover" src="/images/AOR.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-11-03</div><div class="title">原始-对偶方法与最短路算法</div></div></a></div><div><a href="/2019/11/06/2019-11-07-%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E4%B8%8E%E5%8D%95%E7%BA%AF%E5%BD%A2%E6%B3%95/" title="线性规划与单纯形法"><img class="cover" src="/images/AOR.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-11-07</div><div class="title">线性规划与单纯形法</div></div></a></div><div><a href="/2019/12/25/2019-12-26-%E6%95%B4%E6%95%B0%E8%A7%84%E5%88%92/" title="整数规划"><img class="cover" src="/images/AOR.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-12-26</div><div class="title">整数规划</div></div></a></div><div><a href="/2019/12/27/2019-12-28-%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/" title="背包问题"><img class="cover" src="/images/AOR.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-12-28</div><div class="title">背包问题</div></div></a></div><div><a href="/2019/12/28/2019-12-29-%E5%87%B8%E4%BC%98%E5%8C%96--%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/" title="凸优化--基本概念"><img class="cover" src="/img/top.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-12-29</div><div class="title">凸优化--基本概念</div></div></a></div><div><a href="/2019/12/28/2019-12-30-%E5%87%B8%E4%BC%98%E5%8C%96--%E4%B8%BB%E8%A6%81%E7%AE%97%E6%B3%95/" title="凸优化--主要算法"><img class="cover" src="/img/top.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-12-29</div><div class="title">凸优化--主要算法</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/me.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Joey Lian</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/joeylian" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:lianjy9976@163.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8B%AC%E7%AB%8B%E9%9B%86%E7%B3%BB%E7%BB%9F%E5%9F%BA%E6%9C%AC%E5%AE%9A%E4%B9%89"><span class="toc-number">1.</span> <span class="toc-text">独立集系统基本定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E9%97%AE%E9%A2%98"><span class="toc-number">2.</span> <span class="toc-text">优化问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B4%AA%E2%BC%BC%E7%AE%97%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">贪⼼算法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Best-in%EF%BC%9A"><span class="toc-number">3.0.1.</span> <span class="toc-text">Best in：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Worst-out"><span class="toc-number">3.0.2.</span> <span class="toc-text">Worst out:</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AE%9A%E7%90%86"><span class="toc-number">3.0.3.</span> <span class="toc-text">定理</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8B%AC%E7%AB%8B%E9%9B%86%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%AF%B9%E5%81%B6"><span class="toc-number">4.</span> <span class="toc-text">独立集系统的对偶</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8B%9F%E9%98%B5"><span class="toc-number">5.</span> <span class="toc-text">拟阵</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8B%9F%E9%98%B5%E4%B8%8E%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95"><span class="toc-number">6.</span> <span class="toc-text">拟阵与贪心算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8B%9F%E9%98%B5%E4%B8%8E%E7%8B%AC%E7%AB%8B%E9%9B%86%E7%B3%BB%E7%BB%9F"><span class="toc-number">7.</span> <span class="toc-text">拟阵与独立集系统</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BB%BB%E4%BD%95%E2%BC%80%E4%B8%AA%E7%8B%AC%E2%BD%B4%E9%9B%86%E7%B3%BB%E7%BB%9F%E2%BC%80%E5%AE%9A%E6%98%AF%E6%9C%89%E9%99%90%E4%B8%AA%E6%8B%9F%E9%98%B5%E7%9A%84%E4%BA%A4"><span class="toc-number">7.0.1.</span> <span class="toc-text">任何⼀个独⽴集系统⼀定是有限个拟阵的交</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%8B%A5%E7%8B%AC%E2%BD%B4%E9%9B%86%E7%B3%BB%E7%BB%9F%E6%98%AF-k-%E4%B8%AA%E6%8B%9F%E9%98%B5%E7%9A%84%E4%BA%A4%EF%BC%8C%E5%88%99%E8%B4%AA%E2%BC%BC%E8%A7%A3%E7%9A%84%E8%BF%91%E4%BC%BC%E2%BD%90%E8%87%B3%E5%B0%91%E4%B8%BA-1-x2F-k"><span class="toc-number">7.0.2.</span> <span class="toc-text">若独⽴集系统是 $k$ 个拟阵的交，则贪⼼解的近似⽐至少为 $1&#x2F;k$</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">8.</span> <span class="toc-text">总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" title="【EffectiveC++】构造/析构/赋值运算"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】构造/析构/赋值运算"/></a><div class="content"><a class="title" href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" title="【EffectiveC++】构造/析构/赋值运算">【EffectiveC++】构造/析构/赋值运算</a><time datetime="2021-12-29T16:00:00.000Z" title="发表于 2021-12-30 00:00:00">2021-12-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/" title="【EffectiveC++】让自己习惯C++"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】让自己习惯C++"/></a><div class="content"><a class="title" href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/" title="【EffectiveC++】让自己习惯C++">【EffectiveC++】让自己习惯C++</a><time datetime="2021-12-27T16:00:00.000Z" title="发表于 2021-12-28 00:00:00">2021-12-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】设计与声明"/></a><div class="content"><a class="title" href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明">【EffectiveC++】设计与声明</a><time datetime="2021-01-22T16:00:00.000Z" title="发表于 2021-01-23 00:00:00">2021-01-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="【EffectiveC++】资源管理"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】资源管理"/></a><div class="content"><a class="title" href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="【EffectiveC++】资源管理">【EffectiveC++】资源管理</a><time datetime="2021-01-21T16:00:00.000Z" title="发表于 2021-01-22 00:00:00">2021-01-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/" title="C++右值引用与移动语义"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C++右值引用与移动语义"/></a><div class="content"><a class="title" href="/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/" title="C++右值引用与移动语义">C++右值引用与移动语义</a><time datetime="2020-08-01T16:00:00.000Z" title="发表于 2020-08-02 00:00:00">2020-08-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/images/top.jpeg')"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2022 By Joey Lian</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.2
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container:not\([display]\)').forEach(node => {
+            const target = node.parentNode
+            if (target.nodeName.toLowerCase() === 'li') {
+              target.parentNode.classList.add('has-jax')
+            } else {
+              target.classList.add('has-jax')
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd9d8e97d1c1701a3d53b',
+      clientSecret: '52ab8c95467a938ecb0cfb1c3ca318d6574a806d',
+      repo: 'JoeyLian.github.io',
+      owner: 'JoeyLian',
+      admin: ['JoeyLian'],
+      id: '510ad8a086a0004fecdb901cc1980f9a',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !false) {
+  if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = false;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

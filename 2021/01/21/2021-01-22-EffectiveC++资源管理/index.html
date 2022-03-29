@@ -1,0 +1,367 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>【EffectiveC++】资源管理 | OneTime</title><meta name="keywords" content="C++,EffectiveC++"><meta name="author" content="Joey Lian"><meta name="copyright" content="Joey Lian"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="资源一旦用了它，将来必须还给系统。  条款 13: 以对象管理资源 把资源放进对象内，便可倚赖 C+＋的“析构函数自动调用机制”确保资源被释放。  createInvestment() 的调用端使用了函数返回的对象后， 有责任删除它。 f 函数履行了这个责任： 1234567Investment＊ createlnvestment(); &#x2F;&#x2F;返回指针，指向Investment 继承体系内的动态分">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【EffectiveC++】资源管理">
+<meta property="og:url" content="http://joeylian.github.io/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/index.html">
+<meta property="og:site_name" content="OneTime">
+<meta property="og:description" content="资源一旦用了它，将来必须还给系统。  条款 13: 以对象管理资源 把资源放进对象内，便可倚赖 C+＋的“析构函数自动调用机制”确保资源被释放。  createInvestment() 的调用端使用了函数返回的对象后， 有责任删除它。 f 函数履行了这个责任： 1234567Investment＊ createlnvestment(); &#x2F;&#x2F;返回指针，指向Investment 继承体系内的动态分">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://joeylian.github.io/images/Cpp.png">
+<meta property="article:published_time" content="2021-01-21T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-29T12:57:04.720Z">
+<meta property="article:author" content="Joey Lian">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="EffectiveC++">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://joeylian.github.io/images/Cpp.png"><link rel="shortcut icon" href="/img/me.jpeg"><link rel="canonical" href="http://joeylian.github.io/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【EffectiveC++】资源管理',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-03-29 20:57:04'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.1.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/me.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 总览</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/images/top.jpeg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">OneTime</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 总览</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">【EffectiveC++】资源管理<a class="post-edit-link" href="https://github.com/JoeyLian/githubio/edit/master/source/_posts/2021-01-22-EffectiveC++资源管理.md" title="编辑" target="_blank"><i class="fas fa-pencil-alt"></i></a></h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-01-21T16:00:00.000Z" title="发表于 2021-01-22 00:00:00">2021-01-22</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-03-29T12:57:04.720Z" title="更新于 2022-03-29 20:57:04">2022-03-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="【EffectiveC++】资源管理"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/#post-comment"><span class="gitalk-comment-count"></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><blockquote>
+<p>资源一旦用了它，将来必须还给系统。</p>
+</blockquote>
+<h2 id="条款-13-以对象管理资源"><a href="#条款-13-以对象管理资源" class="headerlink" title="条款 13: 以对象管理资源"></a>条款 13: 以对象管理资源</h2><blockquote>
+<p>把资源放进对象内，便可倚赖 C+＋的“析构函数自动调用机制”确保资源被释放。</p>
+</blockquote>
+<p><code>createInvestment()</code> 的调用端使用了函数返回的对象后， 有责任删除它。 f 函数履行了这个责任：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Investment＊ <span class="built_in">createlnvestment</span>(); <span class="comment">//返回指针，指向Investment 继承体系内的动态分配对象。调用者有责任删除它。 </span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    Investment* pInv = <span class="built_in">createInvestment</span>(); <span class="comment">//调用 factory 函数</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">delete</span> pInv;                           <span class="comment">//释放pInv 所指对象</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但一些情况下 f 可能无法删除它得自 createinvestment 的对象， 如“…”区域内的一个过早的 return语句。为确保<code>createInvestment()</code> 返回的资源总是被释放，我们需要将资源放进对 内，当控制流离开 f, 该对象的析构函数会自动释放那些资源。</p>
+<p>标准程序库提供的  <code>auto_ptr</code> 正是针对这种形势而设计的特制产品。  <code>auto_ptr</code> 是个“类指针 (pointer-like) 对象”，也就是所谓智能指针，其析构函数自动对其所指对象调用 delete。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">std::auto_ptr&lt;Investment&gt; <span class="title">pInv</span><span class="params">(createInvestment())</span></span>; <span class="comment">//调用 create 函数</span></span><br><span class="line">    ...                   <span class="comment">//使用 pInv </span></span><br><span class="line">                          <span class="comment">//经由 auto_ptr 的析构函数自动删除 pInv</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以对象管理资源的两个关键想法：</p>
+<ul>
+<li>获得资源后立刻放进管理对象 (managing object) 内。“以对象管理资源” 的观念常被称为 “资源取得时机便是初始化时机” <strong>(Resource Acquisition Is Initialization; RAII)</strong> ，因为我们几乎总是在获得一笔资源后于同一语句内以它初始化某个管理对象。有时候获得的资源被拿来赋值某个管理对象。但不论哪一种做法，每一笔资源都在获得的同时立刻被放进管理对象中。 </li>
+<li>管理对象 (managing object) 运用析构函数确保资源被释放。不论控制流如何离开区块，一旦对象被销毁，其析构函数自然会被自动调用，于是资源被释放。</li>
+</ul>
+<p>由千 <code>auto_ptr</code> 被销毁时会自动删除它所指之物，所以一定要注意别让多个<code>auto_ptr</code>同时指向同一对象。如果这样，对象会被删除一次以上，这是一个未定义的行为。</p>
+<p>为了预防这个问题， <code>auto_ptr</code> 有一个不寻常的性质：若通过copy 构造函数或 copy 赋值操作符复制它， 它本身 (被复制者) 会变成 null, 而复制所得的指针将取得资源的唯一拥有权。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::auto_ptr&lt;Investment&gt; <span class="title">pInv1</span><span class="params">(createInvestment())</span></span>; </span><br><span class="line">                                        <span class="comment">//pInv1 指向 createInvestment 返回物</span></span><br><span class="line"><span class="function">std::auto_ptr&lt;Investment&gt; <span class="title">pInv2</span><span class="params">(pInv1)</span></span>; <span class="comment">//现在 pInv2 指向对象, pInv1 被设为 null</span></span><br><span class="line">pInv1 = pInv2;                          <span class="comment">//现在 pInv1 指向对象，pInv2 被设为 null</span></span><br></pre></td></tr></table></figure>
+
+<p><code>auto_ptr</code> 的替代方案是 “引用计数型智慧指针” (reference-counting smart pointer; RCSP)。RCSP 持续追踪共有多少对象指向某笔资源，在无人指向它时自动删除该资源。 RCSP 提供的行为类似垃圾回收 (garbage collection)，不同的是 RCSP 无法打破环状引用 (cycles of references,  如两个其实已经没被使用的对象彼此互指，因而好像还处在被使用状态)。</p>
+<p>TR1 的 <code>tr1::shared_ptr</code> （见条款 54) 就是个 RCSP.</p>
+<p><code>auto_ptr</code> 和 <code>tr1::shared_ptr</code> 两者都在其析构函数内做 delete 而不是 <code>delete[]</code>动作。那意味在动态分配而得的 array 身上使用 <code>auto_ptr</code> 或 <code>tr1::shared_ptr</code>  是个馈主意。 vector 和 string 几乎总是可以取代动态分配而得的数组。</p>
+<p>但有时候你所使用的资源是目前这些预制式 classes 无法妥善管理的。这样就需要精巧制作你自己的资源管理类。这需要涉及若干你需要考虑的细节。(条款14, 15)。</p>
+<p>最后，必须指出， <code>createInvestment()</code> 返回的“未加工指针”(raw<br>pointer) 是很危险的。即使使用 <code>auto_ptr</code> 或 <code>tr1::shared_ptr</code> 来执行 delete,  首先必须记得将 createinvestment 的返回值存储于智能指针对象内。需要对 createinvestment 进行接口修改(条款 18)。</p>
+<blockquote>
+<ul>
+<li>为防止资源泄漏，请使用 RAII 对象，它们在构造函数中获得资源并在析构函数中释放资源。</li>
+<li>两个常被使用的 RAII classes 分别是 <code>tr1::shared_ptr </code>和 <code>auto_ptr</code>。前者通常是较佳选择，因为其 copy行为比较直观。若选择 <code>auto_ptr</code>, 复制动作会使它 (被复制者) 指向 null 。</li>
+</ul>
+</blockquote>
+<h2 id="条款-14-在资源管理类中小心-copying-行为"><a href="#条款-14-在资源管理类中小心-copying-行为" class="headerlink" title="条款 14: 在资源管理类中小心 copying 行为"></a>条款 14: 在资源管理类中小心 copying 行为</h2><p>有时候会发现需要建立自己的资源管理类。</p>
+<p>假设我们使用 C API 函数处理类型为 Mutex 的互斥器对象， lock和 unlock两函数可用：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">lock</span><span class="params">(Mutex* pm)</span></span>;  <span class="comment">//锁定 pm所指的互斥器</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">unlock</span><span class="params">(Mutex* pm)</span></span>;<span class="comment">//将互斥器解除锁定</span></span><br></pre></td></tr></table></figure>
+
+<p>为确保不会忘记将一个被锁住的 Mutex 解锁，希望建立一个 class 用来管理机锁。这样的 class 的基本结构由 RAII 守则支配，也就是“资源在构造期间获得，在析构期间释放”:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Lock</span> &#123; </span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">explicit</span> <span class="title">Lock</span> <span class="params">(Mutex* pm)</span> : mutexPtr(pm)</span></span><br><span class="line"><span class="function">    &#123;</span> <span class="built_in">lock</span> (mutexPtr) ; &#125;          <span class="comment">//获得资源</span></span><br><span class="line">    ~<span class="built_in">Lock</span>() &#123; <span class="built_in">unlock</span> (mutexPtr); &#125; <span class="comment">//释放资源</span></span><br><span class="line"><span class="keyword">private</span>: </span><br><span class="line">    Mutex *mutexPtr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们还需要面对一个问题： “当一个 RAII 对象被复制，会发生什么事？” 大多数时候会选择以下两种可能：</p>
+<ul>
+<li><p><strong>禁止复制</strong>。许多时候允许 RAII 对象被复制并不合理。如果复制动作对 RAII class 并不合理，应该禁止复制。条款 6 告诉我们可以将 copying操作声明为 private。</p>
+</li>
+<li><p><strong>对底层资源运用 “引用计数法”(reference-count)</strong> 。有时候我们希望保有资源， 直到它的最后一个使用者被销毁。这种情况下复制 RAII 对象时，应该将资源的 “被引用数” 递增。<code>tr1::shared_ptr</code> 便是如此。</p>
+<p>通常只要内含一个 <code>tr1::shared_ptr</code>  成员变量， RAII 类便可实现引用计数。如果前述的 Lock 打算使用引用计数, 可以改变 mutexPtr 的类型，将它从 <code>Mutex*</code> 改为 <code>tr1::shared_ptr&lt;Mutex&gt;</code>。 然而 <code>tr1::shared_ptr</code> 析构函数的缺省行为是 “当引用次数为 0 时删除其所指物“, 那不是我们所要的 unlock。为此，<code>tr1::shared_ptr</code> 允许指定特定的删除器——一个函数或函数对象 (function object) ，当引用次数为 0 时被调用。(此机能并不存在于 <code>auto_ptr</code>, 它总是将指针删除) 。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Lock</span> &#123; </span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">explicit</span> <span class="title">Lock</span><span class="params">(Mutex* pm)</span>: mutexPtr(pm, unlock) </span></span><br><span class="line"><span class="function">    &#123;</span>                 <span class="comment">//以某个 Mutex 初始化 shared_ptr, 并以 unlock 函数为删除器</span></span><br><span class="line">        <span class="built_in">lock</span> (mutexPtr. <span class="built_in">get</span> ());         <span class="comment">//条款 15 谈到 “get&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>: </span><br><span class="line">    std::tr1::shared_ptr&lt;Muex&gt; mutexPtr; <span class="comment">//使用 shared_ptr 替换 raw point</span></span><br><span class="line">&#125;；</span><br></pre></td></tr></table></figure>
+
+<p>请注意，本例的 Lock 类不再声明析构函数。因为没有必要。 class 析构函数会自动调用其 non-static 成员变量的析构函数。</p>
+</li>
+<li><p><strong>复制底部资源</strong>。可以针对一份资源拥有其任意数量的副本。需要“资源管理类”的唯一理由是，当你不再需要某个复件时确保它被释放。在此情况下复制资源管理对象，应该同时复制其所包覆的 资源。也就是说，复制资源管理对象时进行“深度拷贝”。 </p>
+</li>
+<li><p><strong>转移底部资源的拥有权</strong>。某些罕见场合下你可能希望确保永远只有一个 RAII 对象指向一个未加工资源，即使 RAII 对象被复制依然如此。此时资源的拥有权会从被复制物转移到目标物。这是 <code>auto_ptr</code> 奉行的复制行为。</p>
+</li>
+</ul>
+<blockquote>
+<ul>
+<li>复制 RAII 对象必须一并复制它所管理的资源，所以资源的 copying 行为决定 RAII 对象的 copying 行为。 </li>
+<li>普遍而常见的 RAII 对象 copying 行为是：禁止 copying、施行引用计数法 (reference counting) 。不过其他行为也都可能被实现。</li>
+</ul>
+</blockquote>
+<h2 id="条款15-在资源管理类中提供对原始资源的访问"><a href="#条款15-在资源管理类中提供对原始资源的访问" class="headerlink" title="条款15: 在资源管理类中提供对原始资源的访问"></a>条款15: 在资源管理类中提供对原始资源的访问</h2><p>需要一个函数可将 RAII 类的对象转换为其所内含之原始资源 。有两个做法可以达成目标： 显式转换和隐式转换。</p>
+<p><code>auto_ptr</code> 和 <code>tr1::shared_ptr</code> 都提供一个 <code>get</code> 成员函数，用来执行显式转换， 也就是它会返回智能指针内部的原始指针。</p>
+<p><code>auto_ptr</code> 和 <code>tr1::shared_ptr</code> 也重载了指针取值操作符 (<code>operator-&gt;</code>和 <code>operator*</code>) ，它们允许隐式转换至底部原始指针。</p>
+<p>对于自己设计的 RAII 类，可以提供显式转换函数，也可以提供隐式转换函数。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">changeFontSize</span><span class="params">(FontHandle f, <span class="type">int</span> newSize)</span></span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">releaseFont</span><span class="params">(FontHandle fh)</span></span>; </span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Font</span> &#123; </span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">explicit</span> <span class="title">Font</span><span class="params">(FontHandle fh)</span> : f(fh)</span></span><br><span class="line"><span class="function">    &#123;</span> &#125; </span><br><span class="line">    ~<span class="built_in">Font</span>() &#123; <span class="built_in">releaseFont</span>(f) ; &#125; </span><br><span class="line">    <span class="function"><span class="keyword">operator</span> <span class="title">FontHandle</span><span class="params">()</span> <span class="type">const</span>         <span class="comment">//隐式转换函数</span></span></span><br><span class="line"><span class="function">    </span>&#123; <span class="keyword">return</span> f; &#125;</span><br><span class="line"><span class="keyword">private</span>: </span><br><span class="line">    FontHandle f;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">Font <span class="title">f</span><span class="params">(getFont())</span></span>;</span><br><span class="line"><span class="type">int</span> newFontSize;</span><br><span class="line">...</span><br><span class="line"><span class="built_in">changeFontSize</span>(f, newFontSize); <span class="comment">//将 Font 隐式转换为 FontHandle</span></span><br></pre></td></tr></table></figure>
+
+<p>这使得客户调用 C API 时比较轻松且自然。但是隐式转换会增加错误发生机会。</p>
+<div class="note info flat"><p><strong>operator用于隐式类型转换</strong></p>
+<p>C++中的 operator 主要有两个作用，一是<strong>操作符的重载</strong>，一是<strong>操作符的转换</strong>。这里用到操作符的转换。</p>
+<p>语法很简单: <code>operator Type() {}</code>。函数没有参数，没有返回类型，但是有return 语句，在return语句中返回目标类型数据。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    ......</span><br><span class="line">    <span class="function"><span class="keyword">operator</span> <span class="title">int</span><span class="params">()</span></span>&#123;<span class="keyword">return</span> num;&#125;  <span class="comment">//在需要情况下， A对象可以转成int类型对象。</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">int</span> num;</span><br><span class="line"> &#125;;</span><br></pre></td></tr></table></figure>
+</div>
+
+<p>是否该提供一个显式转换函数将 RAII 类转换为其底部资源，或是应该提供隐式转换，答案主要取决于 RAII 类被设计执行的特定工 作以及它被使用的情况。最佳设计很可能是坚待条款 18 的忠告： **”让接口容易被正确使用，不易被误用”**。</p>
+<p>你的内心也可能认为， RAIl 类内的返回原始资源的函数与“封装” 发生矛盾。但 RAII 类并不是为了封装某物而存在：它们的存在是为了确保资源释放会发生。</p>
+<p>也有某些 RAIl 类结合底层资源封装以获得真正的封装实现。例如 <code>tr1::shared_ptr</code> 将它的所有引用计数机构封装了起来，但还是让外界很容易访问其所内含的原始指针。设计良好的 classes隐藏了客户不需要看的部分，但备妥客户需要的所有东西。</p>
+<blockquote>
+<ul>
+<li>APIs 往往要求访问原始资源，所以每一个 RAII 类应该提供一个取得其所管理之资源的办法。</li>
+<li>对原始资源的访问可能经由显式转换或隐式转换。一般而言显式转换比较安全，但隐式转换对客户比较方便。</li>
+</ul>
+</blockquote>
+<h2 id="条款16-成对使用-new-和-delete-时要采取相同形式"><a href="#条款16-成对使用-new-和-delete-时要采取相同形式" class="headerlink" title="条款16: 成对使用 new 和 delete 时要采取相同形式"></a>条款16: 成对使用 new 和 delete 时要采取相同形式</h2><p>当使用 new 时，有两件事发生。第一， 内存被分配出来。第二， 针对此内存会有一个（或更多）构造函数被调用。当你使用 delete, 也有两件事发生：针对此内存会有一个（或更多）析构函数被调用，然后内存才被释放。 delete 的最大问题 在于：即将被删除的内存之内存有多少对象？这个问题的答案决定了有多少个析构函数需要被调用。</p>
+<p>这个问题可以更简单些：将被删除的那个指针所指的是单一对象或对象数组？数组所用的内存通常还包括 “数组大小” 的记录，以便 delete 知道需要调用多少次析构函数。单一对象的内存则没有这笔记录。当你对着一个指针使用 delete, 唯一能够让 delete 知道内存中是否存在一个 “数组大小记录”的办法就是：由你来告诉它。</p>
+<p>规则很简单：如果你调用 new 时使用 [], 你必须在对应调用 delete 时也使用 []。如果你调用 new 时没有使用 [], 那么也不该在对应调用 delete 时使用 []。</p>
+<p>这个规则对于喜欢使用 typedef 的人也很重要。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> std::string AddressLines[<span class="number">4</span>]; <span class="comment">//没个人的地址有 4 行，每行是一个 string</span></span><br><span class="line"></span><br><span class="line">std::string* pal = <span class="keyword">new</span> AddressLines; <span class="comment">//&quot;new AddressLines&quot; 返回一个 string*，就像 &quot;new string [4]&quot; 一样。 </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">delete</span> pal;    <span class="comment">//行为未定义</span></span><br><span class="line"><span class="keyword">delete</span> [] pal; <span class="comment">//正确</span></span><br></pre></td></tr></table></figure>
+
+<p>为避免诸如此类的错误，最好不要对数组形式做 typedef 动作。 C++标准程序库 含有 string,vector 等 templates, 可将数组的需求几乎降至为零。</p>
+<blockquote>
+<p>如果你在 new 表达式中使用 []，必须在相应的 delete 表达式中也使用 []。如果 你在 new 表达式中不使用 []，一定不要在相应的 delete 表达式中使用 []。</p>
+</blockquote>
+<h2 id="条款-17-以独立语句将-newed-对象置入智能指针"><a href="#条款-17-以独立语句将-newed-对象置入智能指针" class="headerlink" title="条款 17: 以独立语句将 newed 对象置入智能指针"></a>条款 17: 以独立语句将 newed 对象置入智能指针</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">priority</span><span class="params">()</span></span>; </span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">processWidget</span><span class="params">(std::tr1::shared_ptr&lt;Widget&gt; pw, <span class="type">int</span> priority)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">processWidget</span>(std::tr1::<span class="built_in">shared_ptr</span>&lt;Widget&gt;(<span class="keyword">new</span> Widget), <span class="built_in">priority</span>());<span class="comment">//可能造成资源泄露</span></span><br></pre></td></tr></table></figure>
+
+<p>编译器产出一个 processWidget 调用码之前，必须首先核算即将被传递的各个实参。上述第二实参只是一个单纯的对 priority 函数的调用，但第一实参 <code>std::tr1::shared_ptr&lt;Widget&gt;(new Widget)</code> 由两部分组成.</p>
+<p>在调用 processWidget 之前，编译器必须做以下三件事：</p>
+<ul>
+<li>调用 <code>priority()</code></li>
+<li>执行 <code>new Widget</code> 表达式 </li>
+<li>调用 <code>tr1::shared_ptr</code> 构造函数</li>
+</ul>
+<p>c++ 编译器可能以不同的次序完成这些事情：对 priority 的调用可以在第一或第二或第三执行。可能获得这样的操作序列：</p>
+<ol>
+<li>执行 <code>new Widget</code> 表达式 </li>
+<li>调用 <code>priority()</code></li>
+<li>调用 <code>tr1::shared_ptr</code> 构造函数</li>
+</ol>
+<p>万一对 priority 的调用导致异常， “new Widget” 返回的指针将会遗失。</p>
+<p>避免这类问题的办法很简单：使用分离语句:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">std::<span class="function">tr1::shared_ptr&lt;Widget&gt; <span class="title">pw</span><span class="params">(<span class="keyword">new</span> Widget)</span></span>; <span class="comment">//在单独语旬内以智能指针存储 newed 所得对象.</span></span><br><span class="line"><span class="built_in">processWidget</span>(pw, <span class="built_in">priority</span>()); </span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>以独立语句将 newed 对象存储于智能指针内。如果不这样做，一旦异常被抛出，有可能导致难以察觉的资源泄漏。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>读书笔记，来自 《Effective C++》第 3 版</p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Joey Lian</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://joeylian.github.io/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/">http://joeylian.github.io/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://joeylian.github.io" target="_blank">OneTime</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/C/">C++</a><a class="post-meta__tags" href="/tags/EffectiveC/">EffectiveC++</a></div><div class="post_share"><div class="social-share" data-image="/images/Cpp.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/"><img class="prev-cover" src="/images/Cpp.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">【EffectiveC++】设计与声明</div></div></a></div><div class="next-post pull-right"><a href="/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/"><img class="next-cover" src="/images/Cpp.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">C++右值引用与移动语义</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明"><img class="cover" src="/images/Cpp.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-01-23</div><div class="title">【EffectiveC++】设计与声明</div></div></a></div><div><a href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/" title="【EffectiveC++】让自己习惯C++"><img class="cover" src="/images/Cpp.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-28</div><div class="title">【EffectiveC++】让自己习惯C++</div></div></a></div><div><a href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" title="【EffectiveC++】构造/析构/赋值运算"><img class="cover" src="/images/Cpp.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-30</div><div class="title">【EffectiveC++】构造/析构/赋值运算</div></div></a></div><div><a href="/2020/07/26/2020-07-27-C++STL-Vector%E4%BB%8B%E7%BB%8D/" title="C++STL-Vector介绍"><img class="cover" src="/images/Cpp.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-07-27</div><div class="title">C++STL-Vector介绍</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/me.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Joey Lian</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/joeylian" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:lianjy9976@163.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E6%AC%BE-13-%E4%BB%A5%E5%AF%B9%E8%B1%A1%E7%AE%A1%E7%90%86%E8%B5%84%E6%BA%90"><span class="toc-number">1.</span> <span class="toc-text">条款 13: 以对象管理资源</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E6%AC%BE-14-%E5%9C%A8%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B1%BB%E4%B8%AD%E5%B0%8F%E5%BF%83-copying-%E8%A1%8C%E4%B8%BA"><span class="toc-number">2.</span> <span class="toc-text">条款 14: 在资源管理类中小心 copying 行为</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E6%AC%BE15-%E5%9C%A8%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E7%B1%BB%E4%B8%AD%E6%8F%90%E4%BE%9B%E5%AF%B9%E5%8E%9F%E5%A7%8B%E8%B5%84%E6%BA%90%E7%9A%84%E8%AE%BF%E9%97%AE"><span class="toc-number">3.</span> <span class="toc-text">条款15: 在资源管理类中提供对原始资源的访问</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E6%AC%BE16-%E6%88%90%E5%AF%B9%E4%BD%BF%E7%94%A8-new-%E5%92%8C-delete-%E6%97%B6%E8%A6%81%E9%87%87%E5%8F%96%E7%9B%B8%E5%90%8C%E5%BD%A2%E5%BC%8F"><span class="toc-number">4.</span> <span class="toc-text">条款16: 成对使用 new 和 delete 时要采取相同形式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E6%AC%BE-17-%E4%BB%A5%E7%8B%AC%E7%AB%8B%E8%AF%AD%E5%8F%A5%E5%B0%86-newed-%E5%AF%B9%E8%B1%A1%E7%BD%AE%E5%85%A5%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88"><span class="toc-number">5.</span> <span class="toc-text">条款 17: 以独立语句将 newed 对象置入智能指针</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" title="【EffectiveC++】构造/析构/赋值运算"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】构造/析构/赋值运算"/></a><div class="content"><a class="title" href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" title="【EffectiveC++】构造/析构/赋值运算">【EffectiveC++】构造/析构/赋值运算</a><time datetime="2021-12-29T16:00:00.000Z" title="发表于 2021-12-30 00:00:00">2021-12-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/" title="【EffectiveC++】让自己习惯C++"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】让自己习惯C++"/></a><div class="content"><a class="title" href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/" title="【EffectiveC++】让自己习惯C++">【EffectiveC++】让自己习惯C++</a><time datetime="2021-12-27T16:00:00.000Z" title="发表于 2021-12-28 00:00:00">2021-12-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】设计与声明"/></a><div class="content"><a class="title" href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明">【EffectiveC++】设计与声明</a><time datetime="2021-01-22T16:00:00.000Z" title="发表于 2021-01-23 00:00:00">2021-01-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="【EffectiveC++】资源管理"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】资源管理"/></a><div class="content"><a class="title" href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="【EffectiveC++】资源管理">【EffectiveC++】资源管理</a><time datetime="2021-01-21T16:00:00.000Z" title="发表于 2021-01-22 00:00:00">2021-01-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/" title="C++右值引用与移动语义"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C++右值引用与移动语义"/></a><div class="content"><a class="title" href="/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/" title="C++右值引用与移动语义">C++右值引用与移动语义</a><time datetime="2020-08-01T16:00:00.000Z" title="发表于 2020-08-02 00:00:00">2020-08-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/images/top.jpeg')"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2022 By Joey Lian</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.2
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container:not\([display]\)').forEach(node => {
+            const target = node.parentNode
+            if (target.nodeName.toLowerCase() === 'li') {
+              target.parentNode.classList.add('has-jax')
+            } else {
+              target.classList.add('has-jax')
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd9d8e97d1c1701a3d53b',
+      clientSecret: '52ab8c95467a938ecb0cfb1c3ca318d6574a806d',
+      repo: 'JoeyLian.github.io',
+      owner: 'JoeyLian',
+      admin: ['JoeyLian'],
+      id: 'a8e5bc2c26cd1a9ef3e11398813272cf',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !false) {
+  if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = false;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

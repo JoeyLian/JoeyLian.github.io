@@ -1,0 +1,310 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>凸优化--主要算法 | OneTime</title><meta name="keywords" content="应用运筹学,凸优化"><meta name="author" content="Joey Lian"><meta name="copyright" content="Joey Lian"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="本文对凸优化问题的解法进行简单的归纳整理，仅供引入，对于详细的使用与证明请自行查阅资料。 下降方法无约束优化问题 $$\min f(x)$$ 其中 $f: \mathbb{R}^n → \mathbb{R}$ 是二次可微凸函数(这意味着 domf 是开集)。我们假定  该问题存在唯一的最优点 ，用 $$p^*$$ 表示最优值 $$\inf_x f(x) &#x3D; f(x^*)$$ 目标函数在">
+<meta property="og:type" content="article">
+<meta property="og:title" content="凸优化--主要算法">
+<meta property="og:url" content="http://joeylian.github.io/2019/12/28/2019-12-30-%E5%87%B8%E4%BC%98%E5%8C%96--%E4%B8%BB%E8%A6%81%E7%AE%97%E6%B3%95/index.html">
+<meta property="og:site_name" content="OneTime">
+<meta property="og:description" content="本文对凸优化问题的解法进行简单的归纳整理，仅供引入，对于详细的使用与证明请自行查阅资料。 下降方法无约束优化问题 $$\min f(x)$$ 其中 $f: \mathbb{R}^n → \mathbb{R}$ 是二次可微凸函数(这意味着 domf 是开集)。我们假定  该问题存在唯一的最优点 ，用 $$p^*$$ 表示最优值 $$\inf_x f(x) &#x3D; f(x^*)$$ 目标函数在">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://joeylian.github.io/img/top.jpeg">
+<meta property="article:published_time" content="2019-12-28T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-29T12:57:04.720Z">
+<meta property="article:author" content="Joey Lian">
+<meta property="article:tag" content="应用运筹学">
+<meta property="article:tag" content="凸优化">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://joeylian.github.io/img/top.jpeg"><link rel="shortcut icon" href="/img/me.jpeg"><link rel="canonical" href="http://joeylian.github.io/2019/12/28/2019-12-30-%E5%87%B8%E4%BC%98%E5%8C%96--%E4%B8%BB%E8%A6%81%E7%AE%97%E6%B3%95/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '凸优化--主要算法',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-03-29 20:57:04'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.1.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/me.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 总览</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/top.jpeg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">OneTime</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 总览</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">凸优化--主要算法<a class="post-edit-link" href="https://github.com/JoeyLian/githubio/edit/master/source/_posts/2019-12-30-凸优化--主要算法.md" title="编辑" target="_blank"><i class="fas fa-pencil-alt"></i></a></h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2019-12-28T16:00:00.000Z" title="发表于 2019-12-29 00:00:00">2019-12-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-03-29T12:57:04.720Z" title="更新于 2022-03-29 20:57:04">2022-03-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/AOR/">AOR</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="凸优化--主要算法"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/2019/12/28/2019-12-30-%E5%87%B8%E4%BC%98%E5%8C%96--%E4%B8%BB%E8%A6%81%E7%AE%97%E6%B3%95/#post-comment"><span class="gitalk-comment-count"></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>本文对凸优化问题的解法进行简单的归纳整理，仅供引入，对于详细的使用与证明请自行查阅资料。</p>
+<h3 id="下降方法"><a href="#下降方法" class="headerlink" title="下降方法"></a>下降方法</h3><p>无约束优化问题</p>
+<p>$$<br>\min f(x)<br>$$</p>
+<p>其中 $f: \mathbb{R}^n → \mathbb{R}$ 是二次可微凸函数(这意味着 domf 是开集)。我们假定</p>
+<ul>
+<li>该问题存在唯一的最优点 ，用 $$p^*$$ 表示最优值 $$\inf_x f(x) &#x3D; f(x^*)$$</li>
+<li>目标函数在 $S$ 上是强凸的，存在 $m&gt;0$ 使得 $\nabla ^2 f(x) &gt; mI$ 对任意的 $x\in S$ 都成立。</li>
+</ul>
+<p>无约束问题中我们讨论<strong>下降方法</strong>。方法需要一个适当的初始点 $x^{(0)}$ 必须属于 $\mathbf{dom}f $， 并且下水平集是闭集。</p>
+<p>算法产生一个优化点列  $x^{(k)},k &#x3D; 1,…$, 其中</p>
+<p>$$<br>x^{(k+1)} &#x3D;  x^{(k)} + t^{(k)}\Delta x^{(k)}<br>$$</p>
+<p>且当 $x^{(k)}$ 不是最优点时，$t^{(k)} &gt;0$。其中， $\Delta x\in \mathbb{R}^n$ 称为步径或搜索方向，$t^{(k)} \ge0$称为步长。对于下降方法，我们需要满足 $x^{(k)}$ 不是最优点时 $f(x^{(k+1)})&lt;f(x^{(k)})$, 因此，搜索方向必须满足$\nabla f(x^{(k)})^T\Delta x^{(k)}&lt;0$ , 即它与负梯度方向夹角必须是锐角，称这样的方向为下降方向。</p>
+<p>对于步长考虑两种方法：</p>
+<p><strong>精确直线搜索</strong>： $$t &#x3D; \arg\min_{s\ge0} f(x+s\Delta x)$$, 即对得到的方向找到下降最大的步长</p>
+<p><strong>回溯直线搜索</strong> ：给定下降方向与参数 $\alpha,\beta, 0&lt;\alpha &lt; 0.5, 0&lt;\beta&lt;1$。$t :&#x3D; 1$。当 $f(x+\Delta x)&gt;f(x) + \alpha t\nabla f(x)^T\Delta x$ 时，令 $t:&#x3D;\beta x$。回溯直线搜索并不需要得到一个精确的步长，只是希望得到一个步长使函数指有一定的减小，即  $f(x+\Delta x)\le f(x) + \alpha t\nabla f(x)^T\Delta x$，落在下图的虚线之间 (图源：<em>《凸优化》，Stephen Boyd等著，王书宁等译</em>)</p>
+<p><img src="/images/image-20200101101514620.png" alt="image-20200101101514620"></p>
+<p>接下来我们介绍几个下降方法</p>
+<h4 id="梯度下降方法"><a href="#梯度下降方法" class="headerlink" title="梯度下降方法"></a>梯度下降方法</h4><p>用负梯度作搜索方向，即令$\Delta x &#x3D; -\nabla f(x)$， 是一种自然的选择。相应的方法被称为梯度下降方法。</p>
+<h4 id="最速下降方法"><a href="#最速下降方法" class="headerlink" title="最速下降方法"></a>最速下降方法</h4><p><strong>规范化的最速下降方向</strong>：令 $\vert\vert \cdot \vert\vert$ 为 $\mathbb{R}^n$ 上的任意范数。定义一个规范化的最速下降方向 (相对于范数) 为</p>
+<p>$$<br>\Delta x_{\mathrm{nsd}} &#x3D; \arg\min{\nabla f(x)^Tv\quad\vert \quad\vert\vert v\vert\vert &#x3D; 1}<br>$$</p>
+<p><strong>非规范化的最速下降方向</strong> ：$$\vert\vert\cdot\vert\vert_* $$ 表示对偶范数</p>
+<p>$$<br>\Delta x_{\mathrm{sd}} &#x3D; \vert\vert\nabla f(x)\vert\vert_*\Delta x_{\mathrm{nsd}},<br>$$</p>
+<p>当范数为 Euclid 范数时，最速下降方向就是负梯度方向。采用 Euclid 范数的最速下降方法就是梯度下降方法。</p>
+<h4 id="Newton-方法"><a href="#Newton-方法" class="headerlink" title="Newton 方法"></a>Newton 方法</h4><p>对于 $x\in\mathbf{dom}f$， 称向量</p>
+<p>$$<br>\Delta x_{\mathrm{nt}} &#x3D; -\nabla^2f(x)^{-1}\nabla f(x)<br>$$</p>
+<p>为 ( $f$ 在 $x$ 处的) Newton 步径。由 $\nabla ^2f(x)$ 的正定性可知，当 $\nabla f(x) \neq 0$，有</p>
+<p>$$<br>\nabla f(x)^T\Delta x_{\mathrm{nt}} &#x3D; -\nabla f(x)^T\nabla^2f(x)^{-1}\nabla f(x) &lt; 0<br>$$</p>
+<p>因此 Newton 步径是下降方向(除非 $x$ 是最优点)。</p>
+<p>Newton 步径是 $x$ 处采用 Hessian 矩阵定义的二次范数 $\vert\vert u\vert\vert_{\nabla^2f(x)} &#x3D; (y^t\nabla^2f(x)u)^{1&#x2F;2}$  导出的最速下降方法。函数 $f$ 在 $x$ 处的二阶 Taylor 近似是关于 $v$ 的二阶凸函数，且在 $v &#x3D; \Delta x_{\mathrm{nt}}$ 时达到最小值。因此Newton 方法在 $x^*$ 附近二阶近似的方法。</p>
+<h3 id="等式约束优化"><a href="#等式约束优化" class="headerlink" title="等式约束优化"></a>等式约束优化</h3><p>等式约束优化问题</p>
+<p>$$<br>\min f(x)\<br>\mathbf{s.t.} Ax &#x3D; b<br>$$</p>
+<p>其中 $f: \mathbb{R}^n → \mathbb{R}$ 是二次连续可微凸函数。我们假定</p>
+<ul>
+<li>$A\in \mathbb{R}^{p\times n}，\mathbf{rank} A &#x3D; p &lt; n $,  即等式约束数少于变量数且等式约束相互独立</li>
+<li>该问题存在唯一的最优点 ，用 $p^*$ 表示最优值 $\inf{f(x)\vert Ax &#x3D; b}  &#x3D; f(x^*)$</li>
+</ul>
+<h5 id="消除等式约束"><a href="#消除等式约束" class="headerlink" title="消除等式约束"></a>消除等式约束</h5><p>可行解 $$ {x\vert Ax &#x3D; b} &#x3D; {Fz+\hat{x}\vert z \in \mathbb{R}^{n-p}}$$, 新的优化问题为：</p>
+<p>$$<br>\min \tilde{f}(z) &#x3D; f(Fz+\hat{x})<br>$$</p>
+<h5 id="用对偶方法求解"><a href="#用对偶方法求解" class="headerlink" title="用对偶方法求解"></a>用对偶方法求解</h5><p>即 $f^*$ 为$f$ 的共轭，对偶问题为</p>
+<p>$$<br>\max -b^Tv-f^*(-A^Tv)<br>$$</p>
+<p>若原问题存在最优解，Slater 条件成立，强对偶性成立，最优对偶目标可以达到。如果对偶函数 $g$ 是二次可微的，可以无约束优化方法极大化 $g$, 一旦找到最优的对偶变量 $$v^*$$，我们就可以由它构造出原问题的最优解 $$x^*$$。 </p>
+<h3 id="障碍方法"><a href="#障碍方法" class="headerlink" title="障碍方法"></a>障碍方法</h3><p>含有不等式约的凸束优化问题</p>
+<p>$$<br>\min f_0(x)\<br>\mathbf{s.t.} f_i(x)\le 0, i &#x3D; 1,…,m\<br>Ax &#x3D; b\<br>$$</p>
+<p>其中 $f_0,…,f_m: \mathbb{R}^n → \mathbb{R}$ 是二次连续可微凸函数。我们假定</p>
+<ul>
+<li>$A\in \mathbb{R}^{p\times n}，\mathbf{rank} A &#x3D; p &lt; n $,  即等式约束数少于变量数且等式约束相互独立</li>
+<li>该问题存在唯一的最优点 ，用 $$p^*$$ 表示最优值 $$\inf{f(x)\vert Ax &#x3D; b}  &#x3D; f(x^*)$$</li>
+</ul>
+<p>内点法通过将其简化成一系列线性等式约束问题求解线性等式和不等式约束的优化问题。我们将集中讨论一种特殊的内点法，障碍法。</p>
+<h5 id="对数障碍函数"><a href="#对数障碍函数" class="headerlink" title="对数障碍函数"></a>对数障碍函数</h5><p>我们知道，可以用示性函数将不等式约束隐含在目标函数中：</p>
+<p>$$<br>\min F(x) &#x3D; f_0(x) + \sum_{i &#x3D; 1}^m I_(f_i(x)) + \sum_{i&#x3D;1}^pI_0(h_i(x))\<br>\mathbf{s.t.}Ax &#x3D; b\<br>$$</p>
+<p>其中</p>
+<p>$$<br>\begin{equation}<br>I_(u)&#x3D;<br>\begin{cases}<br>0&amp; u\le0\<br>\infty&amp; u&gt;0<br>\end{cases}<br>\end{equation}<br>$$</p>
+<p> 障碍方法的基本思想是用函数近似示性函数, 主要使用以下函数</p>
+<p>$$<br>\hat{I}_(u) &#x3D; -(1&#x2F;t)\log(-u)<br>$$</p>
+<p>我们将函数</p>
+<p>$$<br>\phi (x) &#x3D; -\sum_{i &#x3D; 1}^m \log(-f_i(x))<br>$$</p>
+<p>称为问题的对数障碍函数或对数障碍。其定义域是满足问题的严格不等式约束的点集。不管正参数 t 取什么值， 对于任意 $i$，当 $f_i(x) → 0$ 时，对数障碍函数将趋于无穷大。 </p>
+<h5 id="障碍方法-1"><a href="#障碍方法-1" class="headerlink" title="障碍方法"></a>障碍方法</h5><p><img src="/images/image-20200101145804053.png" alt="image-20200101145804053"></p>
+<p> (图源：<em>《凸优化》，Stephen Boyd等著，王书宁等译</em>) 障碍方法给不等式约束一个无穷大的惩罚从而使得到的解一定满足原问题可行。然而这不能得到原问题的最优解。但随着 $t$ 逐渐增加，当 $t  → \infty$ 时，障碍函数的影响较小，我们可以得到最优解。</p>
+<h3 id="外部罚函数法"><a href="#外部罚函数法" class="headerlink" title="外部罚函数法"></a>外部罚函数法</h3><p>外部罚函数法通过给原问题增加一个惩罚函数将有约束最优化问题转化为求解无约束最优化问题。它是在不可行解中得到最优解，通过迭代使解逐渐可行。（障碍法也被称为内部罚函数法）</p>
+<p>这里只做简单介绍：外部罚函数法添加的罚函数会对不满足约束的的变量一个较大的惩罚，与对偶函数不同的是，它不会给满足约束的变量奖励。外部罚函数法得到的不一定是可行解，与障碍法相同，它通过迭代改变原函数与惩罚函数的比例，通过逐渐增大惩罚函数因子使最优解逐渐可行。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Joey Lian</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://joeylian.github.io/2019/12/28/2019-12-30-%E5%87%B8%E4%BC%98%E5%8C%96--%E4%B8%BB%E8%A6%81%E7%AE%97%E6%B3%95/">http://joeylian.github.io/2019/12/28/2019-12-30-%E5%87%B8%E4%BC%98%E5%8C%96--%E4%B8%BB%E8%A6%81%E7%AE%97%E6%B3%95/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://joeylian.github.io" target="_blank">OneTime</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%BA%94%E7%94%A8%E8%BF%90%E7%AD%B9%E5%AD%A6/">应用运筹学</a><a class="post-meta__tags" href="/tags/%E5%87%B8%E4%BC%98%E5%8C%96/">凸优化</a></div><div class="post_share"><div class="social-share" data-image="/img/top.jpeg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2019/12/28/2019-12-29-%E5%87%B8%E4%BC%98%E5%8C%96--%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/"><img class="prev-cover" src="/img/top.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">凸优化--基本概念</div></div></a></div><div class="next-post pull-right"><a href="/2019/12/27/2019-12-28-%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/"><img class="next-cover" src="/images/AOR.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">背包问题</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2019/12/28/2019-12-29-%E5%87%B8%E4%BC%98%E5%8C%96--%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/" title="凸优化--基本概念"><img class="cover" src="/img/top.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-12-29</div><div class="title">凸优化--基本概念</div></div></a></div><div><a href="/2019/12/30/2019-12-31-%E5%87%B8%E4%BC%98%E5%8C%96--Lagrange%E5%AF%B9%E5%81%B6/" title="凸优化--Lagrange对偶"><img class="cover" src="/img/top.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-12-31</div><div class="title">凸优化--Lagrange对偶</div></div></a></div><div><a href="/2019/11/02/2019-11-03-%E5%8E%9F%E5%A7%8B-%E5%AF%B9%E5%81%B6%E6%96%B9%E6%B3%95%E4%B8%8E%E6%9C%80%E7%9F%AD%E8%B7%AF%E7%AE%97%E6%B3%95/" title="原始-对偶方法与最短路算法"><img class="cover" src="/images/AOR.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-11-03</div><div class="title">原始-对偶方法与最短路算法</div></div></a></div><div><a href="/2019/11/06/2019-11-07-%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E4%B8%8E%E5%8D%95%E7%BA%AF%E5%BD%A2%E6%B3%95/" title="线性规划与单纯形法"><img class="cover" src="/images/AOR.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-11-07</div><div class="title">线性规划与单纯形法</div></div></a></div><div><a href="/2019/12/25/2019-12-26-%E6%95%B4%E6%95%B0%E8%A7%84%E5%88%92/" title="整数规划"><img class="cover" src="/images/AOR.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-12-26</div><div class="title">整数规划</div></div></a></div><div><a href="/2019/12/27/2019-12-28-%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/" title="背包问题"><img class="cover" src="/images/AOR.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-12-28</div><div class="title">背包问题</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/me.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Joey Lian</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/joeylian" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:lianjy9976@163.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8B%E9%99%8D%E6%96%B9%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text">下降方法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E6%96%B9%E6%B3%95"><span class="toc-number">1.1.</span> <span class="toc-text">梯度下降方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%80%E9%80%9F%E4%B8%8B%E9%99%8D%E6%96%B9%E6%B3%95"><span class="toc-number">1.2.</span> <span class="toc-text">最速下降方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Newton-%E6%96%B9%E6%B3%95"><span class="toc-number">1.3.</span> <span class="toc-text">Newton 方法</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AD%89%E5%BC%8F%E7%BA%A6%E6%9D%9F%E4%BC%98%E5%8C%96"><span class="toc-number">2.</span> <span class="toc-text">等式约束优化</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%B6%88%E9%99%A4%E7%AD%89%E5%BC%8F%E7%BA%A6%E6%9D%9F"><span class="toc-number">2.0.1.</span> <span class="toc-text">消除等式约束</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%94%A8%E5%AF%B9%E5%81%B6%E6%96%B9%E6%B3%95%E6%B1%82%E8%A7%A3"><span class="toc-number">2.0.2.</span> <span class="toc-text">用对偶方法求解</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9A%9C%E7%A2%8D%E6%96%B9%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">障碍方法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AF%B9%E6%95%B0%E9%9A%9C%E7%A2%8D%E5%87%BD%E6%95%B0"><span class="toc-number">3.0.1.</span> <span class="toc-text">对数障碍函数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%9A%9C%E7%A2%8D%E6%96%B9%E6%B3%95-1"><span class="toc-number">3.0.2.</span> <span class="toc-text">障碍方法</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%96%E9%83%A8%E7%BD%9A%E5%87%BD%E6%95%B0%E6%B3%95"><span class="toc-number">4.</span> <span class="toc-text">外部罚函数法</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" title="【EffectiveC++】构造/析构/赋值运算"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】构造/析构/赋值运算"/></a><div class="content"><a class="title" href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" title="【EffectiveC++】构造/析构/赋值运算">【EffectiveC++】构造/析构/赋值运算</a><time datetime="2021-12-29T16:00:00.000Z" title="发表于 2021-12-30 00:00:00">2021-12-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/" title="【EffectiveC++】让自己习惯C++"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】让自己习惯C++"/></a><div class="content"><a class="title" href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/" title="【EffectiveC++】让自己习惯C++">【EffectiveC++】让自己习惯C++</a><time datetime="2021-12-27T16:00:00.000Z" title="发表于 2021-12-28 00:00:00">2021-12-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】设计与声明"/></a><div class="content"><a class="title" href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明">【EffectiveC++】设计与声明</a><time datetime="2021-01-22T16:00:00.000Z" title="发表于 2021-01-23 00:00:00">2021-01-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="【EffectiveC++】资源管理"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】资源管理"/></a><div class="content"><a class="title" href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="【EffectiveC++】资源管理">【EffectiveC++】资源管理</a><time datetime="2021-01-21T16:00:00.000Z" title="发表于 2021-01-22 00:00:00">2021-01-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/" title="C++右值引用与移动语义"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C++右值引用与移动语义"/></a><div class="content"><a class="title" href="/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/" title="C++右值引用与移动语义">C++右值引用与移动语义</a><time datetime="2020-08-01T16:00:00.000Z" title="发表于 2020-08-02 00:00:00">2020-08-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/img/top.jpeg')"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2022 By Joey Lian</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.2
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container:not\([display]\)').forEach(node => {
+            const target = node.parentNode
+            if (target.nodeName.toLowerCase() === 'li') {
+              target.parentNode.classList.add('has-jax')
+            } else {
+              target.classList.add('has-jax')
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd9d8e97d1c1701a3d53b',
+      clientSecret: '52ab8c95467a938ecb0cfb1c3ca318d6574a806d',
+      repo: 'JoeyLian.github.io',
+      owner: 'JoeyLian',
+      admin: ['JoeyLian'],
+      id: 'a373832e27b8528b370fc4d137975665',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !false) {
+  if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = false;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

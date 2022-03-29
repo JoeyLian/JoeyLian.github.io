@@ -1,0 +1,299 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>背包问题 | OneTime</title><meta name="keywords" content="应用运筹学,线性规划,背包问题"><meta name="author" content="Joey Lian"><meta name="copyright" content="Joey Lian"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="一些概念介绍背包问题之前，先说明几个概念。 标准时间复杂度：在标准时间复杂度中，输入规模的定义为：保存输入数据所需要的bit位数。举个例子，在排序算法中，输入是32-bit整数的数组，那么输入规模就是$32n$，$n$ 是指数组中元素的个数。 多项式时间：对于一个问题，在输入规模为$x$ 的情况下，如果一个算法能够在 $O(x^k)$ 时间内解决此问题，则我们称此算法是多项式时间的，其中$k$ 为">
+<meta property="og:type" content="article">
+<meta property="og:title" content="背包问题">
+<meta property="og:url" content="http://joeylian.github.io/2019/12/27/2019-12-28-%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:site_name" content="OneTime">
+<meta property="og:description" content="一些概念介绍背包问题之前，先说明几个概念。 标准时间复杂度：在标准时间复杂度中，输入规模的定义为：保存输入数据所需要的bit位数。举个例子，在排序算法中，输入是32-bit整数的数组，那么输入规模就是$32n$，$n$ 是指数组中元素的个数。 多项式时间：对于一个问题，在输入规模为$x$ 的情况下，如果一个算法能够在 $O(x^k)$ 时间内解决此问题，则我们称此算法是多项式时间的，其中$k$ 为">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://joeylian.github.io/images/AOR.png">
+<meta property="article:published_time" content="2019-12-27T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-29T12:57:04.720Z">
+<meta property="article:author" content="Joey Lian">
+<meta property="article:tag" content="应用运筹学">
+<meta property="article:tag" content="线性规划">
+<meta property="article:tag" content="背包问题">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://joeylian.github.io/images/AOR.png"><link rel="shortcut icon" href="/img/me.jpeg"><link rel="canonical" href="http://joeylian.github.io/2019/12/27/2019-12-28-%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '背包问题',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-03-29 20:57:04'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.1.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/me.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 总览</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/images/top.jpeg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">OneTime</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 总览</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">背包问题<a class="post-edit-link" href="https://github.com/JoeyLian/githubio/edit/master/source/_posts/2019-12-28-背包问题.md" title="编辑" target="_blank"><i class="fas fa-pencil-alt"></i></a></h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2019-12-27T16:00:00.000Z" title="发表于 2019-12-28 00:00:00">2019-12-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-03-29T12:57:04.720Z" title="更新于 2022-03-29 20:57:04">2022-03-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/AOR/">AOR</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="背包问题"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/2019/12/27/2019-12-28-%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/#post-comment"><span class="gitalk-comment-count"></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="一些概念"><a href="#一些概念" class="headerlink" title="一些概念"></a>一些概念</h2><p>介绍背包问题之前，先说明几个概念。</p>
+<p><strong>标准时间复杂度</strong>：在标准时间复杂度中，输入规模的定义为：<strong>保存输入数据所需要的bit位数</strong>。举个例子，在排序算法中，输入是32-bit整数的数组，那么输入规模就是$32n$，$n$ 是指数组中元素的个数。</p>
+<p><strong>多项式时间：</strong>对于一个问题，在输入规模为$x$ 的情况下，如果一个算法能够在 $O(x^k)$ 时间内解决此问题，则我们称此算法是多项式时间的，其中$k$ 为常数。</p>
+<p>在一些问题中，标准定义下的多项式时间与传统的多项式时间是相同的。如冒泡排序中传统时间复杂度为 $O(n^2) $ ，对于$n$ 个元素，它的输入规模是 $32n$，因此标准定义下的时间复杂度为 $O((x&#x2F;32)^2) &#x3D; O(x^2)$ 。  </p>
+<p>但在一些问题中则不同, 考虑判断一个整数是否为素数的算法, 设输入的整数为 $n$, 我们可以简单得到一个时间复杂度为 $O(n^k)$ 的算法。然而, 保存一个整数需要的 bit 位数是 $x &#x3D; \log n$ , 在标准时间复杂度中, 算法的复杂度变成了 $ (2^x)^k &#x3D; 2 ^{xk} $, 是指数时间复杂度。</p>
+<p><strong>伪多项式时间复杂度</strong> (PPTAS (Pseudo-polynomial time approximation scheme)) : 一个算法的传统时间复杂度是多项式时间的，而标准时间复杂度不是多项式时间的。</p>
+<p>接下来我们考虑一个 NP-hard 问题 $\cal I$ 的近似算法 $\cal A$,  $\epsilon $ 表示该算法的误差参数 $ \epsilon &#x3D; \frac{\vert OPT(\cal I) -A(\cal I)\vert }{OPT(\cal I)} $ </p>
+<p><strong>多项式时间近似算法</strong>  (PTAS (Polynomial time approximation scheme)) : 对于每一个固定的 $\epsilon &gt;0$  ，算法 $\cal A$ 的运行时间以实例 $\cal I$ 的规模的多项式为上界。</p>
+<p>然而有多项时间近似算法并不一定就有很好的应用, 因为很多算法都是$1&#x2F; \epsilon $ 的指数时间算法,如 $ O(n^{1&#x2F;\epsilon})$ , 当我们希望误差小于 1% 时, 算法复杂度可能高达  $ O(n^{100})$ , 因此提出一个更强的要求: </p>
+<p><strong>完全多项式时间近似算法</strong> (FPTAS (Fully polynomial time approximation scheme)): 算法 $\cal A$  的运行时间以实例 $\cal I$ 的规模和 $1&#x2F; \epsilon $ 的多项式为上界。即算法复杂度为   $ O(n^k &#x2F; \epsilon ^ m)$ </p>
+<h2 id="背包问题"><a href="#背包问题" class="headerlink" title="背包问题"></a>背包问题</h2><p>问题: 给定$n$个物品，第 $i$ 个物体大小为 $s_i$，价值为 $v_i$ ， 背包大小为 K , 找到物品的集合使得背包内物品的价值最大。</p>
+<h3 id="整数规划"><a href="#整数规划" class="headerlink" title="整数规划:"></a>整数规划:</h3><p>我们已经知道背包问题的整数规划形式: 记有 $n$  个物品，第 $i$ 个物体大小为 $s_i$，价值为 $v_i$ ， 背包大小为 K ， $ x_i &#x3D; 1 $ 表示选中该物体，   $x_i &#x3D; 0$  则不选。背包问题的整数规划为： </p>
+<p>$$<br>\max \sum_{i &#x3D;1}^n v_i x_i \quad\<br>s.t. \sum_{i&#x3D;1}^n s_i x_i \le C\<br>x_i \in {0,1}<br>$$</p>
+<h3 id="贪心算法"><a href="#贪心算法" class="headerlink" title="贪心算法"></a>贪心算法</h3><p>背包问题最合理的贪心算法是根据物品的单位价值 $ {v_i}&#x2F;{s_i}$ 对物品进行排序, 从单位价值最大的物品开始选取直到无法放入背包。</p>
+<p>这个算法的近似比是无穷大的: 我们考虑三个解:</p>
+<ul>
+<li>将整数规划放松为线性规划的最优解 $OPT_{LP} (\cal I)$ : 可以简单得到, 线性规划的最优解会去单位价值最大的前 $m$ 个物品为 1, 下一个物品为小数 (或0) : 线性规划总能使背包装满, 选择单位价值最大的物品可以是在一定的空间内总价值最大。记前 $m$ 个物品的总价值为 $\alpha$ , 下一个物品的价值为 $\beta$,   $OPT_{LP} (\cal I) \le \alpha + \beta$</li>
+<li>贪心算法的解 $Greedy (\cal I) $:  前 $m$ 个物品也会被取到, 剩余的空间可能放入其他体积更小的物品,  $Greedy (\cal I) \ge \alpha$</li>
+<li>背包问题的最优解 $OPT  (\cal I) $: 整数规划的最优解一定不优于线性规划, 因此   $OPT_{LP} (\cal I)  \le OPT_{LP} (\cal I) \le  \alpha + \beta$</li>
+</ul>
+<p>因此该算法的近似比为:</p>
+<p>$$<br>\frac{OPT(\cal I)}{Greedy(\cal I)}\le \frac{OPT_{LP}(\cal I)}{Greedy(\cal I)} \le \frac{\alpha + \beta}{\alpha} &#x3D; 1 + \frac{\beta}{\alpha}<br>$$</p>
+<p>然而,  $ \beta&#x2F; \alpha$ 可能趋于正无穷: 设前 $m$ 个物品的体积和为 $2\epsilon$, 单位价值为 $v_0 $, 后面的物品的体积为 $ K-\epsilon$, 单位价值为 $v_0 &#x2F;2 $, 此时无法再放入其他物品,   $\beta&#x2F; \alpha &#x3D; (K-\epsilon) &#x2F; 4\epsilon$ , 当 $\epsilon$ 很小时趋于无穷大。</p>
+<ul>
+<li>这里可以加入一个小判断: 当$\beta &gt; \alpha $时, 算法只取价值 $\beta$ 的这个物体 (在算法开始前保证$v_i \le K$ ), 此时算法的近似比为 2。</li>
+</ul>
+<h3 id="动态规划-PPTAS"><a href="#动态规划-PPTAS" class="headerlink" title="动态规划 (PPTAS)"></a>动态规划 (PPTAS)</h3><p>背包问题是动态规划中的基础问题:</p>
+<p>$F_j(i)$ 表示: 前 $j$ 个物品中价值和为 $i$ 的物品所需的最小空间。最优解为 $ F_n(1), …, F_n(\sum v)$ 中 $F_n(i) \le K $ 中 $i$ 最大的情况。</p>
+<p>$$<br>OPT &#x3D; \arg\max {i \vert F_n(i) \le K} \<br>$$</p>
+<p>$$<br>F_1(0) &#x3D; 0, F_1(i \le v_1) &#x3D; s_1 , F_1(i &gt; v_1) &#x3D; +\infty\<br>$$</p>
+<p>$$<br>F_j (i) &#x3D; \min{ F_{j-1}(i), F_{j-1}(i-v_j) + s_j}<br>$$</p>
+<p>第三行分别表示不取第 $j$ 个物品与取第 $j$ 个物品。算法的时间复杂度为 $O(n\sum v_i) \le O(n^2 v_\max)$。</p>
+<p>由于时间复杂度与 $v_\max$ 有关, 这是一个伪多项式时间复杂度的算法: 当 $v_\max$ 很大时, 输入的 bit 数 $x &#x3D; \log  v_\max$ , 标准时间复杂度为 $O(n^2 2^x)$。</p>
+<h4 id="近似算法"><a href="#近似算法" class="headerlink" title="近似算法"></a>近似算法</h4><p>顺着上面动态规划的方法, 我们先介绍一个完全多项式时间的近似算法:</p>
+<p>上面方法是伪多项式时间的原因是时间复杂度与  $v_\max$ 有关, 因此我们希望将时间复杂度中的  $v_\max$  去掉。</p>
+<p>另每个物品的价值减小为  $$v_i’ &#x3D; \lfloor\frac{v_i}{K}\rfloor$$ 用动态规划求解当前的最优解, 时间复杂度为 $$O(\frac{n^2V_{\max}}{K})$$</p>
+<p>设当前问题的最优解为$ S’$ , 原问题的最优解 $S^*$ 。首先计算当前问题与原问题的误差: </p>
+<p>$$<br>\begin{align}<br>\sum_{j\in S’} V_j &amp;\ge\lfloor \sum <em>{j \in S’} \frac{V_j}{K} \rfloor\cdot K \<br>&amp;&#x3D; K \cdot\sum</em>{j\in S’} V_j’ \<br>&amp;\ge K\cdot\sum_{j\in S^*} V_j’\<br>&amp;\ge \sum_{j \in S^*}(\frac{V_j}{K}-1)\cdot K\<br>&amp;&#x3D; \sum_{j\in S*}V_j - K\vert S^*\vert  \<br>&amp;\ge OPT - n K<br>\end{align}<br>$$</p>
+<ol>
+<li>由下界显然成立</li>
+<li>$$v_i’ &#x3D; \lfloor\frac{v_i}{K}\rfloor$$ 使我们定义的物品新的价值</li>
+<li>在新的问题中, 最优解为$ S’$ ,而$S^*$ 为可行解, 最优解的值大于等于任意的可行解</li>
+<li>$v_i’ &#x3D; \lfloor\frac{v_i}{K}\rfloor\ge \frac{v_i}{K}-1 $</li>
+<li>展开</li>
+<li>$ \vert S^*\vert  \le n$</li>
+</ol>
+<p>为了使误差 $nK \le \epsilon\cdot  OPT$ </p>
+<p>$$<br>\begin{align}<br>&amp;nK \le \epsilon\cdot  OPT \<br>\Leftarrow &amp;K \le \frac{\epsilon\cdot  OPT }{n} \<br>\Leftarrow &amp;K \le \frac{\epsilon\cdot  v_\max }{n}\<br>\end{align}<br>$$</p>
+<p>最后一行: $ OPT \ge v_\max$ (只需取价值最大的物品即可得到$v_\max$ 的解) 因此 $ K \le \frac{\epsilon\cdot  v_\max }{n} \le \frac{\epsilon\cdot OPT }{n}$    </p>
+<p>取 $ K &#x3D; \frac{\epsilon}{n} v_{\max}$, 此时时间复杂度为 $$O(\frac{n^2v_{\max}}{K}) &#x3D; O(\frac{n^3}{\epsilon})$$, 是一个完全多项式时间近似算法。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Joey Lian</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://joeylian.github.io/2019/12/27/2019-12-28-%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/">http://joeylian.github.io/2019/12/27/2019-12-28-%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://joeylian.github.io" target="_blank">OneTime</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%BA%94%E7%94%A8%E8%BF%90%E7%AD%B9%E5%AD%A6/">应用运筹学</a><a class="post-meta__tags" href="/tags/%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92/">线性规划</a><a class="post-meta__tags" href="/tags/%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/">背包问题</a></div><div class="post_share"><div class="social-share" data-image="/images/AOR.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2019/12/28/2019-12-30-%E5%87%B8%E4%BC%98%E5%8C%96--%E4%B8%BB%E8%A6%81%E7%AE%97%E6%B3%95/"><img class="prev-cover" src="/img/top.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">凸优化--主要算法</div></div></a></div><div class="next-post pull-right"><a href="/2019/12/25/2019-12-26-%E6%95%B4%E6%95%B0%E8%A7%84%E5%88%92/"><img class="next-cover" src="/images/AOR.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">整数规划</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2019/11/02/2019-11-03-%E5%8E%9F%E5%A7%8B-%E5%AF%B9%E5%81%B6%E6%96%B9%E6%B3%95%E4%B8%8E%E6%9C%80%E7%9F%AD%E8%B7%AF%E7%AE%97%E6%B3%95/" title="原始-对偶方法与最短路算法"><img class="cover" src="/images/AOR.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-11-03</div><div class="title">原始-对偶方法与最短路算法</div></div></a></div><div><a href="/2019/11/06/2019-11-07-%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E4%B8%8E%E5%8D%95%E7%BA%AF%E5%BD%A2%E6%B3%95/" title="线性规划与单纯形法"><img class="cover" src="/images/AOR.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-11-07</div><div class="title">线性规划与单纯形法</div></div></a></div><div><a href="/2019/12/25/2019-12-26-%E6%95%B4%E6%95%B0%E8%A7%84%E5%88%92/" title="整数规划"><img class="cover" src="/images/AOR.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-12-26</div><div class="title">整数规划</div></div></a></div><div><a href="/2019/12/28/2019-12-29-%E5%87%B8%E4%BC%98%E5%8C%96--%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/" title="凸优化--基本概念"><img class="cover" src="/img/top.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-12-29</div><div class="title">凸优化--基本概念</div></div></a></div><div><a href="/2019/12/28/2019-12-30-%E5%87%B8%E4%BC%98%E5%8C%96--%E4%B8%BB%E8%A6%81%E7%AE%97%E6%B3%95/" title="凸优化--主要算法"><img class="cover" src="/img/top.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-12-29</div><div class="title">凸优化--主要算法</div></div></a></div><div><a href="/2019/12/30/2019-12-31-%E5%87%B8%E4%BC%98%E5%8C%96--Lagrange%E5%AF%B9%E5%81%B6/" title="凸优化--Lagrange对偶"><img class="cover" src="/img/top.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-12-31</div><div class="title">凸优化--Lagrange对偶</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/me.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Joey Lian</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/joeylian" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:lianjy9976@163.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E6%A6%82%E5%BF%B5"><span class="toc-number">1.</span> <span class="toc-text">一些概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98"><span class="toc-number">2.</span> <span class="toc-text">背包问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B4%E6%95%B0%E8%A7%84%E5%88%92"><span class="toc-number">2.1.</span> <span class="toc-text">整数规划:</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95"><span class="toc-number">2.2.</span> <span class="toc-text">贪心算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-PPTAS"><span class="toc-number">2.3.</span> <span class="toc-text">动态规划 (PPTAS)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%91%E4%BC%BC%E7%AE%97%E6%B3%95"><span class="toc-number">2.3.1.</span> <span class="toc-text">近似算法</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" title="【EffectiveC++】构造/析构/赋值运算"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】构造/析构/赋值运算"/></a><div class="content"><a class="title" href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" title="【EffectiveC++】构造/析构/赋值运算">【EffectiveC++】构造/析构/赋值运算</a><time datetime="2021-12-29T16:00:00.000Z" title="发表于 2021-12-30 00:00:00">2021-12-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/" title="【EffectiveC++】让自己习惯C++"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】让自己习惯C++"/></a><div class="content"><a class="title" href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/" title="【EffectiveC++】让自己习惯C++">【EffectiveC++】让自己习惯C++</a><time datetime="2021-12-27T16:00:00.000Z" title="发表于 2021-12-28 00:00:00">2021-12-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】设计与声明"/></a><div class="content"><a class="title" href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明">【EffectiveC++】设计与声明</a><time datetime="2021-01-22T16:00:00.000Z" title="发表于 2021-01-23 00:00:00">2021-01-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="【EffectiveC++】资源管理"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】资源管理"/></a><div class="content"><a class="title" href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="【EffectiveC++】资源管理">【EffectiveC++】资源管理</a><time datetime="2021-01-21T16:00:00.000Z" title="发表于 2021-01-22 00:00:00">2021-01-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/" title="C++右值引用与移动语义"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C++右值引用与移动语义"/></a><div class="content"><a class="title" href="/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/" title="C++右值引用与移动语义">C++右值引用与移动语义</a><time datetime="2020-08-01T16:00:00.000Z" title="发表于 2020-08-02 00:00:00">2020-08-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/images/top.jpeg')"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2022 By Joey Lian</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.2
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container:not\([display]\)').forEach(node => {
+            const target = node.parentNode
+            if (target.nodeName.toLowerCase() === 'li') {
+              target.parentNode.classList.add('has-jax')
+            } else {
+              target.classList.add('has-jax')
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd9d8e97d1c1701a3d53b',
+      clientSecret: '52ab8c95467a938ecb0cfb1c3ca318d6574a806d',
+      repo: 'JoeyLian.github.io',
+      owner: 'JoeyLian',
+      admin: ['JoeyLian'],
+      id: 'dd173dce299787b10495a6603c7eea43',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !false) {
+  if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = false;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

@@ -1,0 +1,340 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>网络流(二)-The_Preflow-Push_Algorithm | OneTime</title><meta name="keywords" content="Network Flow,最大流问题,Preflow-Push 算法,Push-Relabel 算法"><meta name="author" content="Joey Lian"><meta name="copyright" content="Joey Lian"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="基础定义Flow Networks (流网络)流网络指一个符合以下特征的有向图 G &#x3D; (V,E):     每条边关联一个非负数，即边的容量，记为 $c_e$  存在单一源点 (source node) $s\in V$：产生流量的点 存在单一汇点 (sink node) $t\in V$：吸收流量的点  一般的，我们假设流网络满足：没有边进入源点，没有边离开汇点。每个结点至少存在一条">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网络流(二)-The_Preflow-Push_Algorithm">
+<meta property="og:url" content="http://joeylian.github.io/2020/04/05/2020-04-06-%E7%BD%91%E7%BB%9C%E6%B5%81(%E4%BA%8C)-The_Preflow-Push_Algorithm/index.html">
+<meta property="og:site_name" content="OneTime">
+<meta property="og:description" content="基础定义Flow Networks (流网络)流网络指一个符合以下特征的有向图 G &#x3D; (V,E):     每条边关联一个非负数，即边的容量，记为 $c_e$  存在单一源点 (source node) $s\in V$：产生流量的点 存在单一汇点 (sink node) $t\in V$：吸收流量的点  一般的，我们假设流网络满足：没有边进入源点，没有边离开汇点。每个结点至少存在一条">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://joeylian.github.io/images/AlgDesign.png">
+<meta property="article:published_time" content="2020-04-05T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-29T12:57:04.720Z">
+<meta property="article:author" content="Joey Lian">
+<meta property="article:tag" content="Network Flow">
+<meta property="article:tag" content="最大流问题">
+<meta property="article:tag" content="Preflow-Push 算法">
+<meta property="article:tag" content="Push-Relabel 算法">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://joeylian.github.io/images/AlgDesign.png"><link rel="shortcut icon" href="/img/me.jpeg"><link rel="canonical" href="http://joeylian.github.io/2020/04/05/2020-04-06-%E7%BD%91%E7%BB%9C%E6%B5%81(%E4%BA%8C)-The_Preflow-Push_Algorithm/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '网络流(二)-The_Preflow-Push_Algorithm',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-03-29 20:57:04'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.1.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/me.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 总览</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/images/top.jpeg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">OneTime</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 总览</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">网络流(二)-The_Preflow-Push_Algorithm<a class="post-edit-link" href="https://github.com/JoeyLian/githubio/edit/master/source/_posts/2020-04-06-网络流(二)-The_Preflow-Push_Algorithm.md" title="编辑" target="_blank"><i class="fas fa-pencil-alt"></i></a></h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-04-05T16:00:00.000Z" title="发表于 2020-04-06 00:00:00">2020-04-06</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-03-29T12:57:04.720Z" title="更新于 2022-03-29 20:57:04">2022-03-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%AE%97%E6%B3%95%E8%AE%BE%E8%AE%A1/">算法设计</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="网络流(二)-The_Preflow-Push_Algorithm"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/2020/04/05/2020-04-06-%E7%BD%91%E7%BB%9C%E6%B5%81(%E4%BA%8C)-The_Preflow-Push_Algorithm/#post-comment"><span class="gitalk-comment-count"></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="基础定义"><a href="#基础定义" class="headerlink" title="基础定义"></a>基础定义</h2><h4 id="Flow-Networks-流网络"><a href="#Flow-Networks-流网络" class="headerlink" title="Flow Networks (流网络)"></a>Flow Networks (流网络)</h4><p>流网络指一个符合以下特征的有向图 G &#x3D; (V,E):   </p>
+<ul>
+<li>每条边关联一个非负数，即边的容量，记为 $c_e$ </li>
+<li>存在单一源点 (source node) $s\in V$：产生流量的点</li>
+<li>存在单一汇点 (sink node) $t\in V$：吸收流量的点</li>
+</ul>
+<p>一般的，我们假设流网络满足：没有边进入源点，没有边离开汇点。每个结点至少存在一条边与之相连。</p>
+<h4 id="Flow-流"><a href="#Flow-流" class="headerlink" title="Flow (流)"></a>Flow (流)</h4><p>s-t 流是一个函数 $f: E\rightarrow \mathbb{R}^+$, 值 $f(e)$ 表示边 $e$ 携带的流量。一个流需要满足两个性质  </p>
+<ul>
+<li>容量条件 (Capacity conditions): $$\forall e\in E, 0\le f(e)\le c_e$$</li>
+<li>守恒条件 (Conservation conditions): $$\forall v\in V, v\neq s,t, \sum_{e\text{ into }v}f(e) &#x3D; \sum_{e\text{ out of }v}f(e)$$</li>
+</ul>
+<p>为了使记号简洁，我们定义 </p>
+<p>$$<br>f^{\text{out}}(v) &#x3D; \sum_{e\text{ out of }v}f(e),\  f^{\text{in}}(v) &#x3D; \sum_{e\text{ into }v}f(e)<br>$$</p>
+<p>自然的，对于点集 $S\subseteq V, f^{\text{out}}(S) &#x3D; \sum_{e\text{ out of }S}f(e),\  f^{\text{in}}(S) &#x3D; \sum_{e\text{ into }S}f(e)$。</p>
+<p>一个流 $f$ 的值, 记作 $v(f)$，定义为源点产生的流量:</p>
+<p>$$<br>v(f) &#x3D; \sum_{e\text{ out of } s}f(e) &#x3D; f^\text{out} (s)<br>$$</p>
+<h4 id="The-Residual-Graph-剩余图"><a href="#The-Residual-Graph-剩余图" class="headerlink" title="The Residual Graph (剩余图)"></a>The Residual Graph (剩余图)</h4><p> 给定流网络 $G$ 及 $G$ 上的流 $f$， 定义 $G$ 关于 $f$ 的剩余图 $G_f$ ：  </p>
+<ul>
+<li>$G_f$ 中的顶点集与 $G$ 中的顶点集相同</li>
+<li>对于 $G$ 中的每条边 $e &#x3D; (u,v)$ ，若 $f(e) &lt; c_e$， 则还有 $c_e-f(e)$ 的剩余流量。$G_f$ 中包含边  $e &#x3D; (u,v)$ ，其容量为  $c_e-f(e)$。这种边称为<strong>前向边</strong> (forward edges).</li>
+<li>对于 $G$ 中的每条边 $e &#x3D; (u,v)$ ，若 $f(e) &gt; 0$， 则流中有 $f(e)$ 的流可以 “撤销”。$G_f$ 中包含边  $e’ &#x3D; (v,u)$ ，其容量为  $f(e)$。这种边称为<strong>后向边</strong> (backward edges).</li>
+</ul>
+<p>直观的理解，剩余图定义了在当前流状态下每条边可以操作的流量：在初始流网络中剩余的流量可以继续使用，以及使用的流量则可以 “撤销” ：使用一条反向的边运输流量。</p>
+<p>定义一条边的<strong>剩余流量</strong> (residual capacity) 为这条边在剩余图中的流量。</p>
+<h4 id="The-Maximum-Flow-Problem-最大流问题"><a href="#The-Maximum-Flow-Problem-最大流问题" class="headerlink" title="The Maximum-Flow Problem (最大流问题)"></a>The Maximum-Flow Problem (最大流问题)</h4><p>定义：给定一个流网络：有向图 $G&#x3D;(V,E)$ 与每条边的容量 $c_e$，找出一个具有最大值的流 $f$.</p>
+<h2 id="算法设计"><a href="#算法设计" class="headerlink" title="算法设计"></a>算法设计</h2><h3 id="动机"><a href="#动机" class="headerlink" title="动机"></a>动机</h3><p>考虑下面的一个流网络，其中 K 是一个很大的数。如果我们使用 Ford-Fulkerson 方法，我们需要找到图中的每条 s-t 路径，在每条路径上通过 1 的流量，时间复杂度为 $\Omega(k^2)$ (每次寻找路径需要 $O(k)$, 有 $k$ 条路径)。然而，直观上看，我们只需要将 k 的流量从 s 发往 x ，然后将这些流量分流到每条支路上，希望在 $O(k)$ 时间内完成。</p>
+<p>图源：<a target="_blank" rel="noopener" href="http://timroughgarden.org/w16/l/l3.pdf">CS261: Lecture #3: The Push-Relabel Algorithm for Maximum Flow</a></p>
+<p><img src="/images/image-20200406113703037.png" alt="image-20200406113703037"></p>
+<p>换句话说，我们希望算法将所有可能的流量从源头发出，再逐渐 “推” 到不同的支路，最后将推不出去的流量返回源头，产生一个合法的最大流。类似于 “泛洪” 的想法。</p>
+<h3 id="Preflow-定义"><a href="#Preflow-定义" class="headerlink" title="Preflow 定义"></a>Preflow 定义</h3><p>算法将所有可能的流量从源头发出，此时已经不是一个合法的流。因此，我们定义一种 Preflow：s-t Preflow是一个函数 $f: E\rightarrow \mathbb{R}^+$, 值 $f(e)$ 表示边 $e$ 携带的流量。一个 <strong>Preflow</strong> 需要满足两个性质  </p>
+<ul>
+<li>容量条件 (Capacity conditions): $$\forall e\in E, 0\le f(e)\le c_e$$</li>
+<li>松弛守恒条件 (Conservation conditions): $$\forall v\in V-{s},\sum_{e\text{ into }v}f(e) \ge \sum_{e\text{ out of }v}f(e) $$</li>
+</ul>
+<p>一个 Preflow 不需要将流入节点的所有流量流出，而是允许暂时储存在节点中，通过后续操作将这些流量流出。节点流入流量与流出流量的差值称为 <strong>Excess (余量)</strong>:</p>
+<p>$$<br>e_f(v) &#x3D; \sum_{e\text{ into }v}f(e) - \sum_{e\text{ out of }v}f(e) \ge 0<br>$$</p>
+<p>可以看到，当一个 Preflow 中所有节点的余量均为 0 时，这个 Preflow 就是一个合法的流。</p>
+<h3 id="Push-推-操作"><a href="#Push-推-操作" class="headerlink" title="Push (推) 操作"></a>Push (推) 操作</h3><p>要把一个 Preflow 调整为一个流，就需要将节点中的余量 “推” 到其他节点，最终推到终点。此时的推操作受到两个方面的限制，一是节点自身的余量，二是边可以通过的流量。因此，推操作为：</p>
+<blockquote>
+<p>Push(v)<br>{<br>   choose an outgoing edge $(v, w)$ of $v$ in $G_f$ (if any)<br>   &#x2F;&#x2F; push as much flow as possible<br>   If $e&#x3D;(v, w)$ is a forward edge then<br>   — let $\Delta&#x3D;\min{e_f(v), c_e −f(e)}$<br>   — increase $f(e)$ by $\Delta$<br>   If $e&#x3D;(v, w)$ is a backward edge then<br>   — let $\Delta&#x3D;\min{e_f(v), f(e)}$<br>   — decrease $f(e)$ by $\Delta$<br>   Return $(f, h)$<br>}</p>
+</blockquote>
+<h3 id="Height-定义"><a href="#Height-定义" class="headerlink" title="Height 定义"></a>Height 定义</h3><p>只有推操作是不够的。考虑从源点将流量推出到节点之后，剩余图中会生成一条从节点到源点的后向边，算法需要保证在推的过程中不会马上将流量推回源点，造成流量推入推出的无穷循环。</p>
+<p>在流量一开始流动时，我们希望尽可能的从源点流向终点。想象流网络在一个平面上，希望流量尽可能的从高出流向低处。因此，为图中的每个节点 $v$ 维持一个高度 $\text{height}(v) $ 。我们定义一个<strong>标签 (labeling)</strong> 是一个从点集到非负整数的函数 $h:V\rightarrow\mathbb{Z}^+ $ 。算法需要维持标签 $h$ 与 preflow $f$是<strong>兼容 (compatible)</strong> 的，即满足：</p>
+<ul>
+<li>$h(s) &#x3D; n, n &#x3D; \vert V\vert$ </li>
+<li>$h(t) &#x3D; 0$</li>
+<li>Steepness conditions:  $h(v)\le h(w)+1, \forall e &#x3D; (v,w) \in G_f$</li>
+</ul>
+<p>可以这么理解，我们将源点放在高处，汇点放在低处，对于剩余图中的边，起点不能比终点高太多,(否则它会自动流入。)接下来我们可以得到两个结论：</p>
+<p><strong>定理 1</strong>：如果 s-t preflow $f$ 与标签 $h$ 兼容，那么在剩余图 $G_f$ 中没有 s-t 路径。</p>
+<p><strong>证明</strong>：反证法，如果在剩余图 $G_f$ 中存在一条 s-t 路径 $P$ 。沿着路径 $P$ 的节点为 $s, v_1, …, v_{k-1}, t$。由于 $h(s)&#x3D;n, h(t) &#x3D; 0, h(s) \le  h(v_{1})+1 \le …\le h({v_k-1}) + k-1\le h(t) + k$, 又有 $P$中最多有 $n$ 个节点，故 $k&lt;n$, 与 $n\le 0+k$ 矛盾。因此剩余图 $G_f$ 中没有 s-t 路径。</p>
+<p><strong>定理 2</strong>：如果 s-t 流 $f$ 与标签 $h$ 兼容，那么 $f$ 是一个最大流。</p>
+<p><strong>证明</strong>：根据定理 1，我们有流 $f$ 的剩余图 $G_f$ 中没有 s-t 路径。根据 <a href="https://joeylian.github.io/%E7%AE%97%E6%B3%95%E8%AE%BE%E8%AE%A1/2020/04/05/%E7%BD%91%E7%BB%9C%E6%B5%81(%E4%B8%80)-%E6%9C%80%E5%A4%A7%E6%B5%81%E4%B8%8E%E6%9C%80%E5%B0%8F%E5%89%B2%E9%97%AE%E9%A2%98/">网络流(一)</a> 中的 定理 4 ，有$f$ 是 $G$ 上的一个最大流。</p>
+<p>因此，如果我们一直维持 preflow $f$ 与标签 $h$ 兼容，逐步将preflow $f$ 修改为合法的流，则可以得到一个最大流。</p>
+<h3 id="算法流程"><a href="#算法流程" class="headerlink" title="算法流程"></a>算法流程</h3><h4 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h4><blockquote>
+<p>$h(s) &#x3D; n$<br>$h(v) &#x3D; 0, \forall v \neq s$<br>$f_e &#x3D; c_e ,\forall e &#x3D; (s,v)$<br>$f_e &#x3D; 0, else$ </p>
+</blockquote>
+<p>显然 $h(s) &#x3D; n,\ h(t) &#x3D; 0$, 令其他节点的高度为 0 是平凡的。为了满足 preflow 与标签兼容，我们需要消除掉所有从源点 $s$ 出发的边，其他的边取 0.</p>
+<h4 id="主循环"><a href="#主循环" class="headerlink" title="主循环"></a>主循环</h4><blockquote>
+<p>Main Loop<br>{<br><strong>while</strong> there is a vertex $v \neq s, t$ with $e_f (v) &gt; 0$ <strong>do</strong><br>— choose such a vertex $v$ with the maximum height $h(v)$<br>— &#x2F;&#x2F; break ties arbitrarily<br>— <strong>if</strong> there is an edge $e &#x3D; (v, w)$ of $v$ in $G_f$ with $h(v) &#x3D; h(w) + 1 (\text{or } h(v)&gt;h(w))$<br>— <strong>then</strong><br>— — Push(v)<br>— <strong>else</strong><br>— — $h(v) &#x3D; h(v)+1$(relabel 操作)<br><strong>return</strong> f<br>}</p>
+</blockquote>
+<h3 id="正确性"><a href="#正确性" class="headerlink" title="正确性"></a>正确性</h3><p>只需证明在算法过程中一直维持 preflow $f$ 与标签 $h$ 兼容，当算法终止时，preflow 转化为合法的流，也是所求的最大流。可以验证初始化后  preflow $f$ 与标签 $h$ 兼容。且$h(s ) &#x3D; n, h(t) &#x3D; 0$ 的条件始终满足。只需证明算法不会破坏 Steepness conditions：</p>
+<ul>
+<li>对于 push 操作，不会更改节点的高度，可能会向剩余图中加入新的后向边 $e &#x3D; (w,v)$, 由于 $h(v) &#x3D; h(w) + 1$, 因此一定满足对  $e &#x3D; (w,v),\ h(w) \le h(v) + 1$</li>
+<li>对于 relabel 操作，它只发生在对于所有从 $v$ 出发的边 $$e &#x3D; (v, w), h(v)&lt; h(w) +1.$$        因此  $h(v) &#x3D; h(v)+1$ 后，依然满足对所有从 $v$ 出发的边 $$e &#x3D; (v, w), h(v)\le h(w) +1.$$</li>
+</ul>
+<h2 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h2><h3 id="Relabel-操作"><a href="#Relabel-操作" class="headerlink" title="Relabel 操作"></a>Relabel 操作</h3><p><strong>定理 3</strong>： 令 $f$ 是一个 preflow，如果节点 $v$ 有余量，那么在剩余图 $G_f$ 中有从 $v$ 到源点 $s$ 的路径。</p>
+<p><strong>证明</strong>：令 $A$ 为 $G _ {f}$ 中存在一条 v-s 路径的所有点 $v$ 的集合，$B &#x3D; V-A$，证明所有有余量的点均在 $A$ 中：</p>
+<p>设 $e &#x3D; (u,v)$ 是 $G$ 中的一条边，满足 $u\in A, v\in B$, 则有 $f(e) &#x3D; 0$，否则，剩余图中存在一条流量为 $f(e)$ 的后向边  $e’ &#x3D; (v,u)$ ，由于 $u\in A$,  $G_{f}$ 中存在一条 u-s 路径，将 e’ 接上这条路径，则得到$G_{f} $ 中一条 v-s 路径，与  $v\in B$ 矛盾。<br>考虑集合 $B$ 中的余量之和,由于 $s\notin B$, $B$ 中每个节点都有非负的余量<br>$$<br>\begin{align*}<br>0\le \sum_{v\in B} e_f(v) &amp;&#x3D; \sum_{v\in B}(f^{\text{in}}(v)-f^{\text{out}}(v))\\<br>&amp;&#x3D; f^{\text{in}}(B)-f^{\text{out}}(B) \\<br>&amp;&#x3D;-f^{\text{out}}(B) \\<br>&amp;\le0\\<br>e_f(v) &#x3D; 0,&amp; \forall v \in B<br>\end{align*}<br>$$</p>
+<p>因此, 所有有余量的点均在 $A$ 中。</p>
+<p><strong>定理 4</strong>: 算法过程中, 对任意的节点有 $h(v) \le 2n+1$。</p>
+<p><strong>证明</strong>: 考虑 $v\neq s,t$ , 算法只在 relabel 操作中修改 $h(v)$ 的值, 此时 $e_f(v) &gt; 0$, 由定理 3, 在剩余图 $G_f$ 中有从 $v$ 到源点 $s$ 的路径 $P$, $\vert P\vert \le n-1$, 节点的高度沿着 P 的每条边至多可以减少 1, 因此有 $h(v) - h(s)\le \vert P\vert, h(v) \le 2n+1$。</p>
+<p><strong>定理 5</strong>: 算法过程中, relabel 操作总数少于 $2 n^2$ 。</p>
+<p><strong>证明</strong>: 在算法过程中, $h(v)$ 单调递增, $h(v) \le 2n+1$, 因此 relabel 操作总数不多于 $(n-2)(2n+1)$ 。</p>
+<h3 id="饱和-saturating-Push-操作"><a href="#饱和-saturating-Push-操作" class="headerlink" title="饱和 (saturating) Push 操作"></a>饱和 (saturating) Push 操作</h3><p>将 push 操作分为两类: 在 push 操作中, 当 $e$ 是一条前向边且 $\Delta &#x3D; c_e-f(e)$ 或  $e$ 是一条后向边且 $\Delta &#x3D; f(e)$ , 则称该 push 操作是饱和的(saturating), 否则是非饱和(non-saturating)的。换句话说, 饱和 Push 操作使得边 $e &#x3D; (v,w)$ 不再处于剩余图中, 非饱和 Push 操作使得节点 $v$ 的减小余量为0.</p>
+<p><strong>定理 6</strong>: 算法过程中, 饱和 Push 操作次数至多为 $2 nm$ 。</p>
+<p><strong>证明</strong>: 考虑剩余图中的任意一条边 $e &#x3D; (v,w)$, 如果在 $e$ 上进行饱和 push 操作, 则需要满足 $h(v) &#x3D; h(w)+1$ , 且操作后 $e$ 不再处于剩余图中。在 $e$ 上进行下一次饱和 push 操作之前,需要将 $e$ 重新加入剩余图中, 则需要有在 $e’ &#x3D; (w,v)$ 上的 push 操作, 此时需要有 $h(w) &#x3D; h(v)+1$ , 也就是说点 $w$ 至少需要进行 relabel 两次。由于算法过程中, 对任意的节点有 $h(v) \le 2n+1$, 最多有 $n$ 次将 $w$ 的高度提升2。 因此, 对于每条边, 最多有 $n$ 次饱和 push 操作。剩余图中共有 $2m$ 条边, 饱和 Push 操作次数至多为 $2 nm$ 。</p>
+<h3 id="非饱和-Push-操作"><a href="#非饱和-Push-操作" class="headerlink" title="非饱和 Push 操作"></a>非饱和 Push 操作</h3><p><strong>定理 6</strong>: 算法过程中, 非饱和 Push 操作次数至多为 $2n^3$ 。</p>
+<p><strong>证明</strong>: 考虑每相邻的两次 relabel 操作之间的非饱和 Push 操作, 非饱和 Push 操作使顶点的余量变为0, 再对同一个顶点进行下次 push 操作之前, 需要使它的余量变为正数, 即需要有其他顶点 push 流量给它。由于我们的操作是对在有余量的顶点中最大高度的顶点进行,  其他顶点 push 流量给它需要满足高度大于该顶点, 因此至少有一次relabel 操作。也就是说, 每相邻的两次 relabel 操作之间的非饱和 Push 操作在每个顶点上最多有一次, 即总共有 $n$ 次。算法过程中, relabel 操作总数少于 $2 n^2$ , 因此非饱和 Push 操作次数至多为 $2n^3$ 。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>Push-Relabel 方法的时间复杂度为 $O(n^3)$</p>
+<h2 id="对偶解释"><a href="#对偶解释" class="headerlink" title="对偶解释"></a>对偶解释</h2><p>换个角度看最大流的两种方法, Ford-Fulkerson 方法是在维持解可行的条件下逐步使解更优, 它维持了一个合法流,逐渐增大它的流量。而 Push-Relabel 方法则是在保持解最优的条件下使解逐步可行, 它构造了一个具有最大流量的不可行解 preflow, 逐渐将preflow 转化为一个合法的流。</p>
+<p>这个想法似曾相识 emmm 跟对偶单纯形法的思路很像。也就是说, Push-Relabel 方法在维持问题的对偶可行的前提下改进原始可行, 由对偶定理, 当同时满足对偶可行与原始可行时, 可行解也是问题的最优解.</p>
+<p>参考资料：</p>
+<blockquote>
+<ul>
+<li>《Algorithm Design》Jon Kleinberg, Eva Tardos， Chapter 7</li>
+<li>Stanford <a target="_blank" rel="noopener" href="http://timroughgarden.org/w16/w16.html">CS 261</a> Lecture 3 (Push-Relabel):  <a target="_blank" rel="noopener" href="https://youtu.be/0hI89H39USg">Video</a>  <a target="_blank" rel="noopener" href="http://timroughgarden.org/w16/l/l3.pdf">Notes</a></li>
+</ul>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Joey Lian</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://joeylian.github.io/2020/04/05/2020-04-06-%E7%BD%91%E7%BB%9C%E6%B5%81(%E4%BA%8C)-The_Preflow-Push_Algorithm/">http://joeylian.github.io/2020/04/05/2020-04-06-%E7%BD%91%E7%BB%9C%E6%B5%81(%E4%BA%8C)-The_Preflow-Push_Algorithm/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://joeylian.github.io" target="_blank">OneTime</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Network-Flow/">Network Flow</a><a class="post-meta__tags" href="/tags/%E6%9C%80%E5%A4%A7%E6%B5%81%E9%97%AE%E9%A2%98/">最大流问题</a><a class="post-meta__tags" href="/tags/Preflow-Push-%E7%AE%97%E6%B3%95/">Preflow-Push 算法</a><a class="post-meta__tags" href="/tags/Push-Relabel-%E7%AE%97%E6%B3%95/">Push-Relabel 算法</a></div><div class="post_share"><div class="social-share" data-image="/images/AlgDesign.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/04/29/2020-04-30-LowerBound%E5%88%86%E6%9E%90/"><img class="prev-cover" src="/images/AlgDesign.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">LowerBound分析</div></div></a></div><div class="next-post pull-right"><a href="/2020/04/04/2020-04-05-%E7%BD%91%E7%BB%9C%E6%B5%81(%E4%B8%80)-%E6%9C%80%E5%A4%A7%E6%B5%81%E4%B8%8E%E6%9C%80%E5%B0%8F%E5%89%B2%E9%97%AE%E9%A2%98/"><img class="next-cover" src="/images/AlgDesign.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">网络流(一)-最大流与最小割问题</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2020/04/04/2020-04-05-%E7%BD%91%E7%BB%9C%E6%B5%81(%E4%B8%80)-%E6%9C%80%E5%A4%A7%E6%B5%81%E4%B8%8E%E6%9C%80%E5%B0%8F%E5%89%B2%E9%97%AE%E9%A2%98/" title="网络流(一)-最大流与最小割问题"><img class="cover" src="/images/AlgDesign.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-04-05</div><div class="title">网络流(一)-最大流与最小割问题</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/me.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Joey Lian</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/joeylian" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:lianjy9976@163.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E5%AE%9A%E4%B9%89"><span class="toc-number">1.</span> <span class="toc-text">基础定义</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Flow-Networks-%E6%B5%81%E7%BD%91%E7%BB%9C"><span class="toc-number">1.0.1.</span> <span class="toc-text">Flow Networks (流网络)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Flow-%E6%B5%81"><span class="toc-number">1.0.2.</span> <span class="toc-text">Flow (流)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#The-Residual-Graph-%E5%89%A9%E4%BD%99%E5%9B%BE"><span class="toc-number">1.0.3.</span> <span class="toc-text">The Residual Graph (剩余图)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#The-Maximum-Flow-Problem-%E6%9C%80%E5%A4%A7%E6%B5%81%E9%97%AE%E9%A2%98"><span class="toc-number">1.0.4.</span> <span class="toc-text">The Maximum-Flow Problem (最大流问题)</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E8%AE%BE%E8%AE%A1"><span class="toc-number">2.</span> <span class="toc-text">算法设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A8%E6%9C%BA"><span class="toc-number">2.1.</span> <span class="toc-text">动机</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Preflow-%E5%AE%9A%E4%B9%89"><span class="toc-number">2.2.</span> <span class="toc-text">Preflow 定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Push-%E6%8E%A8-%E6%93%8D%E4%BD%9C"><span class="toc-number">2.3.</span> <span class="toc-text">Push (推) 操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Height-%E5%AE%9A%E4%B9%89"><span class="toc-number">2.4.</span> <span class="toc-text">Height 定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E6%B5%81%E7%A8%8B"><span class="toc-number">2.5.</span> <span class="toc-text">算法流程</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">2.5.1.</span> <span class="toc-text">初始化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BB%E5%BE%AA%E7%8E%AF"><span class="toc-number">2.5.2.</span> <span class="toc-text">主循环</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A3%E7%A1%AE%E6%80%A7"><span class="toc-number">2.6.</span> <span class="toc-text">正确性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="toc-number">3.</span> <span class="toc-text">复杂度分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Relabel-%E6%93%8D%E4%BD%9C"><span class="toc-number">3.1.</span> <span class="toc-text">Relabel 操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A5%B1%E5%92%8C-saturating-Push-%E6%93%8D%E4%BD%9C"><span class="toc-number">3.2.</span> <span class="toc-text">饱和 (saturating) Push 操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%9E%E9%A5%B1%E5%92%8C-Push-%E6%93%8D%E4%BD%9C"><span class="toc-number">3.3.</span> <span class="toc-text">非饱和 Push 操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">3.4.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E5%81%B6%E8%A7%A3%E9%87%8A"><span class="toc-number">4.</span> <span class="toc-text">对偶解释</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" title="【EffectiveC++】构造/析构/赋值运算"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】构造/析构/赋值运算"/></a><div class="content"><a class="title" href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" title="【EffectiveC++】构造/析构/赋值运算">【EffectiveC++】构造/析构/赋值运算</a><time datetime="2021-12-29T16:00:00.000Z" title="发表于 2021-12-30 00:00:00">2021-12-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/" title="【EffectiveC++】让自己习惯C++"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】让自己习惯C++"/></a><div class="content"><a class="title" href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/" title="【EffectiveC++】让自己习惯C++">【EffectiveC++】让自己习惯C++</a><time datetime="2021-12-27T16:00:00.000Z" title="发表于 2021-12-28 00:00:00">2021-12-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】设计与声明"/></a><div class="content"><a class="title" href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明">【EffectiveC++】设计与声明</a><time datetime="2021-01-22T16:00:00.000Z" title="发表于 2021-01-23 00:00:00">2021-01-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="【EffectiveC++】资源管理"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】资源管理"/></a><div class="content"><a class="title" href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="【EffectiveC++】资源管理">【EffectiveC++】资源管理</a><time datetime="2021-01-21T16:00:00.000Z" title="发表于 2021-01-22 00:00:00">2021-01-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/" title="C++右值引用与移动语义"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C++右值引用与移动语义"/></a><div class="content"><a class="title" href="/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/" title="C++右值引用与移动语义">C++右值引用与移动语义</a><time datetime="2020-08-01T16:00:00.000Z" title="发表于 2020-08-02 00:00:00">2020-08-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/images/top.jpeg')"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2022 By Joey Lian</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.2
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container:not\([display]\)').forEach(node => {
+            const target = node.parentNode
+            if (target.nodeName.toLowerCase() === 'li') {
+              target.parentNode.classList.add('has-jax')
+            } else {
+              target.classList.add('has-jax')
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd9d8e97d1c1701a3d53b',
+      clientSecret: '52ab8c95467a938ecb0cfb1c3ca318d6574a806d',
+      repo: 'JoeyLian.github.io',
+      owner: 'JoeyLian',
+      admin: ['JoeyLian'],
+      id: 'f3eef71ca9ced00e0afdc6ec39ef6f76',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !false) {
+  if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = false;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

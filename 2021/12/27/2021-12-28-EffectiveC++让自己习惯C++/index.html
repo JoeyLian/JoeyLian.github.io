@@ -1,0 +1,401 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>【EffectiveC++】让自己习惯C++ | OneTime</title><meta name="keywords" content="C++,EffectiveC++"><meta name="author" content="Joey Lian"><meta name="copyright" content="Joey Lian"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="条款01: 视 C++ 为一个预言联邦 将 C++视为一个由相关语言组成的联邦而非单—语言。  在其某个次语言中，各种守则与通例都倾向简单、直观易懂、并且容易记住。然而当你从一个次语言移往另一个次语言，守则可能改变。 次语言总共有四个:  C。说到底 C++ 仍是以 C 为基础。区块 (blocks) 、语句 (statements) 、预处理器 (preprocessor) 、内置数据类型 (b">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【EffectiveC++】让自己习惯C++">
+<meta property="og:url" content="http://joeylian.github.io/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/index.html">
+<meta property="og:site_name" content="OneTime">
+<meta property="og:description" content="条款01: 视 C++ 为一个预言联邦 将 C++视为一个由相关语言组成的联邦而非单—语言。  在其某个次语言中，各种守则与通例都倾向简单、直观易懂、并且容易记住。然而当你从一个次语言移往另一个次语言，守则可能改变。 次语言总共有四个:  C。说到底 C++ 仍是以 C 为基础。区块 (blocks) 、语句 (statements) 、预处理器 (preprocessor) 、内置数据类型 (b">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://joeylian.github.io/images/Cpp.png">
+<meta property="article:published_time" content="2021-12-27T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-29T12:57:04.720Z">
+<meta property="article:author" content="Joey Lian">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="EffectiveC++">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://joeylian.github.io/images/Cpp.png"><link rel="shortcut icon" href="/img/me.jpeg"><link rel="canonical" href="http://joeylian.github.io/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【EffectiveC++】让自己习惯C++',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-03-29 20:57:04'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.1.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/me.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 总览</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/images/top.jpeg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">OneTime</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 总览</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">【EffectiveC++】让自己习惯C++<a class="post-edit-link" href="https://github.com/JoeyLian/githubio/edit/master/source/_posts/2021-12-28-EffectiveC++让自己习惯C++.md" title="编辑" target="_blank"><i class="fas fa-pencil-alt"></i></a></h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-12-27T16:00:00.000Z" title="发表于 2021-12-28 00:00:00">2021-12-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-03-29T12:57:04.720Z" title="更新于 2022-03-29 20:57:04">2022-03-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="【EffectiveC++】让自己习惯C++"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/#post-comment"><span class="gitalk-comment-count"></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="条款01-视-C-为一个预言联邦"><a href="#条款01-视-C-为一个预言联邦" class="headerlink" title="条款01: 视 C++ 为一个预言联邦"></a>条款01: 视 C++ 为一个预言联邦</h2><blockquote>
+<p>将 C++视为一个由相关语言组成的联邦而非单—语言。</p>
+</blockquote>
+<p>在其某个次语言中，各种守则与通例都倾向简单、直观易懂、并且容易记住。然而当你从一个次语言移往另一个次语言，守则可能改变。</p>
+<p>次语言总共有四个:</p>
+<ul>
+<li><strong>C</strong>。说到底 C++ 仍是以 C 为基础。区块 (blocks) 、语句 (statements) 、预处理器 (preprocessor) 、内置数据类型 (built-in data types) 、数组 (arrays) 、 指针 (pointers) 等统统来自 C。</li>
+<li><strong>Object-Oriented C</strong>++。这部分也就是 C with Classes 所诉求的: classes (包括构 造函数和析构函数)，封装 (encapsulation) 、继承 (inheritance) 、多态 (polymorphism) 、 virtual 函数(动态绑定)……等等。这一部分是面向对象设计的古典守则在 C++上的最直接实施。</li>
+<li><strong>Template C</strong>++。这是 C++的泛型编程 (generic programming) 部分。 Template 相关考虑与设计已经弥漫整个 C++，良好编程守则中 “惟 template 适用” 的特殊条款并不罕见。templates 带来崭新的编程范型 (programming pradigm) ，也就是所谓的 template metaprogramming (TMP, 模板元编程)。</li>
+<li><strong>STL</strong>。 STL 是个 template 程序库。它对容器 (containers) 、迭代器 (iterators) 、算法 (algorithms) 以及函数对象 (function objects) 的规约有极佳的紧密配合与协调。</li>
+</ul>
+<blockquote>
+<p>C++高效编程守则视状况而变化，取决于你使用 C++的哪一部分。</p>
+</blockquote>
+<h2 id="条款-02-尽量以-const-enum-inline-替换-define"><a href="#条款-02-尽量以-const-enum-inline-替换-define" class="headerlink" title="条款 02: 尽量以 const, enum, inline 替换 #define"></a>条款 02: 尽量以 const, enum, inline 替换 #define</h2><blockquote>
+<p> “尽可能以编译器替换预处理器”</p>
+</blockquote>
+<h3 id="以常量替换-defines"><a href="#以常量替换-defines" class="headerlink" title="以常量替换 #defines"></a>以常量替换 #defines</h3><h4 id="基本形式"><a href="#基本形式" class="headerlink" title="基本形式"></a>基本形式</h4><p><strong>问题:</strong>  记号名称有可能没进入记号表 (symbol table) 内。当你运用此常量但获得一个编译错误信息时，可能会带来困惑。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> ASPECT_RATIO 1.653</span></span><br><span class="line">=&gt; </span><br><span class="line"><span class="type">const</span> <span class="type">double</span> AspectRatio = <span class="number">1.653</span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>优点：</strong></p>
+<ul>
+<li>作为一个语言常量， <code>AspectRatio</code> 肯定会被编译器看到，当然就会进入记号表内。</li>
+<li>对于浮点常量而言，使用常量可能比使用 #define 得到更小的目标码 (object code) ，因为预处理器盲目地将宏名称替换为 1.653 可能导致目标码出现多份 1.653, 若改用常量则不会出现相同情况。</li>
+</ul>
+<p>有两种特殊情况值得讨论。</p>
+<h4 id="定义常量指针"><a href="#定义常量指针" class="headerlink" title="定义常量指针"></a>定义常量指针</h4><p>由于常量定义式通常被放在头文件内 (以便被不同的源码含入)， 因此有必要将指针(而不只是指针所指之物)声明为 const。(const 在*号右侧)(下一条款会详细介绍)</p>
+<h4 id="class-专属常量"><a href="#class-专属常量" class="headerlink" title="class 专属常量"></a>class 专属常量</h4><p>无法利用 #define 创建一个 class 专属常量，因为 #defines 一旦被定义，它就在其后的编译过程中有效，除非在某处被 #undef。若要创建一个 class 专属常量，需要使用 const。</p>
+<p>为了将常量的作用域限制于 class 内，你必须让它成为 class 的一个成员; 而为确保此常数至多只有一份实体，你必须让它成为一个 static 成员:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">GarnePlayer</span> &#123; </span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="type">static</span> <span class="type">const</span> <span class="type">int</span> NumTurns = <span class="number">5</span>;</span><br><span class="line">  <span class="type">int</span> scores[NumTurns];</span><br><span class="line">  ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>这是 NumTurns 的声明式而非定义式。通常 C++要求你对你所使用的任何东西提供一个定义式，但如果它是个 class 专属常量又是 static 且为整数类型 (例如 ints, chars, bools) ，只要不取它们的地址， 你可以声明并使用它们而无须提供定义式。</p>
+<p>但如果需要取某个 class 专属常量的地址 (或编译器(不正确地)坚持要看到一个定义式)，就必须在实现文件中提供定义式:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> GarnePlayer::NumTurns; <span class="comment">//NumTurns 的定义式</span></span><br></pre></td></tr></table></figure>
+
+<p>由于 class 常量已在声明时获得初值，因此定义时不可以再设初值。</p>
+<p>旧式编译器也许不支持上述语法，即不允许 static 成员在其声明式上获得初值。在声明式上获得初值也只允许对整数常量进行。</p>
+<p>如果编译器不支持上述语法，你可以将初值放在定义式 :</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">CostEstimate</span> &#123; </span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="type">static</span> <span class="type">const</span> <span class="type">double</span> FudgeFactor;</span><br><span class="line">  ...</span><br><span class="line">&#125;;</span><br><span class="line"><span class="type">const</span> <span class="type">double</span> CostEstimate::FudgeFactor = <span class="number">1.35</span>;</span><br></pre></td></tr></table></figure>
+
+<p>然而，当在 class 编译期间需要一个 class 常量值时这种方法不适用，例如在上述的<code>GarnePlayer::scores</code> 的数组声明式中 (编译器坚持必须在编译期间知道数组的大小)。这时候若编译器不允许 static 整数常量成员在其声明式上获得初值，可使用所谓的 <strong>“the enum hack”</strong> 补偿做法。其理论基础是: “一个属于枚举类型 (enumerated type) 的数值可当作 int 被使用”，GarnePlayer 可定义如下:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">GamePlayer</span> &#123; </span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="keyword">enum</span> &#123; NumTurns=<span class="number">5</span> &#125;;  <span class="comment">//&quot;the enum hack” — 令NumTurns 成为 5 的一个记号名称</span></span><br><span class="line">  <span class="type">int</span> scores[NumTurns]; <span class="comment">//这就没问题了. </span></span><br><span class="line">  ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p><strong>“The enum hack” 的优点:</strong></p>
+<p> enum hack 的行为在一些方面比较像 #define 而不像 const，有时候这正是你想要的。</p>
+<ul>
+<li>例如取一个 const 的地址是合法的，但取一个 enum 的地址就不合法，而取一个#define的地址通常也不合法。如果你不想让别人获得一个 pointer 或 reference 指向你的某个整数常量， enum 可以帮助你实现这个约束。</li>
+<li>此外虽然优秀的编译器不会为 “整数型 const对象” 设定另外的存储空间，不够优秀的编译器却可能如此。 Enums 和 #defines 一样绝不会导致非必要的内存分配。</li>
+</ul>
+<p> “enum hack” 是 template metaprogramming (模板元编程) 的基础技术。</p>
+<h3 id="用-inline-函数替换-defines"><a href="#用-inline-函数替换-defines" class="headerlink" title="用 inline 函数替换#defines"></a>用 inline 函数替换#defines</h3><p><strong>问题:</strong>  必须为 #defines 实现的宏中的所有实参加上小括号，否则某些人在表达式中调用这个宏时可能会遭遇麻烦。但纵使你为所有实参加上小括号，仍然会有一些问题。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> CALL_WITH_MAX(a, b) f((a) &gt; (b) ? (a) : (b))</span></span><br><span class="line"></span><br><span class="line">%<span class="type">int</span> a = <span class="number">5</span>,b = <span class="number">0</span>;</span><br><span class="line">%<span class="built_in">CALL_WITH_MAX</span>(++a, b);    <span class="comment">//a被累加二次 </span></span><br><span class="line">%<span class="built_in">CALL_WITH_MAX</span>(++a, b+lO); <span class="comment">//a被累加一次</span></span><br><span class="line"></span><br><span class="line">=&gt;</span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="keyword">inline</span> <span class="type">void</span> <span class="built_in">callWithMax</span>(<span class="type">const</span> T&amp; a, <span class="type">const</span> T&amp; b)</span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">f</span>(a &gt; b ? a : b);  </span><br><span class="line">  <span class="comment">//由于我们不知道 T 是什么，所以采用 pass by reference-to-const. </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>优点:</strong></p>
+<ul>
+<li>这里不需要在函数本体中为参数加上括号，也不需要操心参数被求值多次。</li>
+<li>由于 <code>callWithMax</code> 是个真正的函数，它遵守作用域 (scope) 和访问规则。例如可以写出一个 “class 内的 private inline 函数”。一般而言宏无法完成此事。</li>
+</ul>
+<blockquote>
+<ul>
+<li>对于单纯常量，最好以 const对象或 enums 替换 #defines。 </li>
+<li>对于形似函数的宏 (macros) ，最好改用 inline 函数替换#defines。</li>
+</ul>
+</blockquote>
+<h2 id="条款03-尽可能使用-const"><a href="#条款03-尽可能使用-const" class="headerlink" title="条款03: 尽可能使用 const"></a>条款03: 尽可能使用 const</h2><blockquote>
+<p>只要某值保持不变是事实，就应该说出来。因为说出来可以获得编译器的襄助，确保这条约束不被违反。</p>
+</blockquote>
+<p>const 允许指定一个语义约束(也就是指定一个“不该被改动”的对象)，而编译器会强制实施这项约束。</p>
+<h3 id="面对指针"><a href="#面对指针" class="headerlink" title="面对指针"></a>面对指针</h3><p>面对指针，可以指出指针自身、指针所指物，或两者都 (或都不) 是 const:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">char</span> greeting[] = <span class="string">&quot;Hello&quot;</span>; </span><br><span class="line"><span class="type">char</span>* p = greeting;                  <span class="comment">//non-const pointer, non-const data</span></span><br><span class="line"><span class="type">const</span> <span class="type">char</span>* p = greeting;            <span class="comment">//non-const pointer, const data</span></span><br><span class="line"><span class="type">char</span>* <span class="type">const</span> p = greeting;            <span class="comment">//const pointer,non-const data</span></span><br><span class="line"><span class="type">const</span> <span class="type">char</span>* <span class="type">const</span> p = greeting;      <span class="comment">//const pointer,const data</span></span><br></pre></td></tr></table></figure>
+
+<p>如果关键字 const 出现在星号左边，表示被指物是常量;  如果出现在星号右边，表示指针自身是常量; 如果出现在星号两边，表示被指物和指针两者都是常量。</p>
+<p>如果被指物是常量，有些程序员会将关键字 const 写在类型之前，有些人会把它写在类型之后、星号之前。两种写法的意义相同:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">fl</span> <span class="params">(<span class="type">const</span> Widget* pw)</span></span>;  <span class="comment">//fl 获得一个指针，指向一个常量的 Widget 对象</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f2</span> <span class="params">(Widget <span class="type">const</span> * pw)</span></span>; <span class="comment">//f2 也是</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="STL-迭代器"><a href="#STL-迭代器" class="headerlink" title="STL 迭代器"></a>STL 迭代器</h3><p>STL 迭代器系以指针为根据塑模出来，所以迭代器的作用就像个 <code>T*</code> 指针。声明迭代器为 const 就像声明指针为 const 一样(即声明一个 <code>T* const</code> 指针)，表示这个迭代器不得指向不同的东西，但它所指的东西的值是可以改动的。如果希望迭代器所指的东西不可被改动 (即希望 STL 模拟一个 <code>const T*</code> 指针)，你需要的是 <code>const_iterator</code>:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;<span class="type">int</span>&gt; vec;</span><br><span class="line">...</span><br><span class="line"><span class="type">const</span> std::vector&lt;<span class="type">int</span>&gt;::iterator iter = vec.<span class="built_in">begin</span>();<span class="comment">//iter 的作用像个 T*const</span></span><br><span class="line">*iter = <span class="number">10</span>;     <span class="comment">//没问题，改变 iter 所指物 </span></span><br><span class="line">++iter;         <span class="comment">//错误! iter 是 const </span></span><br><span class="line">std::vector&lt;<span class="type">int</span>&gt;::const_iterator citer = vec.<span class="built_in">begin</span>();<span class="comment">// clter 的作用像个const T*</span></span><br><span class="line">*citer = <span class="number">10</span>;    <span class="comment">//错误! *clter 是 const </span></span><br><span class="line">++citer;        <span class="comment">//没问题，改变 clter。</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="函数声明"><a href="#函数声明" class="headerlink" title="函数声明"></a>函数声明</h3><p>在一个函数声明式内， const 可以和函数返回值、各参数、函数自身(如果是成员函数)产生关联。</p>
+<h4 id="返回值"><a href="#返回值" class="headerlink" title="返回值"></a>返回值</h4><p>令函数返回一个常橇值，往往可以降低因客户错误而造成的意外，而又不至于放弃安全性和高效性。</p>
+<p>举个例子，考虑有理数的 operator* 声明式:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Rational</span> &#123;... &#125;;</span><br><span class="line"><span class="type">const</span> Rational <span class="keyword">operator</span>* (<span class="type">const</span> Rational&amp; lhs, <span class="type">const</span> Rational&amp; rhs);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (a*b = c) <span class="comment">//报错</span></span><br></pre></td></tr></table></figure>
+
+<p>如果 a 和 b 都是内置类型，这样的代码直截了当就是不合法。<strong>一个“良好的用户自定义类型”的特征是它们避免无端地与内置类型不兼容</strong> ，因此允许对两值乘积做赋值动作也就没什么意思了。</p>
+<p>至于 const 参数，应该在必要使用它们的时候使用它们。除非你有需要改动参数或 local 对 象，否则请将它们声明为 const。</p>
+<h4 id="const-成员函数"><a href="#const-成员函数" class="headerlink" title="const 成员函数"></a>const 成员函数</h4><p>将 const 实施于成员函数的目的，是为了确认该成员函数可作用于 const 对象身上。const 成员函数之所以重要，基于两个理由：</p>
+<ul>
+<li>它们使 class 接口比较容易被理解：得知哪个函数可以改动对象内容而哪个函数不行是很重要的。</li>
+<li>它们使 “操作 const对象” 成为可能：改善 C++程序效率的一个根本办法是以 pass by reference-to-const 方式传递对象，此技术可行的前提是，const成员函数可用来处理取得的 const 对象。</li>
+</ul>
+<p>两个成员函数即使只是常量性 (constness) 不同，也可以被重载。</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">TextBlock</span> &#123; </span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  ...</span><br><span class="line">  <span class="type">const</span> <span class="type">char</span>&amp; <span class="keyword">operator</span> [] (std:: size t position) <span class="type">const</span> <span class="comment">//operator[] for const对象</span></span><br><span class="line">  &#123; <span class="keyword">return</span> text[position]; &#125;</span><br><span class="line">  <span class="type">char</span>&amp; <span class="keyword">operator</span>[] (std: :<span class="type">size_t</span> position) <span class="comment">//operator[] for non-const对象</span></span><br><span class="line">  &#123; <span class="keyword">return</span> text[position]; &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  std::string text; </span><br><span class="line">&#125;;</span><br><span class="line">------------------------------------------------------</span><br><span class="line"><span class="function">TextBlock <span class="title">tb</span><span class="params">(<span class="string">&quot;Hello&quot;</span>)</span></span>;</span><br><span class="line"><span class="function"><span class="type">const</span> TextBlock <span class="title">ctb</span><span class="params">(<span class="string">&quot;World&quot;</span>)</span></span>;</span><br><span class="line">------------------------------------------------------</span><br><span class="line">std::cout &lt;&lt; tb[O];  <span class="comment">//没问题 - 读一个 non-const TextBlock </span></span><br><span class="line">tb[O] = <span class="string">&#x27;x&#x27;</span>;         <span class="comment">//没问题 - 写一个 non-const TextBlock</span></span><br><span class="line">std::cout &lt;&lt; ctb[O]; <span class="comment">//没问题 - 读一个 const TextBlock </span></span><br><span class="line">ctb[O] = <span class="string">&#x27;x&#x27;</span>;        <span class="comment">//错误！ - 写一个 constTextBlock</span></span><br></pre></td></tr></table></figure>
+
+<p>也请注意，<code>non-const operator[]</code> 的返回类型是个 reference to char, 不是 char。如果 operator[] 只是返回一个 char, <code>tb[O] =&#39;x&#39;;</code> 就无法通过编译。 那是因为，如果函数的返回类型是个内置类型，那么改动函数返回值从来就不合法。纵使合法， 由于 C++ 是 by value返回对象，意味被改动的其实是 tb.text[0] 的一个副本，不是 tb.text[0] 自身。</p>
+<p>成员函数如果是 const 意味什么? 有两个流行概念: bitwise constness 和 logical constness。</p>
+<p><strong>bitwise const:</strong> 成员函数只有在不更改对象的任何成员变量 (static 除外) 时才可以说是 const。也就是说它不更改对象内的任何一个 bit。</p>
+<p>不幸的是许多成员函数不十足具备 const 性质。举个例子，一个更改了”指针所指物”的成员函数虽然不能算是 bitwise const, 但如果只有指针(而非其所指物)隶属于对象，那么称此函数为 const 不会引发编译器异议。</p>
+<p><strong>logical constness:</strong> 一个 const 成员函数可以修改它所处理的对象内的某些 bits, 但只有在客户端侦测不出的情况下才得如此。可以利用C++的一个与const相关的摆动场: <code>mutable</code>(可变的)。 mutable 释放掉 non-static 成员变量的 bitwise constness 约束:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">CTextBlock</span> &#123; </span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  ...</span><br><span class="line">  <span class="function">std::<span class="type">size_t</span> <span class="title">length</span><span class="params">()</span> <span class="type">const</span></span>; </span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="type">char</span>* pText;</span><br><span class="line">  <span class="keyword">mutable</span> std::<span class="type">size_t</span> textLength; <span class="comment">//这些成员变量可以在const成员函数内被更改</span></span><br><span class="line">  <span class="keyword">mutable</span> <span class="type">bool</span> lengthisValid;</span><br><span class="line">);</span><br><span class="line"><span class="function">std::<span class="type">size_t</span> <span class="title">CTextBlock::length</span><span class="params">()</span> <span class="type">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!lengthisValid) &#123;</span><br><span class="line">    textLength = std::<span class="built_in">strlen</span>(pText); </span><br><span class="line">    lengthisValid = <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> textLength;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="在-const-和-non-const-成员函数中避免重复"><a href="#在-const-和-non-const-成员函数中避免重复" class="headerlink" title="在 const 和 non-const 成员函数中避免重复"></a>在 const 和 non-const 成员函数中避免重复</h4><p>令 non-const operator[ ] 调用其 const 兄弟是一个避免代码重复的安全做法——即使过程中需要一个转型动作。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">TextBlock</span> &#123; </span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  ...</span><br><span class="line">  <span class="type">const</span> <span class="type">char</span>&amp; <span class="keyword">operator</span>[] (std::<span class="type">size_t</span> position) <span class="type">const</span></span><br><span class="line">  &#123;</span><br><span class="line">    ...</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">return</span> text[position];</span><br><span class="line">  &#125;                 </span><br><span class="line">  <span class="type">char</span>&amp; <span class="keyword">operator</span>[] (std::<span class="type">size_t</span> position)  <span class="comment">//现在只调用 const op[]</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">const_cast</span>&lt;<span class="type">char</span>&amp;&gt;               <span class="comment">//将 op[]返回值的 const 除  </span></span><br><span class="line">      (<span class="built_in">static_cast</span>&lt;<span class="type">const</span> TextBlock&amp;&gt;(*<span class="keyword">this</span>)<span class="comment">//为*this 加上 const</span></span><br><span class="line">        [position]                         <span class="comment">//调用 const op[]</span></span><br><span class="line">      );</span><br><span class="line">  &#125;</span><br><span class="line">  ...</span><br><span class="line">&#125;;       </span><br></pre></td></tr></table></figure>
+
+<p>值得了解的是，反向做法——令 const 版本调用 non-con玩版本以避免重复——是错误的。记住， const 成员函数承诺绝不改变其对象的逻辑状态 (logical state), non-const 成员函数却没有这般承诺。如果在 const 函数内调用 non-const 函数，就是冒了这样的风险: 你曾经承诺不改动的那个对象被改动了。</p>
+<blockquote>
+<ul>
+<li>将某些东西声明为 const 可帮助编译器侦测出错误用法。 const 可被施加于任何作用域内的对象、函数参数、函数返回类型、成员函数本体。</li>
+<li>编译器强制实施 bitwise constness，但你编写程序时应该使用”概念上的常量性” (conceptual constness) 。</li>
+<li>当 const 和 non-const 成员函数有着实质等价的实现时，令 non-const 版本调用 const 版本可避免代码重复。</li>
+</ul>
+</blockquote>
+<h2 id="条款04-确定对象被使用前已先被初始化"><a href="#条款04-确定对象被使用前已先被初始化" class="headerlink" title="条款04: 确定对象被使用前已先被初始化"></a>条款04: 确定对象被使用前已先被初始化</h2><p>通常如果你使用 C part of C++ 而且初始化可能招致运行期成本， 那么就不保证发生初始化。一旦进入 non-C parts of C++，规则有些变化。这就很好地解释了为什么 array (来自 C part of C++) 不保证其内容被初始化，而 vector (来自 STL part of C++) 却有此保证。</p>
+<blockquote>
+<p>确保每一个构造函数都将对象的每一个成员初始化。</p>
+</blockquote>
+<p>别混淆了赋值 (assignment) 和初始化 (initialization) 。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">PhoneNurnber</span> &#123; ... &#125;; </span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ABEntry</span> &#123;      <span class="comment">//ABEntry = &quot;Address Book Entry&quot;</span></span><br><span class="line"><span class="keyword">public</span>:	</span><br><span class="line">  <span class="built_in">ABEntry</span>(<span class="type">const</span> std::string&amp; name, <span class="type">const</span> std::string&amp; address, <span class="type">const</span> std::list&lt;PhoneNurnber&gt;&amp; phones);</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  std::string theNarne; </span><br><span class="line">  std::string theAddress; </span><br><span class="line">  std::list&lt;PhoneNurnber&gt; thePhones;</span><br><span class="line">  <span class="type">int</span> numTimesConsulted;</span><br><span class="line">);</span><br><span class="line"><span class="built_in">ABEntry</span>(<span class="type">const</span> std::string&amp; name, <span class="type">const</span> std::string&amp; address, <span class="type">const</span> std::list&lt;PhoneNurnber&gt;&amp; phones)</span><br><span class="line">&#123;</span><br><span class="line">  theName = name;               <span class="comment">//这些都是赋值 (assignments)</span></span><br><span class="line">  theAddress = address;         <span class="comment">//而非初始化 (initializations)</span></span><br><span class="line">  thePhones = phones;</span><br><span class="line">  numTimesConsulted = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>C++规定，对象的成员变量的初始化动作发生在进入构造函数本体之前。在 ABEntry构造函数内， 成员变量都不是被初始化，而是被赋值。初始化的发生时间更早，发生于这些成员的 default 构造函数被自动调用之时 (比进入 ABEntry构造函数本体的时间更早)。但对于numTimesConsulted，因为它属于内置类型，不保证一定在赋值动作的时间点之前获得初值。</p>
+<p>ABEntry构造函数的一个较佳写法是，使用所谓的member initialization list (成员初值列)替换赋值动作:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ABEntry</span>(<span class="type">const</span> std::string&amp; name, <span class="type">const</span> std::string&amp; address, <span class="type">const</span> std::list&lt;PhoneNurnber&gt;&amp; phones)</span><br><span class="line">  :<span class="built_in">theName</span>(name), <span class="built_in">theAddress</span>(address), <span class="built_in">thePhones</span>(phones), <span class="built_in">numTimesConsulted</span>(O)       </span><br><span class="line">    <span class="comment">//这些是初始化 (initializations)</span></span><br><span class="line">&#123;&#125;  <span class="comment">//现在，构造函数本体不必有任何动作</span></span><br></pre></td></tr></table></figure>
+
+<p>基千赋值的那个版本首先调用 default 构造函数为 theName，theAddress和 thePhones 设初值，然后立刻再对它们赋予新值。 default构造函数的一切作为因此浪费了。成员初值列的做法避免了这一问题，因为初值列中针对各个成员变量而设的实参，被拿去作为各成员变量的copy构造函数的实参。</p>
+<p>甚至当你想要 default构造一个成员变量， 你都可以使用成员初值列，只要指定无物 <code>()</code> 作为初始化实参即可。</p>
+<p><strong>总是在初值列中列出所有成员变量，以免还得记住哪些成员变量可以无需初值。</strong></p>
+<p>此外，如果成员变量是 const 或 references, 它们就一定需要初值，不能被赋值(见条款 5)。</p>
+<p>C++有着十分固定的“成员初始化次序”: base classes 更早于其 derived classes 被初始化 ，而 class 的成员变量总是以其声明次序被初始化，即使它们在成员初值列中以不同的次序出现。<strong>当你在成员初值列中条列各个成员时，最好总是以其声明次序为次序。</strong></p>
+<h3 id="“不同编译单元内定义的-non-local-static-对象”的初始化次序"><a href="#“不同编译单元内定义的-non-local-static-对象”的初始化次序" class="headerlink" title="“不同编译单元内定义的 non-local static 对象”的初始化次序"></a>“不同编译单元内定义的 non-local static 对象”的初始化次序</h3><ul>
+<li>函数内的 static 对象称为 local static 对象，其他 static 对象称为 non-local static 对象。</li>
+<li>编译单元 (translation unit) 是指产出单一目标文件 (single object file) 的那些源码。基本上它是单一源码文件加上其所含入的头文件。</li>
+<li>C++对定义于不同编译单元内的 non-local static 对象的初始化次序并无明确定义。这是有原因的: 决定它们的初始化次序相当困难，根本无解。</li>
+</ul>
+<p>我们关心的问题涉及至少两个源码文件，每一个内含至少一个 non-local static 对象，如果某编译单元内的某个 non-local static 对象的初始化动作使用了另一编译单元内的某个 non-local static 对象，它所用到的这个对象可能尚未被初始化。</p>
+<p>幸运的是一个小小的设计便可完全消除这个问题：将每个 non-local static对象搬到自己的专属函数内 (该对象在此函数内被声明为 static) 。 这些函数返回一个 reference 指向它所含的对象。用户调用这些函数，而不直接指涉这些对象。换句话说， non-local static 对象被 local static 对象替换了。</p>
+<p>这个手法的基础在于： C++ 保证函数内的 local static 对象会在该函数被调用期间首次遇上该对象的定义式时被初始化。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">FileSystem</span> &#123; . . . &#125;; </span><br><span class="line"><span class="function">FileSystem&amp; <span class="title">tfs</span> <span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="type">static</span> FileSystem fs; </span><br><span class="line">  <span class="keyword">return</span> fs;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这些内含 static 对象的函数在多线程系统中带有不确定性。</p>
+<blockquote>
+<ul>
+<li>为内置型对象进行手工初始化，因为 C++ 不保证初始化它们。 </li>
+<li>构造函数最好使用成员初值列，而不要在构造函数本体内使用赋值操作 (assignment) 。初值列列出的成员变量，其排列次序应该和它们在 class 中的声明次序相同。</li>
+<li>为免除 “跨编译单元之初始化次序” 问题，请以 local static 对象替换 non-local static 对象。</li>
+</ul>
+</blockquote>
+<hr>
+<blockquote>
+<p>读书笔记，来自 《Effective C++》第 3 版</p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Joey Lian</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://joeylian.github.io/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/">http://joeylian.github.io/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://joeylian.github.io" target="_blank">OneTime</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/C/">C++</a><a class="post-meta__tags" href="/tags/EffectiveC/">EffectiveC++</a></div><div class="post_share"><div class="social-share" data-image="/images/Cpp.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/"><img class="prev-cover" src="/images/Cpp.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">【EffectiveC++】构造/析构/赋值运算</div></div></a></div><div class="next-post pull-right"><a href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/"><img class="next-cover" src="/images/Cpp.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">【EffectiveC++】设计与声明</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="【EffectiveC++】资源管理"><img class="cover" src="/images/Cpp.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-01-22</div><div class="title">【EffectiveC++】资源管理</div></div></a></div><div><a href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明"><img class="cover" src="/images/Cpp.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-01-23</div><div class="title">【EffectiveC++】设计与声明</div></div></a></div><div><a href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" title="【EffectiveC++】构造/析构/赋值运算"><img class="cover" src="/images/Cpp.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-30</div><div class="title">【EffectiveC++】构造/析构/赋值运算</div></div></a></div><div><a href="/2020/07/26/2020-07-27-C++STL-Vector%E4%BB%8B%E7%BB%8D/" title="C++STL-Vector介绍"><img class="cover" src="/images/Cpp.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-07-27</div><div class="title">C++STL-Vector介绍</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/me.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Joey Lian</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/joeylian" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:lianjy9976@163.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E6%AC%BE01-%E8%A7%86-C-%E4%B8%BA%E4%B8%80%E4%B8%AA%E9%A2%84%E8%A8%80%E8%81%94%E9%82%A6"><span class="toc-number">1.</span> <span class="toc-text">条款01: 视 C++ 为一个预言联邦</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E6%AC%BE-02-%E5%B0%BD%E9%87%8F%E4%BB%A5-const-enum-inline-%E6%9B%BF%E6%8D%A2-define"><span class="toc-number">2.</span> <span class="toc-text">条款 02: 尽量以 const, enum, inline 替换 #define</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A5%E5%B8%B8%E9%87%8F%E6%9B%BF%E6%8D%A2-defines"><span class="toc-number">2.1.</span> <span class="toc-text">以常量替换 #defines</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E5%BD%A2%E5%BC%8F"><span class="toc-number">2.1.1.</span> <span class="toc-text">基本形式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89%E5%B8%B8%E9%87%8F%E6%8C%87%E9%92%88"><span class="toc-number">2.1.2.</span> <span class="toc-text">定义常量指针</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#class-%E4%B8%93%E5%B1%9E%E5%B8%B8%E9%87%8F"><span class="toc-number">2.1.3.</span> <span class="toc-text">class 专属常量</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8-inline-%E5%87%BD%E6%95%B0%E6%9B%BF%E6%8D%A2-defines"><span class="toc-number">2.2.</span> <span class="toc-text">用 inline 函数替换#defines</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E6%AC%BE03-%E5%B0%BD%E5%8F%AF%E8%83%BD%E4%BD%BF%E7%94%A8-const"><span class="toc-number">3.</span> <span class="toc-text">条款03: 尽可能使用 const</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%A2%E5%AF%B9%E6%8C%87%E9%92%88"><span class="toc-number">3.1.</span> <span class="toc-text">面对指针</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#STL-%E8%BF%AD%E4%BB%A3%E5%99%A8"><span class="toc-number">3.2.</span> <span class="toc-text">STL 迭代器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E5%A3%B0%E6%98%8E"><span class="toc-number">3.3.</span> <span class="toc-text">函数声明</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%94%E5%9B%9E%E5%80%BC"><span class="toc-number">3.3.1.</span> <span class="toc-text">返回值</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#const-%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0"><span class="toc-number">3.3.2.</span> <span class="toc-text">const 成员函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9C%A8-const-%E5%92%8C-non-const-%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0%E4%B8%AD%E9%81%BF%E5%85%8D%E9%87%8D%E5%A4%8D"><span class="toc-number">3.3.3.</span> <span class="toc-text">在 const 和 non-const 成员函数中避免重复</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E6%AC%BE04-%E7%A1%AE%E5%AE%9A%E5%AF%B9%E8%B1%A1%E8%A2%AB%E4%BD%BF%E7%94%A8%E5%89%8D%E5%B7%B2%E5%85%88%E8%A2%AB%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">4.</span> <span class="toc-text">条款04: 确定对象被使用前已先被初始化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%80%9C%E4%B8%8D%E5%90%8C%E7%BC%96%E8%AF%91%E5%8D%95%E5%85%83%E5%86%85%E5%AE%9A%E4%B9%89%E7%9A%84-non-local-static-%E5%AF%B9%E8%B1%A1%E2%80%9D%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E6%AC%A1%E5%BA%8F"><span class="toc-number">4.1.</span> <span class="toc-text">“不同编译单元内定义的 non-local static 对象”的初始化次序</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" title="【EffectiveC++】构造/析构/赋值运算"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】构造/析构/赋值运算"/></a><div class="content"><a class="title" href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" title="【EffectiveC++】构造/析构/赋值运算">【EffectiveC++】构造/析构/赋值运算</a><time datetime="2021-12-29T16:00:00.000Z" title="发表于 2021-12-30 00:00:00">2021-12-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/" title="【EffectiveC++】让自己习惯C++"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】让自己习惯C++"/></a><div class="content"><a class="title" href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/" title="【EffectiveC++】让自己习惯C++">【EffectiveC++】让自己习惯C++</a><time datetime="2021-12-27T16:00:00.000Z" title="发表于 2021-12-28 00:00:00">2021-12-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】设计与声明"/></a><div class="content"><a class="title" href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明">【EffectiveC++】设计与声明</a><time datetime="2021-01-22T16:00:00.000Z" title="发表于 2021-01-23 00:00:00">2021-01-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="【EffectiveC++】资源管理"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】资源管理"/></a><div class="content"><a class="title" href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="【EffectiveC++】资源管理">【EffectiveC++】资源管理</a><time datetime="2021-01-21T16:00:00.000Z" title="发表于 2021-01-22 00:00:00">2021-01-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/" title="C++右值引用与移动语义"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C++右值引用与移动语义"/></a><div class="content"><a class="title" href="/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/" title="C++右值引用与移动语义">C++右值引用与移动语义</a><time datetime="2020-08-01T16:00:00.000Z" title="发表于 2020-08-02 00:00:00">2020-08-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/images/top.jpeg')"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2022 By Joey Lian</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.2
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container:not\([display]\)').forEach(node => {
+            const target = node.parentNode
+            if (target.nodeName.toLowerCase() === 'li') {
+              target.parentNode.classList.add('has-jax')
+            } else {
+              target.classList.add('has-jax')
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd9d8e97d1c1701a3d53b',
+      clientSecret: '52ab8c95467a938ecb0cfb1c3ca318d6574a806d',
+      repo: 'JoeyLian.github.io',
+      owner: 'JoeyLian',
+      admin: ['JoeyLian'],
+      id: '438ad8efcc8f447b3c85e8e7cc0cdf49',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !false) {
+  if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = false;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

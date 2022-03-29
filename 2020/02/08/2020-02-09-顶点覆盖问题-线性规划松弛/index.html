@@ -1,0 +1,307 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>原始对偶方法近似-最小顶点覆盖问题 | OneTime</title><meta name="keywords" content="原始对偶方法,近似算法,最小顶点覆盖问题,Vertex Cover"><meta name="author" content="Joey Lian"><meta name="copyright" content="Joey Lian"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="最小顶点覆盖问题最小顶点覆盖问题是指：给定边集、顶点集及其权重，求权重最小的顶点集，使每条边至少有一个顶点在集合中。 它的整数规划可以写为： $$\begin{align*}\min \sum^n_{i&#x3D;1} &amp;w_ix_i \\\mathbf{s.t.}\ \ x_i + x_j \ge 1 &amp;,\forall(i,j)\in E\\   x_{ij}  \in&amp;amp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="原始对偶方法近似-最小顶点覆盖问题">
+<meta property="og:url" content="http://joeylian.github.io/2020/02/08/2020-02-09-%E9%A1%B6%E7%82%B9%E8%A6%86%E7%9B%96%E9%97%AE%E9%A2%98-%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E6%9D%BE%E5%BC%9B/index.html">
+<meta property="og:site_name" content="OneTime">
+<meta property="og:description" content="最小顶点覆盖问题最小顶点覆盖问题是指：给定边集、顶点集及其权重，求权重最小的顶点集，使每条边至少有一个顶点在集合中。 它的整数规划可以写为： $$\begin{align*}\min \sum^n_{i&#x3D;1} &amp;w_ix_i \\\mathbf{s.t.}\ \ x_i + x_j \ge 1 &amp;,\forall(i,j)\in E\\   x_{ij}  \in&amp;amp">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://joeylian.github.io/images/AOR.png">
+<meta property="article:published_time" content="2020-02-08T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-29T12:57:04.720Z">
+<meta property="article:author" content="Joey Lian">
+<meta property="article:tag" content="原始对偶方法">
+<meta property="article:tag" content="近似算法">
+<meta property="article:tag" content="最小顶点覆盖问题">
+<meta property="article:tag" content="Vertex Cover">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://joeylian.github.io/images/AOR.png"><link rel="shortcut icon" href="/img/me.jpeg"><link rel="canonical" href="http://joeylian.github.io/2020/02/08/2020-02-09-%E9%A1%B6%E7%82%B9%E8%A6%86%E7%9B%96%E9%97%AE%E9%A2%98-%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E6%9D%BE%E5%BC%9B/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '原始对偶方法近似-最小顶点覆盖问题',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-03-29 20:57:04'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.1.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/me.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 总览</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/images/top.jpeg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">OneTime</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 总览</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">原始对偶方法近似-最小顶点覆盖问题<a class="post-edit-link" href="https://github.com/JoeyLian/githubio/edit/master/source/_posts/2020-02-09-顶点覆盖问题-线性规划松弛.md" title="编辑" target="_blank"><i class="fas fa-pencil-alt"></i></a></h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-02-08T16:00:00.000Z" title="发表于 2020-02-09 00:00:00">2020-02-09</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-03-29T12:57:04.720Z" title="更新于 2022-03-29 20:57:04">2022-03-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/AOR/">AOR</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="原始对偶方法近似-最小顶点覆盖问题"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/2020/02/08/2020-02-09-%E9%A1%B6%E7%82%B9%E8%A6%86%E7%9B%96%E9%97%AE%E9%A2%98-%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E6%9D%BE%E5%BC%9B/#post-comment"><span class="gitalk-comment-count"></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h3 id="最小顶点覆盖问题"><a href="#最小顶点覆盖问题" class="headerlink" title="最小顶点覆盖问题"></a>最小顶点覆盖问题</h3><p>最小顶点覆盖问题是指：给定边集、顶点集及其权重，求权重最小的顶点集，使每条边至少有一个顶点在集合中。</p>
+<p>它的整数规划可以写为：</p>
+<p>$$<br>\begin{align*}<br>\min \sum^n_{i&#x3D;1} &amp;w_ix_i \\<br>\mathbf{s.t.}\ \ x_i + x_j \ge 1 &amp;,\forall(i,j)\in E<br>\\   x_{ij}  \in&amp; {0,1}<br>\end{align*}<br>$$</p>
+<h3 id="线性规划-Rounding"><a href="#线性规划-Rounding" class="headerlink" title="线性规划 Rounding"></a>线性规划 Rounding</h3><p>可以将整数规划问题 $IP$ 转化为线性规划问题 $LP$ 。对于最小化问题，线性规划的最优解 $C_{LP} $ 小于等于整数规划的最优解 $ C_{IP}$ 。此时，若对线性规划的最优解进行 rounding 从而得到一个可行解，若知道 rounding 的近似比为 $\alpha$，则可以得到该算法的近似比：</p>
+<p>$$<br>\frac{C_{\mathrm{appro}}}{C_{IP}} \le \frac{C_{\mathrm{appro}}}{C_{LP}} \le \alpha<br>$$</p>
+<h4 id="顶点覆盖问题为例"><a href="#顶点覆盖问题为例" class="headerlink" title="顶点覆盖问题为例"></a>顶点覆盖问题为例</h4><p>可以将上述整数规划转化为线性规划问题</p>
+<p>$$<br>\begin{align*}<br>\min \ &amp;\sum^n_{i&#x3D;1} w_ix_i \\<br>\mathbf{s.t.}\ \ x_i + x_j \ge 1 &amp;,\forall(i,j)\in E \\<br>x_{ij}  &amp;\ge 0<br>\end{align*}<br>$$</p>
+<p>对线性规划的最优解进行简单的 rounding：设 $x^*$ 为线性规划的最优解，<br>$$<br>\begin{align*}<br>x^*&#x3D;\left[ \begin{array}{}x_1^*\\…\\x_n^* \end{array} \right]\rightarrow \mathbf{rounding}\rightarrow \bar{x}&#x3D;\left[ \begin{array}{}\ 1\\\ 0\\…\\\ 1 \end{array} \right],\bar{x} _i &#x3D; \begin{cases}1, &amp;x _ i^*\ge\frac{1}{2}\\0,&amp;x _ i^*&lt;\frac{1}{2}\end{cases}<br>\end{align*}<br>$$</p>
+<p>此时有：<br>$$<br>\begin{align*}<br>C _ {LP} &amp;&#x3D; \sum _ {i&#x3D;1}^n w_ix_i^* \\<br>C _ {appro} &amp;&#x3D; \sum _ {i&#x3D;1}^n w_i\bar x_i \le 2 \sum_{i&#x3D;1}^n w_ix_i^* &#x3D;2 C _ {LP}\\<br>\frac{C _ {\mathrm{appro}}}{C _ {IP}}  &amp;\le \frac{C _ {\mathrm{appro}}}{C _ {LP}} \le 2<br>\end{align*}<br>$$</p>
+<p>因此，该算法的近似比为 2 。</p>
+<p>但是，解线性规划太麻烦了。。。</p>
+<h3 id="原始对偶方法"><a href="#原始对偶方法" class="headerlink" title="原始对偶方法"></a>原始对偶方法</h3><p>回忆一下之前学的原始对偶方法：考虑原问题($LP$) 为：</p>
+<p>$$<br>\begin{align*}<br>\min_x  \sum _ {j&#x3D;1}^nc_jx_j \\<br>\mathbf{s.t.}\ \  \sum _ {j&#x3D;1}^na_{ij}x_j\ge b_i  \\<br>x_j \ge 0<br>\end{align*}<br>$$</p>
+<p>对偶问题 ($DLP$)为</p>
+<p>$$<br>\begin{align*}<br>\max_y  \sum _ {i&#x3D;1}^m b_iy_i \\<br>\mathbf{s.t.}\ \   \sum _ {i&#x3D;1}^m y_ia_{ij} \le c_j\\<br>y_i\ge 0<br>\end{align*}<br>$$</p>
+<p><strong>互补松弛条件</strong>：设 $x$ 和 $y$ 分别为原线性规划和对偶问题的可行解， $x$ 和 $y$ 为最优解<strong>当且仅当</strong>原问题的可行解 $x$ 与 $y$ 满足:<br>(<strong>PCS</strong> : primer complementary slackness; <strong>DCS</strong>: Dual complementary slackness)</p>
+<p>$$<br>\begin{align*}<br>\mathbf{PCS}：\left(c_j-\sum _ {i&#x3D;1}^my_ia_{ij}\right)x_j &#x3D; 0\\<br>\mathbf{DCS}：\left(b_i-\sum _ {j&#x3D;1}^na_{ij}x_j\right)y_i &#x3D; 0<br>\end{align*}<br>$$</p>
+<p>线性规划的原始对偶算法为: </p>
+<ol>
+<li>从可行的对偶问题解和非可行的原问题解开始；</li>
+<li>迭代修改对偶解，在满足互补松弛性的前提下修改原始解，使原始解逐步可行；</li>
+<li>当互补松弛性条件和可行性同时满足时，即得到最优的原问题解和对偶问题解</li>
+</ol>
+<p><strong>松弛的</strong>互补松弛条件：设 $x$ 和 $y$ 分别为原线性规划和对偶问题的可行解，$\alpha\ge 1, \beta \ge 1$ </p>
+<p>$$<br>\begin{align*}<br>\alpha -松弛：x_j &#x3D; 0 \quad \mathbf{or}\quad \frac{c_j}{\alpha}\le\sum _ {i&#x3D;1}^my_ia_{ij}\le c_j\\<br>\beta -松弛：y_i &#x3D; 0 \quad \mathbf{or}\quad b_i\le\sum _ {j&#x3D;1}^nx_ja_{ij}\le \beta\cdot b_i<br>\end{align*}<br>$$</p>
+<p>原始对偶方法近似算法为: </p>
+<ol>
+<li>从可行的对偶问题解和非可行的原问题整数解开始；</li>
+<li>迭代修改对偶解，在满足松弛的互补松弛性与整数性的前提下，使原始解逐步可行；</li>
+<li>当 $( \alpha , \beta )$ 互补松弛性条件和可行性同时满足时，即得到最优的原问题的一个近似解</li>
+</ol>
+<p><strong>定理</strong>: 满足 $( \alpha , \beta )$  互补松弛性条件原始对偶方案近似算法的近似比不超过 $\alpha \beta $  。</p>
+<p>$$<br>\begin{align*}<br>C_{\mathrm{appro}} &amp;&#x3D; \sum_{j&#x3D;1}^nc_jx_j\\<br>&amp;\le \alpha\cdot \sum_{j&#x3D;1}^n\left( \sum_{i&#x3D;1}^ma_{ij}y_i\right)x_j\quad(\mathrm{if}\ x_j\neq 0, c_j\le \alpha\cdot\left( \sum_{i&#x3D;1}^ma_{ij}y_i\right))\\<br>&amp;&#x3D;\alpha \cdot\sum_{i&#x3D;1}^m\left( \sum_{j&#x3D;1}^na_{ij}x_j\right)y_i\\<br>&amp;\le \alpha\cdot\beta\cdot \sum_{i&#x3D;1}^m b_iy_i\quad(\mathrm{if}\ y_i\neq 0, \sum_{j&#x3D;1}^na_{ij}x_j\le \beta\cdot b_i)\\<br>&amp;\le \alpha\cdot\beta\cdot C_{LP} \quad(弱对偶定理)\\<br>&amp;\le \alpha\cdot\beta\cdot C_{IP}<br>\end{align*}<br>$$</p>
+<h4 id="顶点覆盖问题为例-1"><a href="#顶点覆盖问题为例-1" class="headerlink" title="顶点覆盖问题为例"></a>顶点覆盖问题为例</h4><p>顶点覆盖问题的对偶问题为：</p>
+<p>$$<br>\begin{align*}<br>\max &amp;\sum_{e\in E}y_e\\<br>\mathbf{s.t.}\quad \sum_{i\in e}y_e&amp;\le w_i,\forall i \in V\<br>y_e &amp;\ge 0<br>\end{align*}<br>$$</p>
+<p>互补松弛条件为：</p>
+<p>$$<br>\begin{align*}<br>x_i(w_i-\sum_{i\in e}y_e) &#x3D; 0\\<br>y_e(x_i+x_j-1) &#x3D; 0<br>\end{align*}<br>$$</p>
+<p>可以将互补松弛条件松弛为：</p>
+<p>$$<br>\begin{align*}<br>x_i &#x3D; 0 \quad \mathbf{or}\quad w_i&#x3D;\sum_{i\in e} y_e\\<br>y_e &#x3D; 0 \quad \mathbf{or}\quad 1\le x_i+x_j\le 2<br>\end{align*}<br>$$</p>
+<p>此时 $\alpha&#x3D; 2, \beta &#x3D; 1$ ，因此，若找到满足以上条件的可行整数解，近似比为 2 </p>
+<p><strong>迭代算法</strong></p>
+<ol>
+<li>[从可行的对偶问题解和非可行的原问题整数解开始]<br>$ x &#x3D; 0, y &#x3D; 0$, 所有边未标记</li>
+<li>[ 修改对偶解，满足松弛的互补松弛条件]<br>任选⼀条未标记的边 $e$ ,提升 $y_e$, 直⾄其某⼀端顶点的约束变紧: $w_i-\sum_{i\in e}y_e&#x3D; 0$</li>
+<li>[修改原始解，使原始解逐步可行]<br>$ x_i &#x3D; 1$ , 表示将顶点 i 加入覆盖,将与顶点 i 相连的边标记</li>
+<li>重复步骤 2.3 直至所有的边标记</li>
+</ol>
+<p>所有的边都被标记表示得到了一个顶点覆盖集合, 由于 <strong>a)</strong>  $ x_i &#x3D; 1$ 时 $w_i-\sum_{i\in e}y_e&#x3D; 0$ 成立;   <strong>b)</strong>   一条边只连接两个顶点, $1\le x_i+x_j\le 2$  。此时满足松弛的互补松弛条件, 因此该算法的近似比为 2 。</p>
+<p><img src="/images/image-20200209120337756.png" alt="image-20200209120337756"></p>
+<p><strong>算法 2</strong></p>
+<ol>
+<li>$ x &#x3D; 0, y &#x3D; 0$, 所有边未标记</li>
+<li>提升所有未标记的边 $y_e$, 直⾄其某⼀顶点的约束变紧: $w_i-\sum_{i\in e}y_e&#x3D; 0$</li>
+<li>$ x_i &#x3D; 1$ , 表示将顶点 i 加入覆盖,将与顶点 i 相连的边标记</li>
+<li>重复步骤 2.3 直至所有的边标记</li>
+</ol>
+<p>分析同理</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Joey Lian</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://joeylian.github.io/2020/02/08/2020-02-09-%E9%A1%B6%E7%82%B9%E8%A6%86%E7%9B%96%E9%97%AE%E9%A2%98-%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E6%9D%BE%E5%BC%9B/">http://joeylian.github.io/2020/02/08/2020-02-09-%E9%A1%B6%E7%82%B9%E8%A6%86%E7%9B%96%E9%97%AE%E9%A2%98-%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E6%9D%BE%E5%BC%9B/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://joeylian.github.io" target="_blank">OneTime</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%8E%9F%E5%A7%8B%E5%AF%B9%E5%81%B6%E6%96%B9%E6%B3%95/">原始对偶方法</a><a class="post-meta__tags" href="/tags/%E8%BF%91%E4%BC%BC%E7%AE%97%E6%B3%95/">近似算法</a><a class="post-meta__tags" href="/tags/%E6%9C%80%E5%B0%8F%E9%A1%B6%E7%82%B9%E8%A6%86%E7%9B%96%E9%97%AE%E9%A2%98/">最小顶点覆盖问题</a><a class="post-meta__tags" href="/tags/Vertex-Cover/">Vertex Cover</a></div><div class="post_share"><div class="social-share" data-image="/images/AOR.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/02/09/2020-02-10-%E5%B9%B3%E8%A1%8C%E6%9C%BA%E8%B0%83%E5%BA%A6%E9%97%AE%E9%A2%98-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E9%97%AE%E9%A2%98/"><img class="prev-cover" src="/images/AOR.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">平行机调度问题-负载均衡问题</div></div></a></div><div class="next-post pull-right"><a href="/2020/02/07/2020-02-08-%E6%97%85%E8%A1%8C%E5%95%86%E9%97%AE%E9%A2%98%E8%BF%91%E4%BC%BC%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/"><img class="next-cover" src="/images/AOR.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">旅行商问题近似算法分析</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2019/11/02/2019-11-03-%E5%8E%9F%E5%A7%8B-%E5%AF%B9%E5%81%B6%E6%96%B9%E6%B3%95%E4%B8%8E%E6%9C%80%E7%9F%AD%E8%B7%AF%E7%AE%97%E6%B3%95/" title="原始-对偶方法与最短路算法"><img class="cover" src="/images/AOR.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-11-03</div><div class="title">原始-对偶方法与最短路算法</div></div></a></div><div><a href="/2020/01/28/2020-01-29-%E8%A3%85%E7%AE%B1%E9%97%AE%E9%A2%98%E8%BF%91%E4%BC%BC%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/" title="装箱问题近似算法分析"><img class="cover" src="/images/AOR.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-01-29</div><div class="title">装箱问题近似算法分析</div></div></a></div><div><a href="/2020/02/07/2020-02-08-%E6%97%85%E8%A1%8C%E5%95%86%E9%97%AE%E9%A2%98%E8%BF%91%E4%BC%BC%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/" title="旅行商问题近似算法分析"><img class="cover" src="/images/AOR.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-02-08</div><div class="title">旅行商问题近似算法分析</div></div></a></div><div><a href="/2020/02/09/2020-02-10-%E5%B9%B3%E8%A1%8C%E6%9C%BA%E8%B0%83%E5%BA%A6%E9%97%AE%E9%A2%98-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E9%97%AE%E9%A2%98/" title="平行机调度问题-负载均衡问题"><img class="cover" src="/images/AOR.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-02-10</div><div class="title">平行机调度问题-负载均衡问题</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/me.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Joey Lian</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/joeylian" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:lianjy9976@163.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E5%B0%8F%E9%A1%B6%E7%82%B9%E8%A6%86%E7%9B%96%E9%97%AE%E9%A2%98"><span class="toc-number">1.</span> <span class="toc-text">最小顶点覆盖问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92-Rounding"><span class="toc-number">2.</span> <span class="toc-text">线性规划 Rounding</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A1%B6%E7%82%B9%E8%A6%86%E7%9B%96%E9%97%AE%E9%A2%98%E4%B8%BA%E4%BE%8B"><span class="toc-number">2.1.</span> <span class="toc-text">顶点覆盖问题为例</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E5%A7%8B%E5%AF%B9%E5%81%B6%E6%96%B9%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">原始对偶方法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A1%B6%E7%82%B9%E8%A6%86%E7%9B%96%E9%97%AE%E9%A2%98%E4%B8%BA%E4%BE%8B-1"><span class="toc-number">3.1.</span> <span class="toc-text">顶点覆盖问题为例</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" title="【EffectiveC++】构造/析构/赋值运算"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】构造/析构/赋值运算"/></a><div class="content"><a class="title" href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" title="【EffectiveC++】构造/析构/赋值运算">【EffectiveC++】构造/析构/赋值运算</a><time datetime="2021-12-29T16:00:00.000Z" title="发表于 2021-12-30 00:00:00">2021-12-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/" title="【EffectiveC++】让自己习惯C++"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】让自己习惯C++"/></a><div class="content"><a class="title" href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/" title="【EffectiveC++】让自己习惯C++">【EffectiveC++】让自己习惯C++</a><time datetime="2021-12-27T16:00:00.000Z" title="发表于 2021-12-28 00:00:00">2021-12-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】设计与声明"/></a><div class="content"><a class="title" href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明">【EffectiveC++】设计与声明</a><time datetime="2021-01-22T16:00:00.000Z" title="发表于 2021-01-23 00:00:00">2021-01-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="【EffectiveC++】资源管理"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】资源管理"/></a><div class="content"><a class="title" href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="【EffectiveC++】资源管理">【EffectiveC++】资源管理</a><time datetime="2021-01-21T16:00:00.000Z" title="发表于 2021-01-22 00:00:00">2021-01-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/" title="C++右值引用与移动语义"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C++右值引用与移动语义"/></a><div class="content"><a class="title" href="/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/" title="C++右值引用与移动语义">C++右值引用与移动语义</a><time datetime="2020-08-01T16:00:00.000Z" title="发表于 2020-08-02 00:00:00">2020-08-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/images/top.jpeg')"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2022 By Joey Lian</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.2
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container:not\([display]\)').forEach(node => {
+            const target = node.parentNode
+            if (target.nodeName.toLowerCase() === 'li') {
+              target.parentNode.classList.add('has-jax')
+            } else {
+              target.classList.add('has-jax')
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd9d8e97d1c1701a3d53b',
+      clientSecret: '52ab8c95467a938ecb0cfb1c3ca318d6574a806d',
+      repo: 'JoeyLian.github.io',
+      owner: 'JoeyLian',
+      admin: ['JoeyLian'],
+      id: 'fa161411a5447ff9cf3b69268b67bd80',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !false) {
+  if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = false;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

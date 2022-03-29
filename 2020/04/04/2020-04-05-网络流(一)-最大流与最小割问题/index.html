@@ -1,0 +1,348 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>网络流(一)-最大流与最小割问题 | OneTime</title><meta name="keywords" content="对偶,Network Flow,最大流问题,最大流最小割定理"><meta name="author" content="Joey Lian"><meta name="copyright" content="Joey Lian"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="问题定义Flow Networks (流网络)流网络指一个符合以下特征的有向图 G &#x3D; (V,E):     每条边关联一个非负数，即边的容量，记为 $c_e$  存在单一源点 (source node) $s\in V$：产生流量的点 存在单一汇点 (sink node) $t\in V$：吸收流量的点  一般的，我们假设流网络满足：没有边进入源点，没有边离开汇点。每个结点至少存在一条">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网络流(一)-最大流与最小割问题">
+<meta property="og:url" content="http://joeylian.github.io/2020/04/04/2020-04-05-%E7%BD%91%E7%BB%9C%E6%B5%81(%E4%B8%80)-%E6%9C%80%E5%A4%A7%E6%B5%81%E4%B8%8E%E6%9C%80%E5%B0%8F%E5%89%B2%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:site_name" content="OneTime">
+<meta property="og:description" content="问题定义Flow Networks (流网络)流网络指一个符合以下特征的有向图 G &#x3D; (V,E):     每条边关联一个非负数，即边的容量，记为 $c_e$  存在单一源点 (source node) $s\in V$：产生流量的点 存在单一汇点 (sink node) $t\in V$：吸收流量的点  一般的，我们假设流网络满足：没有边进入源点，没有边离开汇点。每个结点至少存在一条">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://joeylian.github.io/images/AlgDesign.png">
+<meta property="article:published_time" content="2020-04-04T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-29T12:57:04.720Z">
+<meta property="article:author" content="Joey Lian">
+<meta property="article:tag" content="对偶">
+<meta property="article:tag" content="Network Flow">
+<meta property="article:tag" content="最大流问题">
+<meta property="article:tag" content="最大流最小割定理">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://joeylian.github.io/images/AlgDesign.png"><link rel="shortcut icon" href="/img/me.jpeg"><link rel="canonical" href="http://joeylian.github.io/2020/04/04/2020-04-05-%E7%BD%91%E7%BB%9C%E6%B5%81(%E4%B8%80)-%E6%9C%80%E5%A4%A7%E6%B5%81%E4%B8%8E%E6%9C%80%E5%B0%8F%E5%89%B2%E9%97%AE%E9%A2%98/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '网络流(一)-最大流与最小割问题',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-03-29 20:57:04'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.1.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/me.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 总览</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/images/top.jpeg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">OneTime</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 总览</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">网络流(一)-最大流与最小割问题<a class="post-edit-link" href="https://github.com/JoeyLian/githubio/edit/master/source/_posts/2020-04-05-网络流(一)-最大流与最小割问题.md" title="编辑" target="_blank"><i class="fas fa-pencil-alt"></i></a></h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-04-04T16:00:00.000Z" title="发表于 2020-04-05 00:00:00">2020-04-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-03-29T12:57:04.720Z" title="更新于 2022-03-29 20:57:04">2022-03-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%AE%97%E6%B3%95%E8%AE%BE%E8%AE%A1/">算法设计</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="网络流(一)-最大流与最小割问题"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/2020/04/04/2020-04-05-%E7%BD%91%E7%BB%9C%E6%B5%81(%E4%B8%80)-%E6%9C%80%E5%A4%A7%E6%B5%81%E4%B8%8E%E6%9C%80%E5%B0%8F%E5%89%B2%E9%97%AE%E9%A2%98/#post-comment"><span class="gitalk-comment-count"></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="问题定义"><a href="#问题定义" class="headerlink" title="问题定义"></a>问题定义</h2><h4 id="Flow-Networks-流网络"><a href="#Flow-Networks-流网络" class="headerlink" title="Flow Networks (流网络)"></a>Flow Networks (流网络)</h4><p>流网络指一个符合以下特征的有向图 G &#x3D; (V,E):   </p>
+<ul>
+<li>每条边关联一个非负数，即边的容量，记为 $c_e$ </li>
+<li>存在单一源点 (source node) $s\in V$：产生流量的点</li>
+<li>存在单一汇点 (sink node) $t\in V$：吸收流量的点</li>
+</ul>
+<p>一般的，我们假设流网络满足：没有边进入源点，没有边离开汇点。每个结点至少存在一条边与之相连。</p>
+<h4 id="Flow-流"><a href="#Flow-流" class="headerlink" title="Flow (流)"></a>Flow (流)</h4><p>s-t 流是一个函数 $f: E\rightarrow \mathbb{R}^+$, 值 $f(e)$ 表示边 $e$ 携带的流量。一个流需要满足两个性质  </p>
+<ul>
+<li>容量条件 (Capacity conditions): $$\forall e\in E, 0\le f(e)\le c_e$$</li>
+<li>守恒条件 (Conservation conditions): $$\forall v\in V, v\neq s,t, \sum_{e\text{ into }v}f(e) &#x3D; \sum_{e\text{ out of }v}f(e)$$</li>
+</ul>
+<p>为了使记号简洁，我们定义 </p>
+<p>$$<br>f^{\text{out}}(v) &#x3D; \sum_{e\text{ out of }v}f(e),\  f^{\text{in}}(v) &#x3D; \sum_{e\text{ into }v}f(e)<br>$$</p>
+<p>自然的，对于点集 $S\subseteq V, f^{\text{out}}(S) &#x3D; \sum_{e\text{ out of }S}f(e),\  f^{\text{in}}(S) &#x3D; \sum_{e\text{ into }S}f(e)$。</p>
+<p>一个流 $f$ 的值, 记作 $v(f)$，定义为源点产生的流量:</p>
+<p>$$<br>v(f) &#x3D; \sum_{e\text{ out of } s}f(e) &#x3D; f^\text{out} (s)<br>$$</p>
+<h4 id="The-Maximum-Flow-Problem-最大流问题"><a href="#The-Maximum-Flow-Problem-最大流问题" class="headerlink" title="The Maximum-Flow Problem (最大流问题)"></a>The Maximum-Flow Problem (最大流问题)</h4><p>定义：给定一个流网络：有向图 $G&#x3D;(V,E)$ 与每条边的容量 $c_e$，找出一个具有最大值的流 $f$</p>
+<h4 id="Cut-分割"><a href="#Cut-分割" class="headerlink" title="Cut (分割)"></a>Cut (分割)</h4><p>s-t 割是点集 $V$  的一个划分 $(A,B), s\in A, t\in V$。一个分割 $(A,B)$ 的容量 $c(A,B)$ ，定义为从 A 出来的所有边的容量之和：</p>
+<p>$$<br>c(A,B) &#x3D; \sum_{e \text{ out of }A} c_e<br>$$</p>
+<h4 id="The-Minimum-Cut-Problem-最小割问题"><a href="#The-Minimum-Cut-Problem-最小割问题" class="headerlink" title="The Minimum-Cut Problem (最小割问题)"></a>The Minimum-Cut Problem (最小割问题)</h4><p>定义：给定一个流网络：有向图 $G&#x3D;(V,E)$ 与每条边的容量 $c_e$，找出一个具有最小容量的分割 $(A,B)$ </p>
+<h4 id="The-Residual-Graph-剩余图"><a href="#The-Residual-Graph-剩余图" class="headerlink" title="The Residual Graph (剩余图)"></a>The Residual Graph (剩余图)</h4><p> 给定流网络 $G$ 及 $G$ 上的流 $f$， 定义 $G$ 关于 $f$ 的剩余图 $G_f$ ：  </p>
+<ul>
+<li>$G_f$ 中的顶点集与 $G$ 中的顶点集相同</li>
+<li>对于 $G$ 中的每条边 $e &#x3D; (u,v)$ ，若 $f(e) &lt; c_e$， 则还有 $c_e-f(e)$ 的剩余流量。$G_f$ 中包含边  $e &#x3D; (u,v)$ ，其容量为  $c_e-f(e)$。这种边称为<strong>前向边</strong> (forward edges).</li>
+<li>对于 $G$ 中的每条边 $e &#x3D; (u,v)$ ，若 $f(e) &gt; 0$， 则流中有 $f(e)$ 的流可以 “撤销”。$G_f$ 中包含边  $e’ &#x3D; (v,u)$ ，其容量为  $f(e)$。这种边称为<strong>后向边</strong> (backward edges).</li>
+</ul>
+<p>直观的理解，剩余图定义了在当前流状态下每条边可以操作的流量：在初始流网络中剩余的流量可以继续使用，以及使用的流量则可以 “撤销” ：使用一条反向的边运输流量。</p>
+<p>定义一条边的<strong>剩余流量</strong> (residual capacity) 为这条边在剩余图中的流量。</p>
+<h2 id="最大流最小割定理"><a href="#最大流最小割定理" class="headerlink" title="最大流最小割定理"></a>最大流最小割定理</h2><h3 id="定理"><a href="#定理" class="headerlink" title="定理"></a>定理</h3><p>在任意的流网络中，最大的 s-t 流的值等于最小的 s-t 割的容量。</p>
+<h3 id="割提供了流的上界"><a href="#割提供了流的上界" class="headerlink" title="割提供了流的上界"></a>割提供了流的上界</h3><h4 id="直观"><a href="#直观" class="headerlink" title="直观"></a>直观</h4><p>从直观上理解流与割，最大流指的是流量从源点流到汇点，可以同时流出的最大容量。而割将网络分成了两部分，使得从源点到汇点的流量必须从 $A$ 穿出到达 $B$ 。因此从源点流到汇点可以同时流出的容量受到从 $A$ 到 $B$ 的所有边容量之和的限制。</p>
+<p>换句话说，对于任意的 s-t 割，它的容量 $c(A,B)$ 是所有 s-t 流值 $v(f) $ 的上界。</p>
+<h4 id="证明"><a href="#证明" class="headerlink" title="证明"></a>证明</h4><p><strong>定理 1</strong>：令 $f$ 是任意的 s-t 流，$(A,B)$ 是任意 s-t 割，有 $v(f) &#x3D; f^\text{out}(A)-f^\text{in}(A)$   </p>
+<p><strong>证明</strong>：有 $f^\text{in}(s) &#x3D; 0$ ,  且对于 $A$ 中除 $s$ 之外的点 $v$:  $f^\text{out}(v)-f^\text{in}(v) &#x3D; 0$</p>
+<p>$$<br>\begin{align*}<br>v(f) &amp;&#x3D; f^\text{out}(s)-f^\text{in}(A)\\<br>&amp;&#x3D; f^\text{out}(s)-f^\text{in}(s)\\<br>&amp;&#x3D; f^\text{out}(s)-f^\text{in}(s) + \sum_{v\in A-{s}}(f^\text{out}(v)-f^\text{in}(v) )\\<br>&amp;&#x3D; \sum_{v\in A}(f^\text{out}(v)-f^\text{in}(v) )\\<br>&amp;&#x3D; f^\text{out}(A)-f^\text{in}(A )<br>\end{align*}<br>$$</p>
+<p>同样的， <strong>定理 2</strong>：令 $f$ 是任意的 s-t 流，$(A,B)$ 是任意 s-t 割，有 $v(f) &#x3D; f^\text{in}(B)-f^\text{out}(B)$ </p>
+<p><strong>定理 3</strong>：令 $f$ 是任意的 s-t 流，$(A,B)$ 是任意 s-t 割，有 $v(f)\le c(A,B)$   </p>
+<p><strong>证明</strong>：</p>
+<p>$$<br>\begin{align*}<br>v(f) &amp;&#x3D;f^\text{out}(A)-f^\text{in}(A) \\<br>&amp;\le f^\text{out}(A) &#x3D; \sum_{e \text{ out of }A}f(e)\\<br>&amp;\le \sum_{e \text{ out of }A}c_e&#x3D;c(A,B)<br>\end{align*}<br>$$</p>
+<h3 id="最大流等于最小割"><a href="#最大流等于最小割" class="headerlink" title="最大流等于最小割"></a>最大流等于最小割</h3><p><strong>定理 4</strong>： 如果 $f^*$ 是使得在剩余图 $G_{f^*}$ 中没有 s-t 路径的一个 s-t 流，则 $G$ 中存在一个 s-t 割 $(A^*, B^*)$ 使得 $v(f) &#x3D; c(A^*,B^*)$. 因此，$f^*$ 是 $G$ 上的一个最大流, $(A^*, B^*)$ 是 $G$ 上的一个最小割。</p>
+<p><strong>证明</strong>：令 $A^*$ 为 $G_{f^*}$ 中存在一条 s-v 路径的所有点 $v$ 的集合，$B^* &#x3D; V-A^*$</p>
+<ul>
+<li>显然有：$s\in A^*,\ t\in B^* $，因此 $(A^*, B^*)$ 是 $G$ 上的一个 s-t 分割。</li>
+<li>设 $e &#x3D; (u,v)$ 是 $G$ 中的一条边，满足 $u\in A^*, v\in B^*$, 则有 $f(e) &#x3D; c _ e$: 若  $f(e) &lt; c_e$, 则 $G_{f^*}$ 中有一条容量为 $c _ e-f(e)$ 的前向边 $e &#x3D; (u,v)$；由于 $u\in A^*$,  $G_{f^*}$ 中存在一条 s-u 路径，将e接上这条路径，则得到 $G_{f^*}$ 中一条 s-v 路径，与  $v\in B^*$ 矛盾。</li>
+<li>设 $e’ &#x3D; (u’,v’)$ 是 $G$ 中的一条边，满足 $u’\in B^*, v’\in A^*$, 则有 $f(e’) &#x3D; 0$: 若  $f(e’)&gt;0$, 则 $G_{f^*}$ 中有一条容量为 $f(e’)$ 的后向边 $e’’ &#x3D; (v’,u’)$；由于 $v’\in A^*$,  $G_{f^*}$ 中存在一条 s-v’ 路径，将 e” 接上这条路径，则得到 $G_{f^*}$ 中一条 s-u’ 路径，与  $u’\in B^*$ 矛盾。</li>
+</ul>
+<p><img src="/images/image-20200405120534836.png" alt="image-20200405120534836"></p>
+<p>因此，所有从 $A^*$ 出发的边  $f(e) &#x3D; c_e$， 所有进入 $A^*$ 的边  $f(e) &#x3D; 0$</p>
+<p>$$<br>\begin{align*}<br>v(f^*) &amp;&#x3D;f^\text{out}(A^*)-f^\text{in}(A^*) \\<br>&amp;&#x3D; \sum_{e \text{ out of }A^*}f(e) -  \sum_{e \text{ into }A^*}f(e)\\<br>&amp;&#x3D; \sum_{e \text{ out of }A^*}c_e\\<br>&amp;&#x3D;c(A^*,B^*)<br>\end{align*}<br>$$</p>
+<p>由定理 3，任意的 s-t 流 $f$ ，任意 s-t 割 $(A,B)$ ，有 $v(f)\le c(A,B)$ ，因此 $f^*$ 是 $G$ 上的一个最大流。否则，若存在一个有更大值的流 $f’$ ，则 $f’$ 的值超过 s-t 割 $(A^*, B^*)$ 的容量，与定理3矛盾。 同理，$(A^*, B^*)$ 是 $G$ 上的一个最小割。</p>
+<p><strong>即，在任意的流网络中，最大的 s-t 流的值等于最小的 s-t 割的容量。</strong></p>
+<h2 id="对偶解释"><a href="#对偶解释" class="headerlink" title="对偶解释"></a>对偶解释</h2><p>前面分析最大流最小割的过程应该很熟悉的有一种对偶的气息（</p>
+<p>它们确实互为对偶问题，这里有两种形式的线性规划。【这里假设容量均为整数，即为整数规划问题】</p>
+<h4 id="第一种形式"><a href="#第一种形式" class="headerlink" title="第一种形式"></a>第一种形式</h4><p><strong>最大流问题的线性规划</strong></p>
+<p>$$<br>\begin{align*}<br>\max \ &amp; v\\ \text{s.t.}\sum _ {e\text{ out of } s}f(e)  &amp; &#x3D; v\\<br>\sum _ {e\text{ into } t}f(e)  &amp; &#x3D; v\\<br>\sum_{e\text{ into } v} f(e) - \sum_{e\text{ out of } v} f(e) &amp;&#x3D;0, \forall v\in V-{s,t} \\<br>f(e)&amp;\le c _ e,\forall e\in E\\<br> f(e)&amp;\ge 0,\forall e\in E\\<br>\end{align*}<br>$$</p>
+<p>可以得到它的对偶问题为</p>
+<p>$$<br>\begin{align*}<br>\min \ &amp; \sum_{e\in E} c_ey_e\\<br>\text{s.t.}\ u_i-u_j+y_e &amp;\ge 0, e&#x3D;(i,j)\in E\\<br>-u_s+u_t&amp;&#x3D;1\\<br>y_e&amp;\ge 0<br>\end{align*}<br>$$</p>
+<p>[有点难。。。但慢慢算还是可以的: ) ]</p>
+<p>观察一下这个对偶规划：  </p>
+<ul>
+<li>系数矩阵是一个全幺模矩阵，故最优解均为整数【见<a href="%5Bhttps://joeylian.github.io/aor/2019/12/26/%E6%95%B4%E6%95%B0%E8%A7%84%E5%88%92/%5D(https://joeylian.github.io/aor/2019/12/26/%E6%95%B4%E6%95%B0%E8%A7%84%E5%88%92/)">整数规划</a>】</li>
+<li>目标函数 与 $u_i$ 无关，约束与 $u_i$ 孤立的值无关，而与 $u_i, u_j$ 的差值相关。故简单令 $u_s &#x3D; 0$ 不改变问题本身。</li>
+</ul>
+<p>接下来证明这个规划实际上就是<strong>最小割问题</strong>：（详细证明请阅读参考资料 4）</p>
+<ul>
+<li><p>给定 $G$ 的一个s-t分割 $(A,B)$， 可以得到一个对偶规划的可行解：</p>
+<ul>
+<li>当 $i\in A,u_i &#x3D; 0 $，当 $i\in B,u_i &#x3D; 1 $</li>
+<li>当 $e&#x3D;(u,v), u\in A, v\in B, y_e &#x3D; 1$, 否则，$y_e &#x3D; 0$</li>
+</ul>
+<p>可以验证这是一个可行解。且最小割问题即为该问题的最优解。</p>
+</li>
+<li><p>给定对偶规划的一个整数可行解，可以得到 $G$ 的一个s-t分割 $(A,B)$：<br>对于变量 $y_e, e &#x3D; (i,j)$, 只需满足 $u_i-u_j+y_e \ge 0, y_e\ge 0$, 由于目标函数为 $\min \sum_{e\in E} c_ey_e$, 可以得到 $$y_e&#x3D; \max{0,u_j-u_i}$$，由 $u_s &#x3D; 0, u_t &#x3D; 1$, 对每条从 s 到 t 的路径，至少有一个 $y_e&gt;0, y_e\ge 1$ 。将图中 $y_e&gt;0$ 的边删去，令 $A$ 为图中存在一条 s-v 路径的所有点 $v$ 的集合, 且 $A$ 中的点 $ u_i &#x3D; 0$。令 $B &#x3D; V-A$ 中的点 $u_j &#x3D; 1$。令删去的边 $y_e &#x3D;$1。则此时目标函数值即为分割的容量，且小于等于原来的整数可行解。</p>
+</li>
+</ul>
+<p><strong>互补松弛性</strong></p>
+<p>根据对偶定理中的互补松弛性，对于最优解：最大流与最小割</p>
+<ul>
+<li>当 $y_e &#x3D; 1$ 需满足 $f(e) &#x3D; c_e$</li>
+<li>当 $u_i-u_j+y_e&gt;0$ (即 $e$ 是从B出发到A的边), 需满足 $f(e) &#x3D; $0</li>
+</ul>
+<p>与前面的证明对应起来了w</p>
+<h4 id="第二种形式"><a href="#第二种形式" class="headerlink" title="第二种形式"></a>第二种形式</h4><p><strong>最大流问题的线性规划</strong></p>
+<p>$$<br>\begin{align*}<br>\max &amp;\sum_{p\in P}x_p\\<br>\text{s.t.}\ \sum_{p\in P:e\in p} x_p&amp;\le c_e,&amp; \forall e \in E\\<br>x_p&amp;\ge 0, &amp;\forall p \in P<br>\end{align*}<br>$$</p>
+<p>其中 $p$ 表示所有从 s 到 t 的路径，一条边可以被多条路径使用，共同分配它的容量。第一个约束指的是对每条边，经过它的路径的流量之和不超过自身的容量。</p>
+<p>它的对偶问题为：</p>
+<p>$$<br>\begin{align*}<br>\min &amp;\sum_{e\in E}c_ey_e\\<br>\text{s.t.}\ \sum_{e\in p} y_e&amp;\ge 1,&amp;\forall p\in P\\<br>y_e&amp;\ge 0, &amp;\forall e\in E<br>\end{align*}<br>$$</p>
+<p>我们同样可以证明这个规划是<strong>最小割问题</strong>的规划。(参考资料3)其中， $y_e &#x3D; 1$ 表示它是一条从 $A$ 到 $B$ 的边。</p>
+<p>这种形式可以更好的理清对偶的关系，但是好像不好解（x</p>
+<p>参考资料：</p>
+<blockquote>
+<ul>
+<li>《Algorithm Design》Jon Kleinberg， Eva Tardos， Chapter 7</li>
+<li><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%9C%80%E5%A4%A7%E6%B5%81%E6%9C%80%E5%B0%8F%E5%89%B2%E5%AE%9A%E7%90%86#%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E5%85%AC%E5%BC%8F">wiki: 最大流最小割定理</a></li>
+<li><a target="_blank" rel="noopener" href="http://theory.stanford.edu/~trevisan/cs261/lecture15.pdf">http://theory.stanford.edu/~trevisan/cs261/lecture15.pdf</a></li>
+<li><a target="_blank" rel="noopener" href="https://www3.diism.unisi.it/~agnetis/mincutENG.pdf">https://www3.diism.unisi.it/~agnetis/mincutENG.pdf</a></li>
+</ul>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Joey Lian</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://joeylian.github.io/2020/04/04/2020-04-05-%E7%BD%91%E7%BB%9C%E6%B5%81(%E4%B8%80)-%E6%9C%80%E5%A4%A7%E6%B5%81%E4%B8%8E%E6%9C%80%E5%B0%8F%E5%89%B2%E9%97%AE%E9%A2%98/">http://joeylian.github.io/2020/04/04/2020-04-05-%E7%BD%91%E7%BB%9C%E6%B5%81(%E4%B8%80)-%E6%9C%80%E5%A4%A7%E6%B5%81%E4%B8%8E%E6%9C%80%E5%B0%8F%E5%89%B2%E9%97%AE%E9%A2%98/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://joeylian.github.io" target="_blank">OneTime</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%AF%B9%E5%81%B6/">对偶</a><a class="post-meta__tags" href="/tags/Network-Flow/">Network Flow</a><a class="post-meta__tags" href="/tags/%E6%9C%80%E5%A4%A7%E6%B5%81%E9%97%AE%E9%A2%98/">最大流问题</a><a class="post-meta__tags" href="/tags/%E6%9C%80%E5%A4%A7%E6%B5%81%E6%9C%80%E5%B0%8F%E5%89%B2%E5%AE%9A%E7%90%86/">最大流最小割定理</a></div><div class="post_share"><div class="social-share" data-image="/images/AlgDesign.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/04/05/2020-04-06-%E7%BD%91%E7%BB%9C%E6%B5%81(%E4%BA%8C)-The_Preflow-Push_Algorithm/"><img class="prev-cover" src="/images/AlgDesign.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">网络流(二)-The_Preflow-Push_Algorithm</div></div></a></div><div class="next-post pull-right"><a href="/2020/02/16/2020-02-17-Git%E5%85%A5%E9%97%A8%E4%B8%8E%E7%90%86%E8%A7%A3/"><img class="next-cover" src="/images/git2.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Git入门与理解</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2020/04/05/2020-04-06-%E7%BD%91%E7%BB%9C%E6%B5%81(%E4%BA%8C)-The_Preflow-Push_Algorithm/" title="网络流(二)-The_Preflow-Push_Algorithm"><img class="cover" src="/images/AlgDesign.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-04-06</div><div class="title">网络流(二)-The_Preflow-Push_Algorithm</div></div></a></div><div><a href="/2019/11/02/2019-11-03-%E5%8E%9F%E5%A7%8B-%E5%AF%B9%E5%81%B6%E6%96%B9%E6%B3%95%E4%B8%8E%E6%9C%80%E7%9F%AD%E8%B7%AF%E7%AE%97%E6%B3%95/" title="原始-对偶方法与最短路算法"><img class="cover" src="/images/AOR.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-11-03</div><div class="title">原始-对偶方法与最短路算法</div></div></a></div><div><a href="/2019/12/30/2019-12-31-%E5%87%B8%E4%BC%98%E5%8C%96--Lagrange%E5%AF%B9%E5%81%B6/" title="凸优化--Lagrange对偶"><img class="cover" src="/img/top.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-12-31</div><div class="title">凸优化--Lagrange对偶</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/me.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Joey Lian</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/joeylian" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:lianjy9976@163.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E5%AE%9A%E4%B9%89"><span class="toc-number">1.</span> <span class="toc-text">问题定义</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Flow-Networks-%E6%B5%81%E7%BD%91%E7%BB%9C"><span class="toc-number">1.0.1.</span> <span class="toc-text">Flow Networks (流网络)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Flow-%E6%B5%81"><span class="toc-number">1.0.2.</span> <span class="toc-text">Flow (流)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#The-Maximum-Flow-Problem-%E6%9C%80%E5%A4%A7%E6%B5%81%E9%97%AE%E9%A2%98"><span class="toc-number">1.0.3.</span> <span class="toc-text">The Maximum-Flow Problem (最大流问题)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Cut-%E5%88%86%E5%89%B2"><span class="toc-number">1.0.4.</span> <span class="toc-text">Cut (分割)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#The-Minimum-Cut-Problem-%E6%9C%80%E5%B0%8F%E5%89%B2%E9%97%AE%E9%A2%98"><span class="toc-number">1.0.5.</span> <span class="toc-text">The Minimum-Cut Problem (最小割问题)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#The-Residual-Graph-%E5%89%A9%E4%BD%99%E5%9B%BE"><span class="toc-number">1.0.6.</span> <span class="toc-text">The Residual Graph (剩余图)</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E5%A4%A7%E6%B5%81%E6%9C%80%E5%B0%8F%E5%89%B2%E5%AE%9A%E7%90%86"><span class="toc-number">2.</span> <span class="toc-text">最大流最小割定理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E7%90%86"><span class="toc-number">2.1.</span> <span class="toc-text">定理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%89%B2%E6%8F%90%E4%BE%9B%E4%BA%86%E6%B5%81%E7%9A%84%E4%B8%8A%E7%95%8C"><span class="toc-number">2.2.</span> <span class="toc-text">割提供了流的上界</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%B4%E8%A7%82"><span class="toc-number">2.2.1.</span> <span class="toc-text">直观</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%81%E6%98%8E"><span class="toc-number">2.2.2.</span> <span class="toc-text">证明</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E5%A4%A7%E6%B5%81%E7%AD%89%E4%BA%8E%E6%9C%80%E5%B0%8F%E5%89%B2"><span class="toc-number">2.3.</span> <span class="toc-text">最大流等于最小割</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E5%81%B6%E8%A7%A3%E9%87%8A"><span class="toc-number">3.</span> <span class="toc-text">对偶解释</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E7%A7%8D%E5%BD%A2%E5%BC%8F"><span class="toc-number">3.0.1.</span> <span class="toc-text">第一种形式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E7%A7%8D%E5%BD%A2%E5%BC%8F"><span class="toc-number">3.0.2.</span> <span class="toc-text">第二种形式</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" title="【EffectiveC++】构造/析构/赋值运算"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】构造/析构/赋值运算"/></a><div class="content"><a class="title" href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" title="【EffectiveC++】构造/析构/赋值运算">【EffectiveC++】构造/析构/赋值运算</a><time datetime="2021-12-29T16:00:00.000Z" title="发表于 2021-12-30 00:00:00">2021-12-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/" title="【EffectiveC++】让自己习惯C++"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】让自己习惯C++"/></a><div class="content"><a class="title" href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/" title="【EffectiveC++】让自己习惯C++">【EffectiveC++】让自己习惯C++</a><time datetime="2021-12-27T16:00:00.000Z" title="发表于 2021-12-28 00:00:00">2021-12-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】设计与声明"/></a><div class="content"><a class="title" href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明">【EffectiveC++】设计与声明</a><time datetime="2021-01-22T16:00:00.000Z" title="发表于 2021-01-23 00:00:00">2021-01-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="【EffectiveC++】资源管理"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】资源管理"/></a><div class="content"><a class="title" href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="【EffectiveC++】资源管理">【EffectiveC++】资源管理</a><time datetime="2021-01-21T16:00:00.000Z" title="发表于 2021-01-22 00:00:00">2021-01-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/" title="C++右值引用与移动语义"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C++右值引用与移动语义"/></a><div class="content"><a class="title" href="/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/" title="C++右值引用与移动语义">C++右值引用与移动语义</a><time datetime="2020-08-01T16:00:00.000Z" title="发表于 2020-08-02 00:00:00">2020-08-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/images/top.jpeg')"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2022 By Joey Lian</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.2
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container:not\([display]\)').forEach(node => {
+            const target = node.parentNode
+            if (target.nodeName.toLowerCase() === 'li') {
+              target.parentNode.classList.add('has-jax')
+            } else {
+              target.classList.add('has-jax')
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd9d8e97d1c1701a3d53b',
+      clientSecret: '52ab8c95467a938ecb0cfb1c3ca318d6574a806d',
+      repo: 'JoeyLian.github.io',
+      owner: 'JoeyLian',
+      admin: ['JoeyLian'],
+      id: 'fb7e1d2c8029c93ba8739358043d801d',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !false) {
+  if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = false;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

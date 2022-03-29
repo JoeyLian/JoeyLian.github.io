@@ -1,0 +1,338 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>递归与尾递归 | OneTime</title><meta name="keywords" content="程序设计语言,函数式编程,递归,SICP"><meta name="author" content="Joey Lian"><meta name="copyright" content="Joey Lian"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="定义递归： 一个过程是递归 (recursive) 的， 也就是: 在过程的定义中（直接或间接地）引用了该过程本身。 尾递归是递归调用的一种实现： 尾递归是递归调用的一种实现，如果一个函数中所有递归形式的调用都出现在函数的末尾，我们称这个递归函数是尾递归 (tail-recursive) 的。 理解先来看一个简单的例子 计算阶乘的函数： 1234(define (factorial n)    (">
+<meta property="og:type" content="article">
+<meta property="og:title" content="递归与尾递归">
+<meta property="og:url" content="http://joeylian.github.io/2020/01/13/2020-01-14-%E9%80%92%E5%BD%92%E4%B8%8E%E5%B0%BE%E9%80%92%E5%BD%92/index.html">
+<meta property="og:site_name" content="OneTime">
+<meta property="og:description" content="定义递归： 一个过程是递归 (recursive) 的， 也就是: 在过程的定义中（直接或间接地）引用了该过程本身。 尾递归是递归调用的一种实现： 尾递归是递归调用的一种实现，如果一个函数中所有递归形式的调用都出现在函数的末尾，我们称这个递归函数是尾递归 (tail-recursive) 的。 理解先来看一个简单的例子 计算阶乘的函数： 1234(define (factorial n)    (">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://joeylian.github.io/images/PPL.png">
+<meta property="article:published_time" content="2020-01-13T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-29T12:57:04.720Z">
+<meta property="article:author" content="Joey Lian">
+<meta property="article:tag" content="程序设计语言">
+<meta property="article:tag" content="函数式编程">
+<meta property="article:tag" content="递归">
+<meta property="article:tag" content="SICP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://joeylian.github.io/images/PPL.png"><link rel="shortcut icon" href="/img/me.jpeg"><link rel="canonical" href="http://joeylian.github.io/2020/01/13/2020-01-14-%E9%80%92%E5%BD%92%E4%B8%8E%E5%B0%BE%E9%80%92%E5%BD%92/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '递归与尾递归',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-03-29 20:57:04'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.1.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/me.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 总览</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/images/top.jpeg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">OneTime</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 总览</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">递归与尾递归<a class="post-edit-link" href="https://github.com/JoeyLian/githubio/edit/master/source/_posts/2020-01-14-递归与尾递归.md" title="编辑" target="_blank"><i class="fas fa-pencil-alt"></i></a></h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-01-13T16:00:00.000Z" title="发表于 2020-01-14 00:00:00">2020-01-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-03-29T12:57:04.720Z" title="更新于 2022-03-29 20:57:04">2022-03-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/PPL/">PPL</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="递归与尾递归"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/2020/01/13/2020-01-14-%E9%80%92%E5%BD%92%E4%B8%8E%E5%B0%BE%E9%80%92%E5%BD%92/#post-comment"><span class="gitalk-comment-count"></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p><strong>递归</strong>：</p>
+<p>一个过程是递归 (<em>recursive</em>) 的， 也就是: 在过程的定义中（直接或间接地）引用了该过程本身。</p>
+<p><strong>尾递归</strong>是递归调用的一种实现：</p>
+<p>尾递归是递归调用的一种实现，如果一个函数中所有递归形式的调用都出现在函数的末尾，我们称这个递归函数是尾递归 (<em>tail-recursive</em>) 的。</p>
+<h3 id="理解"><a href="#理解" class="headerlink" title="理解"></a>理解</h3><p>先来看一个简单的例子</p>
+<p>计算阶乘的函数：</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">define</span> (<span class="name">factorial</span> n)</span><br><span class="line">    (<span class="name">if</span> (<span class="name">=</span> n <span class="number">1</span>)</span><br><span class="line">        <span class="number">1</span></span><br><span class="line">        (<span class="name">*</span> n (<span class="name">factorial</span> (<span class="name">-</span> n <span class="number">1</span>)))))</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">define</span> (<span class="name">factorial</span> n)</span><br><span class="line">    (<span class="name">fact-iter</span> <span class="number">1</span> <span class="number">1</span> n))</span><br><span class="line">(<span class="name">define</span> (<span class="name">fact-iter</span> product counter max-count)</span><br><span class="line">    (<span class="name">if</span> (<span class="name">&gt;</span> counter max-count)</span><br><span class="line">        product</span><br><span class="line">        (<span class="name">fact-iter</span> (<span class="name">*counter</span> product)</span><br><span class="line">                   (<span class="name">+</span> counter <span class="number">1</span>)</span><br><span class="line">                   max-counter)))</span><br></pre></td></tr></table></figure>
+
+<p>可以看的，第一种实现是一个简单的递归过程。第二种实现则是一个尾递归的过程，在函数 <code>fact-iter</code> 中，仅在函数末尾出现自身调用。</p>
+<p>先来看一下这两种实现的执行过程: </p>
+<p>第一种实现：</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">factorial</span> <span class="number">6</span>)</span><br><span class="line">(<span class="name">*</span> <span class="number">6</span> (<span class="name">factorial</span> <span class="number">5</span>))</span><br><span class="line">(<span class="name">*</span> <span class="number">6</span> (<span class="name">*</span> <span class="number">5</span> (<span class="name">factorial</span> <span class="number">4</span>)))</span><br><span class="line">(<span class="name">*</span> <span class="number">6</span> (<span class="name">*</span> <span class="number">5</span> (<span class="name">*</span> <span class="number">4</span> (<span class="name">factorial</span> <span class="number">3</span>))))</span><br><span class="line">(<span class="name">*</span> <span class="number">6</span> (<span class="name">*</span> <span class="number">5</span> (<span class="name">*</span> <span class="number">4</span> (<span class="name">*</span> <span class="number">3</span> (<span class="name">factorial</span> <span class="number">2</span>)))))</span><br><span class="line">(<span class="name">*</span> <span class="number">6</span> (<span class="name">*</span> <span class="number">5</span> (<span class="name">*</span> <span class="number">4</span> (<span class="name">*</span> <span class="number">3</span> (<span class="name">*</span> <span class="number">2</span> (<span class="name">factorial</span> <span class="number">1</span>))))))</span><br><span class="line">(<span class="name">*</span> <span class="number">6</span> (<span class="name">*</span> <span class="number">5</span> (<span class="name">*</span> <span class="number">4</span> (<span class="name">*</span> <span class="number">3</span> (<span class="name">*</span> <span class="number">2</span> <span class="number">1</span>)))))</span><br><span class="line">(<span class="name">*</span> <span class="number">6</span> (<span class="name">*</span> <span class="number">5</span> (<span class="name">*</span> <span class="number">4</span> (<span class="name">*</span> <span class="number">3</span> <span class="number">2</span>))))</span><br><span class="line">(<span class="name">*</span> <span class="number">6</span> (<span class="name">*</span> <span class="number">5</span> (<span class="name">*</span> <span class="number">4</span> <span class="number">6</span>)))</span><br><span class="line">(<span class="name">*</span> <span class="number">6</span> (<span class="name">*</span> <span class="number">5</span> <span class="number">24</span>))</span><br><span class="line">(<span class="name">*</span> <span class="number">6</span> <span class="number">120</span>)</span><br><span class="line"><span class="number">720</span></span><br></pre></td></tr></table></figure>
+
+<p>第二种实现：</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">factorial</span> <span class="number">6</span>)</span><br><span class="line">(<span class="name">fact-iter</span> <span class="number">1</span> <span class="number">1</span> <span class="number">6</span>)</span><br><span class="line">(<span class="name">fact-iter</span> <span class="number">1</span> <span class="number">2</span> <span class="number">6</span>)</span><br><span class="line">(<span class="name">fact-iter</span> <span class="number">2</span> <span class="number">3</span> <span class="number">6</span>)</span><br><span class="line">(<span class="name">fact-iter</span> <span class="number">6</span> <span class="number">4</span> <span class="number">6</span>)</span><br><span class="line">(<span class="name">fact-iter</span> <span class="number">24</span> <span class="number">5</span> <span class="number">6</span>)</span><br><span class="line">(<span class="name">fact-iter</span> <span class="number">120</span> <span class="number">6</span> <span class="number">6</span>)</span><br><span class="line">(<span class="name">fact-iter</span> <span class="number">720</span> <span class="number">7</span> <span class="number">6</span>)</span><br><span class="line"><span class="number">720</span></span><br></pre></td></tr></table></figure>
+
+<p>我们可以看的，第一种实现需要用线性增长的空间存储信息，第二种则只需维持固定的变量。</p>
+<p>在 SICP (Structure and Interpretation of Computer Programs) 中，尾递归形式的实现称为<strong>迭代</strong> (<em>iterative</em> ) 过程。</p>
+<p>在一般的认识 (语言) 中，迭代过程是循环结构实现，也就是通过 <code>for</code>，<code>while</code> 等特殊语法。而Lisp等语言并不支持循环语句。</p>
+<p>我们可以简单地把尾递归转化为一个循环过程</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">factorial</span><span class="params">(<span class="type">int</span> max_count)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> product = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> counter = <span class="number">1</span>; counter &lt;= max_count; counter += <span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        product = counter * product;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> product;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>换句话说，循环语句都可以通过一个尾递归实现。</p>
+<p>看一下 SICP里是怎么说的</p>
+<blockquote>
+<p>In contrasting iteration and recursion, we must be careful not to confuse the notion of a recursive <em>process</em> with the notion of a recursive <em>procedure</em>. When we describe a procedure as recursive, we are referring to the syntactic fact that the procedure definition refers (either directly or indirectly) to the procedure itself. But when we describe a process as following a pattern that is, say, linearly recursive, we are speaking about how the process evolves, not about the syntax of how a procedure is written. It may seem disturbing that we refer to a recursive procedure such as <code>fact-iter</code> as generating an iterative process. However, the process really is iterative: Its state is captured completely by its three state variables, and an interpreter need keep track of only three variables in order to execute the process.</p>
+<p>One reason that the distinction between process and procedure may be confusing is that most implementations of common languages (including Ada, Pascal, and C) are designed in such a way that the interpretation of any recursive procedure consumes an amount of memory that grows with the number of procedure calls, even when the process described is, in principle, iterative. As a consequence, these languages can describe iterative processes only by resorting to special-purpose ‘’looping constructs’’ such as <code>do</code>, <code>repeat</code>, <code>until</code>, <code>for</code>, and <code>while</code>. The implementation of Scheme we shall consider in chapter 5 does not share this defect. It will execute an iterative process in constant space, even if the iterative process is described by a recursive procedure. An implementation with this property is called <em>tail-recursive</em>. With a tail-recursive implementation, iteration can be expressed using the ordinary procedure call mechanism, so that special iteration constructs are useful only as syntactic sugar</p>
+</blockquote>
+<p>emmm  有点绕，解释一下。在 SICP 中，我们说一个程序是递归的，指的是在程序定义中引用了程序本身。而一个递归的程序的计算过程是迭代的，则是说解释器在执行是只需要保持固定数量的状态变量。它确实是 iterative。</p>
+<p>然而，在很多语言中 (如C，python)，对于尾递归形式的函数，它依然是以递归的形式执行，也就是他需要存储量与过程调用的次数成正比。因此，要实现迭代过程，需要使用<code>for</code>，<code>while</code> 等循环语句。</p>
+<p>通过尾递归的实现，我们可以利用常规的递归机制表述迭代过程，各种迭代结果不过是一些 “syntactic sugar”.</p>
+<h3 id="树形递归"><a href="#树形递归" class="headerlink" title="树形递归"></a>树形递归</h3><p>有些时候我们需要在定义中多次调用自身，可以称为<strong>树形递归</strong> (<em>tree recursion</em>): 它的展开过程像一颗树。考虑斐波那契数列的递归过程：</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">define</span> (<span class="name">fib</span> n)</span><br><span class="line">    (<span class="name">cond</span> ((<span class="name">=</span> n <span class="number">0</span>) <span class="number">0</span>)</span><br><span class="line">        ((<span class="name">=</span> n <span class="number">1</span>) <span class="number">1</span>)</span><br><span class="line">        (<span class="name">else</span> (<span class="name">+</span> (<span class="name">fib</span> (<span class="name">-</span> n <span class="number">1</span>))</span><br><span class="line">                 (<span class="name">fib</span> (<span class="name">-</span> n <span class="number">2</span>))))))</span><br></pre></td></tr></table></figure>
+
+<p>[图源 SICP  Figure 1.5]</p>
+<p><img src="/images/image-20200114121355835.png" alt="image-20200114121355835"></p>
+<p>一般来说，树形递归计算所需的步骤数正比于树中结点数，空间需求正比于树的最大深度。</p>
+<p>我们可以用尾递归实现效率更高的方式：</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">define</span> (<span class="name">fib</span> n)</span><br><span class="line">  (<span class="name">fib-iter</span> <span class="number">1</span> <span class="number">0</span> n))</span><br><span class="line">(<span class="name">define</span> (<span class="name">fib-iter</span> a b count)</span><br><span class="line">  (<span class="name">if</span> (<span class="name">=</span> count <span class="number">0</span>)</span><br><span class="line">      b</span><br><span class="line">      (<span class="name">fib-iter</span> (<span class="name">+</span> a b) a (<span class="name">-</span> count <span class="number">1</span>))))</span><br></pre></td></tr></table></figure>
+
+<p>它也是迭代过程：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">fib</span><span class="params">(<span class="type">int</span> count)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> a = <span class="number">1</span>, b = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(; count &gt; <span class="number">0</span>; count -= <span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        a = a+b;</span><br><span class="line">        b = a;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>递归，尾递归与迭代实际上是可以相互转换的。</p>
+<h3 id="一些神奇的例子"><a href="#一些神奇的例子" class="headerlink" title="一些神奇的例子"></a>一些神奇的例子</h3><h4 id="1-欧几里得算法求最大公约数"><a href="#1-欧几里得算法求最大公约数" class="headerlink" title="1.欧几里得算法求最大公约数"></a>1.欧几里得算法求最大公约数</h4><p>这是一个直观的尾递归算法</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">define</span> (<span class="name">gcd</span> a b)</span><br><span class="line">  (<span class="name">if</span> (<span class="name">=</span> b <span class="number">0</span>)</span><br><span class="line">      a</span><br><span class="line">      (<span class="name">gcd</span> b (<span class="name">remainder</span> a b))))</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-尾递归实现"><a href="#2-尾递归实现" class="headerlink" title="2. 尾递归实现"></a>2. 尾递归实现</h4><p>用尾递归过程实现 </p>
+<p>$$<br>f(n) &#x3D; n, n &lt; 3\<br>f(n) &#x3D; f(n-1)+2f(n-2)+3f(n-3),n\ge 3<br>$$</p>
+<p>用递归其实很简单(定义就是递归的)，下面是尾递归的实现：</p>
+<p>答案参考:  <a target="_blank" rel="noopener" href="http://community.schemewiki.org/?sicp-ex-1.11">http://community.schemewiki.org/?sicp-ex-1.11</a> </p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"> (<span class="name">define</span> (<span class="name">f</span> n) </span><br><span class="line">   <span class="comment">;; Given starting coefficients (a, b, c) = (1, 2, 3), </span></span><br><span class="line">   <span class="comment">;; where f(n) = 1 f(n-1) + 2 f(n-2) + 3 f(n-3), </span></span><br><span class="line">   <span class="comment">;; f-iter calculates new (a, b, c) such that </span></span><br><span class="line">   <span class="comment">;; f(n) = a f(2) + b f(1) + c f(0), </span></span><br><span class="line">   <span class="comment">;; where integer n &gt; 3. </span></span><br><span class="line">   <span class="comment">;; main body </span></span><br><span class="line">   (<span class="name">if</span> (<span class="name">&lt;</span> n <span class="number">3</span>) </span><br><span class="line">       n </span><br><span class="line">       (<span class="name">f-iter</span> n <span class="number">1</span> <span class="number">2</span> <span class="number">3</span>))) </span><br><span class="line">(<span class="name">define</span> (<span class="name">f-iter</span> n a b c) </span><br><span class="line">   (<span class="name">if</span> (<span class="name">=</span> n <span class="number">3</span>) </span><br><span class="line">      (<span class="name">+</span> (<span class="name">*</span> a <span class="number">2</span>)  <span class="comment">;; f(2) = 2 </span></span><br><span class="line">      (<span class="name">*</span> b <span class="number">1</span>)  <span class="comment">;; f(1) = 1 ;; (* b 1) = b, and </span></span><br><span class="line">      (<span class="name">*</span> c <span class="number">0</span>)) <span class="comment">;; f(0) = 0 ;; (* c 0) = 0, which can be omitted, </span></span><br><span class="line">                                 <span class="comment">;; but shown here for completeness. </span></span><br><span class="line">      (<span class="name">f-iter</span> (<span class="name">-</span> n <span class="number">1</span>)       <span class="comment">;; decrement counter </span></span><br><span class="line">              (<span class="name">+</span> b a)       <span class="comment">;; new-a = a + b </span></span><br><span class="line">              (<span class="name">+</span> c (<span class="name">*</span> <span class="number">2</span> a)) <span class="comment">;; new-b = 2a + c </span></span><br><span class="line">              (<span class="name">*</span> <span class="number">3</span> a))))    <span class="comment">;; new-c = 3a </span></span><br></pre></td></tr></table></figure>
+
+<p>or</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">define</span> (<span class="name">fi</span> n) </span><br><span class="line">     (<span class="name">f-iter</span> <span class="number">0</span> <span class="number">1</span> <span class="number">2</span> n)) </span><br><span class="line">(<span class="name">define</span> (<span class="name">f-iter</span> a b c count) </span><br><span class="line">     (<span class="name">cond</span> ((<span class="name">&lt;</span> count <span class="number">0</span>) count) </span><br><span class="line">          ((<span class="name">=</span> count <span class="number">0</span>) a) </span><br><span class="line">          ((<span class="name">=</span> count <span class="number">1</span>) b) </span><br><span class="line">          ((<span class="name">=</span> count <span class="number">2</span>) c) </span><br><span class="line">     (<span class="name">else</span> (<span class="name">f-iter</span> b c (<span class="name">+</span> c (<span class="name">*</span> <span class="number">2</span> b) (<span class="name">*</span> <span class="number">3</span> a)) (<span class="name">-</span> count <span class="number">1</span>))))) </span><br></pre></td></tr></table></figure>
+
+<h4 id="3-素数检测"><a href="#3-素数检测" class="headerlink" title="3. 素数检测"></a>3. 素数检测</h4><p>判断一个自然数 $n$ 是不是素数，自然的方法是从2到 $\sqrt{n}$ 检查是否为 $n$ 的因数。用递归实现：</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">define</span> (<span class="name">smallest-divisor</span> n)<span class="comment">;;找到最小的因数</span></span><br><span class="line">  (<span class="name">find-divisor</span> n <span class="number">2</span>))<span class="comment">;;从 2 开始</span></span><br><span class="line">(<span class="name">define</span> (<span class="name">find-divisor</span> n test-divisor)<span class="comment">;;它是尾递归的</span></span><br><span class="line">  (<span class="name">cond</span> ((<span class="name">&gt;</span> (<span class="name">square</span> test-divisor) n) n)	<span class="comment">;;test-divisor平方大于n</span></span><br><span class="line">                                        <span class="comment">;;停止搜索，因数为n</span></span><br><span class="line">        ((<span class="name">divides</span>? test-divisor n) test-divisor)<span class="comment">;;可以整除，因数为 test-divisor</span></span><br><span class="line">        (<span class="name">else</span> (<span class="name">find-divisor</span> n (<span class="name">+</span> test-divisor <span class="number">1</span>)))))<span class="comment">;;不能整除，test-divisor加一</span></span><br><span class="line">(<span class="name">define</span> (<span class="name">divides</span>? a b)	<span class="comment">;;整除</span></span><br><span class="line">  (<span class="name">=</span> (<span class="name">remainder</span> b a) <span class="number">0</span>))</span><br><span class="line"></span><br><span class="line">(<span class="name">define</span> (<span class="name">prime</span>? n)				</span><br><span class="line">  (<span class="name">=</span> n (<span class="name">smallest-divisor</span> n)))<span class="comment">;;若最小的因数为 n， 是一个素数</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="关系"><a href="#关系" class="headerlink" title="关系"></a>关系</h3><p>尾递归是递归的一种实现方式，即函数中递归形式的调用都出现在函数的末尾。尾递归实际上与迭代等效。在Lisp等语言中，尾递归会被解释器通过迭代进行计算。</p>
+<p>用尾递归的形式实现递归，需要用有限的变量表示当前状态，通过修改变量逐步满足条件。</p>
+<p>用尾递归实现迭代(循环)，实际上时间迭代的判断放在递归函数的变量中，在递归函数中进行变量的修改与条件判断，同时在主函数中调用递归函数。</p>
+<h3 id="尾递归优化"><a href="#尾递归优化" class="headerlink" title="尾递归优化"></a>尾递归优化</h3><p>像上面所说的，一些编译器会对尾递归进行优化，从而使用固定的内存空间。称为 TRO (Tail recursion optimization 尾递归优化)  或 TCE (Tail Call elimination 尾递归消除)</p>
+<p>还没有很懂 orz</p>
+<p>编译器做的事情是：检测到一个尾递归后，在函数前加上 <code>start</code> ，函数结尾处加上 <code>goto start</code>，就实现了将尾递归转化为迭代。</p>
+<p>这里说一个下面链接中实现 CPython实现TRO的方法：</p>
+<ol>
+<li>确定”安全的”尾递归调用。<br>应该是一个 CALL操作与RETURN操作连续，并且完全在任何try块之外的代码块。<br>（注意：这里忽略了不同的CALL_ *操作码，使用相同的方法应该很容易处理。）</li>
+<li>接下来，将每个这样的CALL-RETURN操作对替换为一个CALL_RETURN操作。<br>如果在运行时确定此特定调用不适用于TRE，则将执行CALL的常规操作，然后执行RETURN操作。</li>
+</ol>
+<h3 id="不进行TRO"><a href="#不进行TRO" class="headerlink" title="不进行TRO"></a>不进行TRO</h3><p>事实上，很多语言不支持尾递归优化，python 的创造者做出了一些解释：<a target="_blank" rel="noopener" href="http://neopythonic.blogspot.com/2009/04/tail-recursion-elimination.html">http://neopythonic.blogspot.com/2009/04/tail-recursion-elimination.html</a></p>
+<p>他认为：</p>
+<blockquote>
+<ol>
+<li>TRE与堆栈跟踪不兼容：消除尾部递归后，没有堆栈框架可用于打印回溯，并使调试变得困难。</li>
+<li>关于TRE仅仅是一个优化的想法是错误的。一旦消除了尾部递归，开发人员将开始编写依赖于它的代码，他们的代码将难以在不提供尾递归的实现上运行。</li>
+<li>递归不是所有编程的基础。</li>
+</ol>
+</blockquote>
+<p>作者还给出了很多对于python支持尾递归优化的做法，当然他都不持肯定态度：</p>
+<blockquote>
+<p>Of course, none of this does anything to address my first three arguments. Is it really such a big deal to rewrite your function to use a loop? </p>
+<p>(After all TRE <em>only</em> addresses recursion that <em>can</em> easily be replaced by a loop. :-)</p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Joey Lian</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://joeylian.github.io/2020/01/13/2020-01-14-%E9%80%92%E5%BD%92%E4%B8%8E%E5%B0%BE%E9%80%92%E5%BD%92/">http://joeylian.github.io/2020/01/13/2020-01-14-%E9%80%92%E5%BD%92%E4%B8%8E%E5%B0%BE%E9%80%92%E5%BD%92/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://joeylian.github.io" target="_blank">OneTime</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E8%AF%AD%E8%A8%80/">程序设计语言</a><a class="post-meta__tags" href="/tags/%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B/">函数式编程</a><a class="post-meta__tags" href="/tags/%E9%80%92%E5%BD%92/">递归</a><a class="post-meta__tags" href="/tags/SICP/">SICP</a></div><div class="post_share"><div class="social-share" data-image="/images/PPL.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/01/13/2020-01-14-Java-Lambda%E4%B8%8EStream%E7%AE%80%E8%AE%B0/"><img class="prev-cover" src="/images/PPL.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Java-Lambda与Stream简记</div></div></a></div><div class="next-post pull-right"><a href="/2019/12/30/2019-12-31-%E5%87%B8%E4%BC%98%E5%8C%96--Lagrange%E5%AF%B9%E5%81%B6/"><img class="next-cover" src="/img/top.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">凸优化--Lagrange对偶</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2020/01/13/2020-01-14-BNF%E4%B8%8EEBNF/" title="BNF与EBNF"><img class="cover" src="/images/PPL.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-01-14</div><div class="title">BNF与EBNF</div></div></a></div><div><a href="/2020/01/13/2020-01-14-Java-Lambda%E4%B8%8EStream%E7%AE%80%E8%AE%B0/" title="Java-Lambda与Stream简记"><img class="cover" src="/images/PPL.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-01-14</div><div class="title">Java-Lambda与Stream简记</div></div></a></div><div><a href="/2020/01/21/2020-01-22-%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E4%B8%8E%E6%B5%81/" title="函数式编程与流"><img class="cover" src="/images/PPL.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-01-22</div><div class="title">函数式编程与流</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/me.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Joey Lian</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/joeylian" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:lianjy9976@163.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89"><span class="toc-number">1.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%90%86%E8%A7%A3"><span class="toc-number">2.</span> <span class="toc-text">理解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%91%E5%BD%A2%E9%80%92%E5%BD%92"><span class="toc-number">3.</span> <span class="toc-text">树形递归</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E7%A5%9E%E5%A5%87%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="toc-number">4.</span> <span class="toc-text">一些神奇的例子</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E6%AC%A7%E5%87%A0%E9%87%8C%E5%BE%97%E7%AE%97%E6%B3%95%E6%B1%82%E6%9C%80%E5%A4%A7%E5%85%AC%E7%BA%A6%E6%95%B0"><span class="toc-number">4.1.</span> <span class="toc-text">1.欧几里得算法求最大公约数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E5%B0%BE%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0"><span class="toc-number">4.2.</span> <span class="toc-text">2. 尾递归实现</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E7%B4%A0%E6%95%B0%E6%A3%80%E6%B5%8B"><span class="toc-number">4.3.</span> <span class="toc-text">3. 素数检测</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E7%B3%BB"><span class="toc-number">5.</span> <span class="toc-text">关系</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%BE%E9%80%92%E5%BD%92%E4%BC%98%E5%8C%96"><span class="toc-number">6.</span> <span class="toc-text">尾递归优化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8D%E8%BF%9B%E8%A1%8CTRO"><span class="toc-number">7.</span> <span class="toc-text">不进行TRO</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" title="【EffectiveC++】构造/析构/赋值运算"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】构造/析构/赋值运算"/></a><div class="content"><a class="title" href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" title="【EffectiveC++】构造/析构/赋值运算">【EffectiveC++】构造/析构/赋值运算</a><time datetime="2021-12-29T16:00:00.000Z" title="发表于 2021-12-30 00:00:00">2021-12-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/" title="【EffectiveC++】让自己习惯C++"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】让自己习惯C++"/></a><div class="content"><a class="title" href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/" title="【EffectiveC++】让自己习惯C++">【EffectiveC++】让自己习惯C++</a><time datetime="2021-12-27T16:00:00.000Z" title="发表于 2021-12-28 00:00:00">2021-12-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】设计与声明"/></a><div class="content"><a class="title" href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明">【EffectiveC++】设计与声明</a><time datetime="2021-01-22T16:00:00.000Z" title="发表于 2021-01-23 00:00:00">2021-01-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="【EffectiveC++】资源管理"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】资源管理"/></a><div class="content"><a class="title" href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="【EffectiveC++】资源管理">【EffectiveC++】资源管理</a><time datetime="2021-01-21T16:00:00.000Z" title="发表于 2021-01-22 00:00:00">2021-01-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/" title="C++右值引用与移动语义"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C++右值引用与移动语义"/></a><div class="content"><a class="title" href="/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/" title="C++右值引用与移动语义">C++右值引用与移动语义</a><time datetime="2020-08-01T16:00:00.000Z" title="发表于 2020-08-02 00:00:00">2020-08-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/images/top.jpeg')"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2022 By Joey Lian</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.2
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container:not\([display]\)').forEach(node => {
+            const target = node.parentNode
+            if (target.nodeName.toLowerCase() === 'li') {
+              target.parentNode.classList.add('has-jax')
+            } else {
+              target.classList.add('has-jax')
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd9d8e97d1c1701a3d53b',
+      clientSecret: '52ab8c95467a938ecb0cfb1c3ca318d6574a806d',
+      repo: 'JoeyLian.github.io',
+      owner: 'JoeyLian',
+      admin: ['JoeyLian'],
+      id: '2998c5a46fd444c29699d2d1677f79d8',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !false) {
+  if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = false;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

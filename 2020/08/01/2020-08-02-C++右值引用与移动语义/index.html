@@ -1,0 +1,350 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>C++右值引用与移动语义 | OneTime</title><meta name="keywords" content="C++11,右值引用,移动语义,move semantics,R-value references"><meta name="author" content="Joey Lian"><meta name="copyright" content="Joey Lian"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="本文代码主要来源：LearnCPP 第十五章内容 引入：智能指针中的重复拷贝发现简单的例子都被 Copy elision 优化掉了 qaq  从复杂一点的来吧。 C++中一个常用的操作是通过 new 函数来动态分配一个对象，然而，一个问题是容易忘记将分配的内存回收。就算在函数结束时调用了 delete  函数，也可能出现函数中间就返回或者异常的情况。在这个背景下，我们希望有一种结构可以在离开运行环">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++右值引用与移动语义">
+<meta property="og:url" content="http://joeylian.github.io/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/index.html">
+<meta property="og:site_name" content="OneTime">
+<meta property="og:description" content="本文代码主要来源：LearnCPP 第十五章内容 引入：智能指针中的重复拷贝发现简单的例子都被 Copy elision 优化掉了 qaq  从复杂一点的来吧。 C++中一个常用的操作是通过 new 函数来动态分配一个对象，然而，一个问题是容易忘记将分配的内存回收。就算在函数结束时调用了 delete  函数，也可能出现函数中间就返回或者异常的情况。在这个背景下，我们希望有一种结构可以在离开运行环">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://joeylian.github.io/images/Cpp.png">
+<meta property="article:published_time" content="2020-08-01T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-29T12:57:04.720Z">
+<meta property="article:author" content="Joey Lian">
+<meta property="article:tag" content="C++11">
+<meta property="article:tag" content="右值引用">
+<meta property="article:tag" content="移动语义">
+<meta property="article:tag" content="move semantics">
+<meta property="article:tag" content="R-value references">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://joeylian.github.io/images/Cpp.png"><link rel="shortcut icon" href="/img/me.jpeg"><link rel="canonical" href="http://joeylian.github.io/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'C++右值引用与移动语义',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-03-29 20:57:04'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.1.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/me.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 总览</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/images/top.jpeg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">OneTime</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 总览</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">C++右值引用与移动语义<a class="post-edit-link" href="https://github.com/JoeyLian/githubio/edit/master/source/_posts/2020-08-02-C++右值引用与移动语义.md" title="编辑" target="_blank"><i class="fas fa-pencil-alt"></i></a></h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-08-01T16:00:00.000Z" title="发表于 2020-08-02 00:00:00">2020-08-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-03-29T12:57:04.720Z" title="更新于 2022-03-29 20:57:04">2022-03-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="C++右值引用与移动语义"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/#post-comment"><span class="gitalk-comment-count"></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>本文代码主要来源：<a target="_blank" rel="noopener" href="https://www.learncpp.com/">LearnCPP</a> 第十五章内容</p>
+<h2 id="引入：智能指针中的重复拷贝"><a href="#引入：智能指针中的重复拷贝" class="headerlink" title="引入：智能指针中的重复拷贝"></a>引入：智能指针中的重复拷贝</h2><p>发现简单的例子都被 Copy elision 优化掉了 qaq  从复杂一点的来吧。</p>
+<p>C++中一个常用的操作是通过 <code>new</code> 函数来动态分配一个对象，然而，一个问题是容易忘记将分配的内存回收。就算在函数结束时调用了 <code>delete</code>  函数，也可能出现函数中间就返回或者异常的情况。在这个背景下，我们希望有一种结构可以在离开运行环境时自动回收内存。这时候，我们可以自然地想到 C++ 中的类 —— 它会在离开运行环境时自动调用析构函数。如果用一个类来包装指针，则可以将回收函数放在析构函数中，它将在超出范围时自动调用。简单的代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> <span class="title class_">T</span>&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Auto_ptr</span></span><br><span class="line">&#123;</span><br><span class="line">	T* m_ptr;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="comment">// Pass in a pointer to &quot;own&quot; via the constructor</span></span><br><span class="line">	<span class="built_in">Auto_ptr</span>(T* ptr=<span class="literal">nullptr</span>)</span><br><span class="line">		:<span class="built_in">m_ptr</span>(ptr)</span><br><span class="line">	&#123;</span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// The destructor will make sure it gets deallocated</span></span><br><span class="line">	~<span class="built_in">Auto_ptr</span>()</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">delete</span> m_ptr;</span><br><span class="line">	&#125;</span><br><span class="line"> </span><br><span class="line">	<span class="comment">// Overload dereference and operator-&gt; so we can use Auto_ptr1 like m_ptr.</span></span><br><span class="line">	T&amp; <span class="keyword">operator</span>*() <span class="type">const</span> &#123; <span class="keyword">return</span> *m_ptr; &#125;</span><br><span class="line">	T* <span class="keyword">operator</span>-&gt;() <span class="type">const</span> &#123; <span class="keyword">return</span> m_ptr; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// A sample class to prove the above works</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Resource</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Resource</span>() &#123; std::cout &lt;&lt; <span class="string">&quot;Resource acquired\n&quot;</span>; &#125;</span><br><span class="line">    ~<span class="built_in">Resource</span>() &#123; std::cout &lt;&lt; <span class="string">&quot;Resource destroyed\n&quot;</span>; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="function">Auto_ptr&lt;Resource&gt; <span class="title">res</span><span class="params">(<span class="keyword">new</span> Resource)</span></span>; <span class="comment">// Note the allocation of memory here</span></span><br><span class="line"> </span><br><span class="line">    <span class="comment">// ... but no explicit delete needed</span></span><br><span class="line">	<span class="comment">// Also note that the Resource in angled braces doesn&#x27;t need a * symbol, since that&#x27;s supplied by the template</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然而，这么写是有很大问题的。例如：当希望用拷贝构造函数创建一个新的指针时，得到的将是一个指向 res1 中创建的实例的指针。当离开运行环境时，会进行两次 delete操作，而只分配了一份空间，会导致函数出错。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="function">Auto_ptr&lt;Resource&gt; <span class="title">res1</span><span class="params">(<span class="keyword">new</span> Resource)</span></span>;</span><br><span class="line">	<span class="function">Auto_ptr&lt;Resource&gt; <span class="title">res2</span><span class="params">(res1)</span></span>; </span><br><span class="line">    <span class="comment">// Alternatively, don&#x27;t initialize res2 and then assign res2 = res1;</span></span><br></pre></td></tr></table></figure>
+
+<p>考虑一个常见的例子，我们将指针作为参数传入函数，会发生什么呢？调用的函数会通过拷贝构造函数创建一个指向原来实例的指针，而在退出函数时，会进行 delete 操作，<code>main</code>函数中指针指向的实例也被回收了！</p>
+<p>解决这个问题最简单的方法是重写拷贝构造函数和拷贝赋值函数，进行深拷贝 [Deep Copy]。代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> <span class="title class_">T</span>&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Auto_ptr</span></span><br><span class="line">&#123;</span><br><span class="line">	T* m_ptr;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="built_in">Auto_ptr</span>(T* ptr = <span class="literal">nullptr</span>)</span><br><span class="line">		:<span class="built_in">m_ptr</span>(ptr)</span><br><span class="line">	&#123;</span><br><span class="line">	&#125;</span><br><span class="line"> </span><br><span class="line">	~<span class="built_in">Auto_ptr</span>()</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">delete</span> m_ptr;</span><br><span class="line">	&#125;</span><br><span class="line"> </span><br><span class="line">	<span class="comment">// Copy constructor</span></span><br><span class="line">	<span class="comment">// Do deep copy of a.m_ptr to m_ptr</span></span><br><span class="line">	<span class="built_in">Auto_ptr</span>(<span class="type">const</span> Auto_ptr3&amp; a)</span><br><span class="line">	&#123;</span><br><span class="line">		m_ptr = <span class="keyword">new</span> T;</span><br><span class="line">		*m_ptr = *a.m_ptr;</span><br><span class="line">	&#125;</span><br><span class="line"> </span><br><span class="line">	<span class="comment">// Copy assignment</span></span><br><span class="line">	<span class="comment">// Do deep copy of a.m_ptr to m_ptr</span></span><br><span class="line">	Auto_ptr&amp; <span class="keyword">operator</span>=(<span class="type">const</span> Auto_ptr3&amp; a)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">// Self-assignment detection</span></span><br><span class="line">		<span class="keyword">if</span> (&amp;a == <span class="keyword">this</span>)</span><br><span class="line">			<span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">		<span class="comment">// Release any resource we&#x27;re holding</span></span><br><span class="line">		<span class="keyword">delete</span> m_ptr;</span><br><span class="line">		<span class="comment">// Copy the resource</span></span><br><span class="line">		m_ptr = <span class="keyword">new</span> T;</span><br><span class="line">		*m_ptr = *a.m_ptr;</span><br><span class="line">		<span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">	&#125;</span><br><span class="line"> </span><br><span class="line">	T&amp; <span class="keyword">operator</span>*() <span class="type">const</span> &#123; <span class="keyword">return</span> *m_ptr; &#125;</span><br><span class="line">	T* <span class="keyword">operator</span>-&gt;() <span class="type">const</span> &#123; <span class="keyword">return</span> m_ptr; &#125;</span><br><span class="line">	<span class="function"><span class="type">bool</span> <span class="title">isNull</span><span class="params">()</span> <span class="type">const</span> </span>&#123; <span class="keyword">return</span> m_ptr == <span class="literal">nullptr</span>; &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>但是，深拷贝的代价是昂贵的，在一些情况下，我们并不希望进行拷贝。如</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Auto_ptr&lt;Resource&gt; <span class="title">generateResource</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="function">Auto_ptr&lt;Resource&gt; <span class="title">res</span><span class="params">(<span class="keyword">new</span> Resource)</span></span>;</span><br><span class="line">	<span class="keyword">return</span> res; <span class="comment">// this return value will invoke the copy constructor</span></span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	Auto_ptr3&lt;Resource&gt; mainres;</span><br><span class="line">	mainres = <span class="built_in">generateResource</span>(); <span class="comment">// this assignment will invoke the copy assignment</span></span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这段代码在关闭了 Copy elision 优化 [g++编译命令中增加 <code>-fno-elide-constructors</code>] 后的输出为：</p>
+<blockquote>
+<ul>
+<li>Resource acquired</li>
+<li>Resource acquired</li>
+<li>Resource destroyed</li>
+<li>Resource acquired</li>
+<li>Resource destroyed</li>
+<li>Resource destroyed</li>
+</ul>
+</blockquote>
+<p>咦~明明应该只在 <code>generateResource()</code> 函数中创建过一个 Resource。分析一下：</p>
+<ol>
+<li>创建指针 mainres 时并没有创建 Resource，此时指针是一个空指针。</li>
+<li>进入 <code>generateResource()</code> 函数，创建了一个 Resource，同时创建了一个指针 res 指向这个 Resource。出现第一个 <code>Resource acquired</code></li>
+<li>返回时，通过拷贝构造函数，在 <code>main()</code> 函数中创建了一个临时指针。由于使用深拷贝，需要创建一个新的 Resource，将函数返回的指针指向的 Resource 复制过来。出现第二个 <code>Resource acquired</code></li>
+<li>离开函数，函数中创建的指针释放，调用了 <code>delete()</code> 函数。出现第一个 <code>Resource destroyed</code></li>
+<li>进入赋值语句，进行拷贝赋值，创建一个新的 Resource进行拷贝。出现第三个 <code>Resource acquired</code></li>
+<li>赋值语句结束，临时变量释放。出现第二个 <code>Resource destroyed</code></li>
+<li><code>main()</code> 函数结束，mainres 回收。出现第三个 <code>Resource destroyed</code></li>
+</ol>
+<p>&#x2F;&#x2F; 如果使用 Copy elision 优化，赋值语句的两个输出会被优化，即第5，6。详见谷歌（</p>
+<p>但我们希望看到的，是只进行一次 Resource 的创建：它只发生在调用函数中。事实上，通过深拷贝进行多测对象创建已经偏理了我们使用指针的本意。</p>
+<p>在这里，我们并不需要通过拷贝构造函数和拷贝赋值函数复制指针指向的内容，而只需要将指针指向内容的所有权从原来的指针转移到目标对象。这就是移动语义背后的核心思想。 <strong>移动语义 [Move semantics]</strong> 意味着类将转移对象的所有权，而不是进行复制。我们希望在指针类中加入这样的构造&#x2F;赋值函数，并在合适的时候调用。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// A copy constructor that implements move semantics</span></span><br><span class="line"><span class="built_in">Auto_ptr</span>(Auto_ptr&amp; a) <span class="comment">// note: not const</span></span><br><span class="line">&#123;</span><br><span class="line">	m_ptr = a.m_ptr; <span class="comment">// transfer our dumb pointer from the source to our local object</span></span><br><span class="line">	a.m_ptr = <span class="literal">nullptr</span>; <span class="comment">// make sure the source no longer owns the pointer</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// An assignment operator that implements move semantics</span></span><br><span class="line">Auto_ptr&amp; <span class="keyword">operator</span>=(Auto_ptr&amp; a) <span class="comment">// note: not const</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (&amp;a == <span class="keyword">this</span>)</span><br><span class="line">		<span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">	<span class="keyword">delete</span> m_ptr; <span class="comment">// make sure we deallocate any pointer the destination is already holding first</span></span><br><span class="line">	m_ptr = a.m_ptr; <span class="comment">// then transfer our dumb pointer from the source to the local object</span></span><br><span class="line">	a.m_ptr = <span class="literal">nullptr</span>; <span class="comment">// make sure the source no longer owns the pointer</span></span><br><span class="line">	<span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过上面的分析，我们知道了想要实现一个会自动释放内存的指针，需要在必要的时候进行深拷贝，同时希望可以在合适的时候通过移动来优化构造&#x2F;赋值函数。那么一个自然的问题出现了：我们应该如何判断什么时候进行拷贝，什么时候进行移动。</p>
+<h2 id="右值引用"><a href="#右值引用" class="headerlink" title="右值引用"></a>右值引用</h2><blockquote>
+<p>C++11 及之后将表达式的值类别属性分为：prvalue, xvalue, and lvalue。但这与理解右值引用与移动语义关联不大，因此这里不介绍了。（其实是我还没看懂）详情参见：<a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/language/value_category">Value categories</a> </p>
+</blockquote>
+<h3 id="左值-lvalue-与右值-rvalue"><a href="#左值-lvalue-与右值-rvalue" class="headerlink" title="左值 lvalue 与右值 rvalue"></a>左值 lvalue 与右值 rvalue</h3><p>左值与右值指的是表达式的属性。 C ++中的每个表达式都有两个属性：一个类型（用于类型检查）和值类别 [Value categories]（用于某些类型的语法检查，如赋值语句的左端需要是“可以修改的变量”）。在 C++ 03及更早版本中，左值和右值是仅有的两个可用值类别。</p>
+<p>直观的，左值一开始的定义是 “适合位于赋值表达式左侧的值”，然而后来增加了 const 关键字，左值分成了两个子类别：可修改的左值与不可修改的左值。</p>
+<p>而右值，一个简单的定义就是：不是左值的任意表达式。如常量 (1)，临时变量 (x+1)，匿名对象 (Function(a,b)) 等。右值的生存期只有它所在的表达式，当离开表达式时，右值将被回收。同时右值也不能被赋值：由于生存期有限，这是没有意义的。</p>
+<h3 id="左值引用"><a href="#左值引用" class="headerlink" title="左值引用"></a>左值引用</h3><blockquote>
+<p>引用：引用变量是一个别名，也就是说，它是某个已存在变量的另一个名字。一旦把引用初始化为某个变量，就可以使用该引用名称或变量名称来指向变量。引用必须在创建时被初始化，一旦被初始化为一个对象，就不能被指向到另一个对象。[<a target="_blank" rel="noopener" href="https://www.runoob.com/cplusplus/cpp-references.html">C++引用</a>]</p>
+</blockquote>
+<p>在C++11之前，只存在左值引用，也即引用。左值引用又分为可修改的引用与不可修改的引用。可修改的左值引用只能被可修改的左值初始化。不可修改的左值引用可以被任意左值，右值初始化，但不能通过引用修改对象的值。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> x = <span class="number">0</span>;</span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> y = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> &amp; ref1 = x;</span><br><span class="line">    <span class="comment">//int &amp; ref2 = y;		//error: cannot be initialized with const lvalue </span></span><br><span class="line">    <span class="comment">//int &amp; ref3 = 1;		//error: cannot be initialized with rvalue </span></span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> &amp;ref4 = x;</span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> &amp;ref5 = y;</span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> &amp;ref6 = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    ref1 = <span class="number">1</span>;</span><br><span class="line">    cout &lt;&lt; x &lt;&lt; endl;	<span class="comment">// x = 1</span></span><br><span class="line">    <span class="comment">//ref4 = 2;			//error: cannot modify </span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="右值引用-1"><a href="#右值引用-1" class="headerlink" title="右值引用"></a>右值引用</h3><p>在 C++11之后，新增了右值引用。表达方式是两个 &amp;&amp;。右值引用只能被右值初始化，同样分为可修改的右值引用与不可修改的右值引用。右值引用有两个作用：首先，右值引用可以延长右值的生存期，可以在表达式之外被使用；此外，可修改的右值引用允许修改右值。一个简单的例子：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> &amp;&amp;rref&#123; <span class="number">5</span> &#125;; </span><br><span class="line">    <span class="comment">// because we&#x27;re initializing an r-value reference with a literal, a temporary with value 5 is created here</span></span><br><span class="line">    rref = <span class="number">10</span>;</span><br><span class="line">    std::cout &lt;&lt; rref &lt;&lt; <span class="string">&#x27;\n&#x27;</span>; <span class="comment">//output: 10</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 和左值引用一样，右值引用的主要作用是作为函数参数。需要注意的是，右值引用表示对一个右值的引用，但它本身作为一个命名变量，是一个左值。就如前面所说的，表达式有两个属性，右值引用的类型属性为 “右值引用”，它的值类别属性则为左值。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">fun</span><span class="params">(<span class="type">const</span> <span class="type">int</span> &amp;lref)</span> <span class="comment">// l-value arguments will select this function</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	std::cout &lt;&lt; <span class="string">&quot;l-value reference to const\n&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">fun</span><span class="params">(<span class="type">int</span> &amp;&amp;rref)</span> <span class="comment">// r-value arguments will select this function</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	std::cout &lt;&lt; <span class="string">&quot;r-value reference\n&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> x = <span class="number">5</span>;</span><br><span class="line">	<span class="built_in">fun</span>(x); <span class="comment">// l-value argument calls l-value version of function</span></span><br><span class="line">	<span class="built_in">fun</span>(<span class="number">5</span>); <span class="comment">// r-value argument calls r-value version of function</span></span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> &amp;&amp;ref&#123; <span class="number">5</span> &#125;;</span><br><span class="line">	<span class="built_in">fun</span>(ref);<span class="comment">// l-value argument calls l-value version of function </span></span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>同样的道理，如果在右值引用的函数中加入 <code>fun(rref)</code> 再次调用函数，此时将会进入左值引用的函数。</p>
+<p>回到一开始的问题，可以发现，C++中对于左值引用与右值引用的自动区别，完成了判断 “什么时候进行拷贝，什么时候进行移动” 的任务：</p>
+<ul>
+<li>当通过左值进行构造&#x2F;赋值时，由于进行构造的左值在之后还可能被使用，我们应该用深拷贝建立一个新的对象。</li>
+<li>当通过右值进行构造&#x2F;赋值时，进行构造的右值正常会在表达式结束之后就回收，因此我们可以直接将指针指向这个右值，无需重新创建对象。</li>
+</ul>
+<h2 id="移动语义"><a href="#移动语义" class="headerlink" title="移动语义"></a>移动语义</h2><h3 id="移动构造函数与移动拷贝函数"><a href="#移动构造函数与移动拷贝函数" class="headerlink" title="移动构造函数与移动拷贝函数"></a>移动构造函数与移动拷贝函数</h3><p>通过上面的分析，我们可以通过左值引用与右值引用重载构造函数与赋值函数。当使用左值引用时，不允许修改左值。当使用右值引用时，允许修改。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> <span class="title class_">T</span>&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Auto_ptr</span></span><br><span class="line">&#123;</span><br><span class="line">	T* m_ptr;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="built_in">Auto_ptr</span>(T* ptr = <span class="literal">nullptr</span>)</span><br><span class="line">		:<span class="built_in">m_ptr</span>(ptr)</span><br><span class="line">	&#123;</span><br><span class="line">	&#125;</span><br><span class="line"> </span><br><span class="line">	~<span class="built_in">Auto_ptr</span>()</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">delete</span> m_ptr;</span><br><span class="line">	&#125;</span><br><span class="line"> </span><br><span class="line">	<span class="comment">// Copy constructor</span></span><br><span class="line">	<span class="comment">// Do deep copy of a.m_ptr to m_ptr</span></span><br><span class="line">	<span class="built_in">Auto_ptr</span>(<span class="type">const</span> Auto_ptr&amp; a)</span><br><span class="line">	&#123;</span><br><span class="line">		m_ptr = <span class="keyword">new</span> T;</span><br><span class="line">		*m_ptr = *a.m_ptr;</span><br><span class="line">	&#125;</span><br><span class="line"> </span><br><span class="line">	<span class="comment">// Move constructor</span></span><br><span class="line">	<span class="comment">// Transfer ownership of a.m_ptr to m_ptr</span></span><br><span class="line">	<span class="built_in">Auto_ptr</span>(Auto_ptr&amp;&amp; a)</span><br><span class="line">		: <span class="built_in">m_ptr</span>(a.m_ptr)</span><br><span class="line">	&#123;</span><br><span class="line">		a.m_ptr = <span class="literal">nullptr</span>; <span class="comment">// we&#x27;ll talk more about this line below</span></span><br><span class="line">	&#125;</span><br><span class="line"> </span><br><span class="line">	<span class="comment">// Copy assignment</span></span><br><span class="line">	<span class="comment">// Do deep copy of a.m_ptr to m_ptr</span></span><br><span class="line">	Auto_ptr&amp; <span class="keyword">operator</span>=(<span class="type">const</span> Auto_ptr&amp; a)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">// Self-assignment detection</span></span><br><span class="line">		<span class="keyword">if</span> (&amp;a == <span class="keyword">this</span>)</span><br><span class="line">			<span class="keyword">return</span> *<span class="keyword">this</span>; </span><br><span class="line">		<span class="comment">// Release any resource we&#x27;re holding</span></span><br><span class="line">		<span class="keyword">delete</span> m_ptr; </span><br><span class="line">		<span class="comment">// Copy the resource</span></span><br><span class="line">		m_ptr = <span class="keyword">new</span> T;</span><br><span class="line">		*m_ptr = *a.m_ptr;</span><br><span class="line">		<span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">	&#125;</span><br><span class="line"> </span><br><span class="line">	<span class="comment">// Move assignment</span></span><br><span class="line">	<span class="comment">// Transfer ownership of a.m_ptr to m_ptr</span></span><br><span class="line">	Auto_ptr&amp; <span class="keyword">operator</span>=(Auto_ptr&amp;&amp; a)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">// Self-assignment detection</span></span><br><span class="line">		<span class="keyword">if</span> (&amp;a == <span class="keyword">this</span>)</span><br><span class="line">			<span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">		<span class="comment">// Release any resource we&#x27;re holding</span></span><br><span class="line">		<span class="keyword">delete</span> m_ptr;</span><br><span class="line">		<span class="comment">// Transfer ownership of a.m_ptr to m_ptr</span></span><br><span class="line">		m_ptr = a.m_ptr;</span><br><span class="line">		a.m_ptr = <span class="literal">nullptr</span>; <span class="comment">// we&#x27;ll talk more about this line below</span></span><br><span class="line">		<span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">	&#125;</span><br><span class="line"> </span><br><span class="line">	T&amp; <span class="keyword">operator</span>*() <span class="type">const</span> &#123; <span class="keyword">return</span> *m_ptr; &#125;</span><br><span class="line">	T* <span class="keyword">operator</span>-&gt;() <span class="type">const</span> &#123; <span class="keyword">return</span> m_ptr; &#125;</span><br><span class="line">	<span class="function"><span class="type">bool</span> <span class="title">isNull</span><span class="params">()</span> <span class="type">const</span> </span>&#123; <span class="keyword">return</span> m_ptr == <span class="literal">nullptr</span>; &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>此时进行之前的任务，只会进行一次分配与回收：</p>
+<blockquote>
+<ul>
+<li>Resource acquired</li>
+<li>Resource destroyed</li>
+</ul>
+</blockquote>
+<p>需要注意的是，有一次构造函数发生在函数值返回时，按对左右值的分析，此时返回的应该是左值。但C ++规范有一条特殊的规则，规定从函数按值返回的自动对象 [automatic objects，可以理解为非静态的局部变量] 即使是左值也可以作为右值处理。这是有道理的，因为返回值将在函数结束时销毁。</p>
+<p>上面的移动操作仍然是发生在停止了 Copy elision 的情况下。若使用 Copy elision，编译器可以通过完全省去副本，避免了进行复制或移动的需要。</p>
+<p>&#x2F;&#x2F;需要注意的是，对于自定义的类，需要自己定义移动构造函数与移动拷贝函数，否则仍然是进行拷贝操作。</p>
+<h3 id="std-move"><a href="#std-move" class="headerlink" title="std::move"></a>std::move</h3><p>除了对编译器自动识别出来的右值使用移动语义之外，有时候可能也希望对左值进行移动：你知道你的程序在对象进行下一次赋值之前不会使用，此时可以进行移动。以交换函数为例：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">myswap</span><span class="params">(T&amp; a, T&amp; b)</span> </span></span><br><span class="line"><span class="function"></span>&#123; </span><br><span class="line">  T tmp &#123; a &#125;; <span class="comment">// invokes copy constructor</span></span><br><span class="line">  a = b; <span class="comment">// invokes copy assignment</span></span><br><span class="line">  b = tmp; <span class="comment">// invokes copy assignment</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>交换函数一般在两个变量间进行，但是进行三次的拷贝实际上是没有必要的：我们更希望的是将变量 <code>a</code> 移动到临时变量，将变量 <code>b</code> 移动到变量 <code>a</code>，将临时变量移动到变量 <code>b</code> 完成交换。但是函数中 <code>a</code> 和 <code>b</code> 都被认为是左值，不能进行移动构造和移动赋值。有没有方法将左值转化为右值呢？</p>
+<p>在标准库 <code>&lt;utility&gt;</code> 中，提供了 <code>std::move()</code> 函数。它将一个左值转化为右值，从而可以调用移动构造函数与移动赋值函数。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">myswap</span><span class="params">(T&amp; a, T&amp; b)</span> </span></span><br><span class="line"><span class="function"></span>&#123; </span><br><span class="line">  T tmp &#123; std::<span class="built_in">move</span>(a) &#125;; <span class="comment">// invokes move constructor</span></span><br><span class="line">  a = std::<span class="built_in">move</span>(b); <span class="comment">// invokes move assignment</span></span><br><span class="line">  b = std::<span class="built_in">move</span>(tmp); <span class="comment">// invokes move assignment</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此外，类似排序函数等算法也可以通过 <code>std::move</code> 提高效率。</p>
+<h3 id="其他优化"><a href="#其他优化" class="headerlink" title="其他优化"></a>其他优化</h3><p>在定义了右值引用与移动语义之后，很多常见的操作都可以进行优化。</p>
+<p>如 <code>vector</code> 中的 <code>push_back()</code> 函数，在 C++11之后，若希望向容器中加入一个右值， <code>push_back()</code> 会创建变量后调用移动构造函数而无需赋值。在有了右值的定义后，一个更方便的方法是直接在容器中构造，于是出现了 <code>emplace_back()</code> 函数。</p>
+<p>参考资料：</p>
+<blockquote>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://www.learncpp.com/">LearnCpp</a></li>
+<li><a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/language/copy_elision">Copy elision - cppreference</a></li>
+<li><a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/language/value_category">Value categories - cppreference</a> </li>
+<li><a target="_blank" rel="noopener" href="https://www.runoob.com/cplusplus/cpp-references.html">C++引用</a></li>
+</ol>
+</blockquote>
+<p>最后编辑：2020-08-03</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Joey Lian</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://joeylian.github.io/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/">http://joeylian.github.io/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://joeylian.github.io" target="_blank">OneTime</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/C-11/">C++11</a><a class="post-meta__tags" href="/tags/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8/">右值引用</a><a class="post-meta__tags" href="/tags/%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/">移动语义</a><a class="post-meta__tags" href="/tags/move-semantics/">move semantics</a><a class="post-meta__tags" href="/tags/R-value-references/">R-value references</a></div><div class="post_share"><div class="social-share" data-image="/images/Cpp.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/"><img class="prev-cover" src="/images/Cpp.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">【EffectiveC++】资源管理</div></div></a></div><div class="next-post pull-right"><a href="/2020/07/26/2020-07-27-C++STL-Vector%E4%BB%8B%E7%BB%8D/"><img class="next-cover" src="/images/Cpp.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">C++STL-Vector介绍</div></div></a></div></nav><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/me.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Joey Lian</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/joeylian" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:lianjy9976@163.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E5%85%A5%EF%BC%9A%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88%E4%B8%AD%E7%9A%84%E9%87%8D%E5%A4%8D%E6%8B%B7%E8%B4%9D"><span class="toc-number">1.</span> <span class="toc-text">引入：智能指针中的重复拷贝</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8"><span class="toc-number">2.</span> <span class="toc-text">右值引用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A6%E5%80%BC-lvalue-%E4%B8%8E%E5%8F%B3%E5%80%BC-rvalue"><span class="toc-number">2.1.</span> <span class="toc-text">左值 lvalue 与右值 rvalue</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A6%E5%80%BC%E5%BC%95%E7%94%A8"><span class="toc-number">2.2.</span> <span class="toc-text">左值引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8-1"><span class="toc-number">2.3.</span> <span class="toc-text">右值引用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89"><span class="toc-number">3.</span> <span class="toc-text">移动语义</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E4%B8%8E%E7%A7%BB%E5%8A%A8%E6%8B%B7%E8%B4%9D%E5%87%BD%E6%95%B0"><span class="toc-number">3.1.</span> <span class="toc-text">移动构造函数与移动拷贝函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#std-move"><span class="toc-number">3.2.</span> <span class="toc-text">std::move</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E4%BC%98%E5%8C%96"><span class="toc-number">3.3.</span> <span class="toc-text">其他优化</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" title="【EffectiveC++】构造/析构/赋值运算"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】构造/析构/赋值运算"/></a><div class="content"><a class="title" href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" title="【EffectiveC++】构造/析构/赋值运算">【EffectiveC++】构造/析构/赋值运算</a><time datetime="2021-12-29T16:00:00.000Z" title="发表于 2021-12-30 00:00:00">2021-12-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/" title="【EffectiveC++】让自己习惯C++"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】让自己习惯C++"/></a><div class="content"><a class="title" href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/" title="【EffectiveC++】让自己习惯C++">【EffectiveC++】让自己习惯C++</a><time datetime="2021-12-27T16:00:00.000Z" title="发表于 2021-12-28 00:00:00">2021-12-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】设计与声明"/></a><div class="content"><a class="title" href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明">【EffectiveC++】设计与声明</a><time datetime="2021-01-22T16:00:00.000Z" title="发表于 2021-01-23 00:00:00">2021-01-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="【EffectiveC++】资源管理"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】资源管理"/></a><div class="content"><a class="title" href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="【EffectiveC++】资源管理">【EffectiveC++】资源管理</a><time datetime="2021-01-21T16:00:00.000Z" title="发表于 2021-01-22 00:00:00">2021-01-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/" title="C++右值引用与移动语义"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C++右值引用与移动语义"/></a><div class="content"><a class="title" href="/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/" title="C++右值引用与移动语义">C++右值引用与移动语义</a><time datetime="2020-08-01T16:00:00.000Z" title="发表于 2020-08-02 00:00:00">2020-08-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/images/top.jpeg')"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2022 By Joey Lian</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.2
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container:not\([display]\)').forEach(node => {
+            const target = node.parentNode
+            if (target.nodeName.toLowerCase() === 'li') {
+              target.parentNode.classList.add('has-jax')
+            } else {
+              target.classList.add('has-jax')
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd9d8e97d1c1701a3d53b',
+      clientSecret: '52ab8c95467a938ecb0cfb1c3ca318d6574a806d',
+      repo: 'JoeyLian.github.io',
+      owner: 'JoeyLian',
+      admin: ['JoeyLian'],
+      id: 'ea6c5a8c5d4cfb00c6ea83cd2f04728b',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !false) {
+  if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = false;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

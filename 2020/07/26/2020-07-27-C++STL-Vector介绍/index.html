@@ -1,0 +1,335 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>C++STL-Vector介绍 | OneTime</title><meta name="keywords" content="C++,STL标准库,Vector"><meta name="author" content="Joey Lian"><meta name="copyright" content="Joey Lian"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="本文大部分参考于：CPlusPlus - Vector Vector简介Vector 是表示表示动态改变大小的数组的顺序容器 (Sequence Container)。 和数组一样，Vector 使用连续的空间存储元素，因此可以在常数时间内访问指定的元素。与数组不同的是，Vector 的大小可以动态改变，有容器自动处理。 Vector 在内部使用动态分配的数组存储其元素。插入新元素时，可能需要重新">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++STL-Vector介绍">
+<meta property="og:url" content="http://joeylian.github.io/2020/07/26/2020-07-27-C++STL-Vector%E4%BB%8B%E7%BB%8D/index.html">
+<meta property="og:site_name" content="OneTime">
+<meta property="og:description" content="本文大部分参考于：CPlusPlus - Vector Vector简介Vector 是表示表示动态改变大小的数组的顺序容器 (Sequence Container)。 和数组一样，Vector 使用连续的空间存储元素，因此可以在常数时间内访问指定的元素。与数组不同的是，Vector 的大小可以动态改变，有容器自动处理。 Vector 在内部使用动态分配的数组存储其元素。插入新元素时，可能需要重新">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://joeylian.github.io/images/Cpp.png">
+<meta property="article:published_time" content="2020-07-26T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-29T12:57:04.720Z">
+<meta property="article:author" content="Joey Lian">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="STL标准库">
+<meta property="article:tag" content="Vector">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://joeylian.github.io/images/Cpp.png"><link rel="shortcut icon" href="/img/me.jpeg"><link rel="canonical" href="http://joeylian.github.io/2020/07/26/2020-07-27-C++STL-Vector%E4%BB%8B%E7%BB%8D/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'C++STL-Vector介绍',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-03-29 20:57:04'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.1.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/me.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 总览</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/images/top.jpeg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">OneTime</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 总览</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">C++STL-Vector介绍<a class="post-edit-link" href="https://github.com/JoeyLian/githubio/edit/master/source/_posts/2020-07-27-C++STL-Vector介绍.md" title="编辑" target="_blank"><i class="fas fa-pencil-alt"></i></a></h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-07-26T16:00:00.000Z" title="发表于 2020-07-27 00:00:00">2020-07-27</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-03-29T12:57:04.720Z" title="更新于 2022-03-29 20:57:04">2022-03-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="C++STL-Vector介绍"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/2020/07/26/2020-07-27-C++STL-Vector%E4%BB%8B%E7%BB%8D/#post-comment"><span class="gitalk-comment-count"></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>本文大部分参考于：<a target="_blank" rel="noopener" href="http://www.cplusplus.com/reference/vector/">CPlusPlus - Vector</a></p>
+<h2 id="Vector"><a href="#Vector" class="headerlink" title="Vector"></a>Vector</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>Vector 是表示表示动态改变大小的数组的顺序容器 (Sequence Container)。</p>
+<p>和数组一样，Vector 使用连续的空间存储元素，因此可以在常数时间内访问指定的元素。与数组不同的是，Vector 的大小可以动态改变，有容器自动处理。</p>
+<p>Vector 在内部使用动态分配的数组存储其元素。插入新元素时，可能需要重新分配数组以增大数组的大小，这意味着分配新数组并将所有元素移至该数组。这需要<strong>线性时间</strong>，因此，显然不能每次添加元素都重新分配数组。</p>
+<p>Vector 采用的是每次分配都分配额外的空间，实际容量 (<code>capacity()</code>) 大于其包含元素的需要的容量(<code>size()</code>)。为了使插入元素的均摊时间复杂度是常数时间，重新分配容量大小应以<strong>指数增长</strong> (即空容器初始化后，容量以1, 2, 4, 8, 16, … 增长)。</p>
+<p>与数组相比，Vector 通过消耗更多的内存与一定的重新分配时间换取动态改变大小的能力。</p>
+<p>与链表相比，Vector 在访问指定元素的时候更为高效，并且可以高效地在其末尾添加和删除元素。但是涉及末尾之外地插入和删除元素的操作，它的性能较差。</p>
+<h3 id="成员函数"><a href="#成员函数" class="headerlink" title="成员函数"></a>成员函数</h3><h5 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span> <span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">//1. 构造整数类型的空 Vector</span></span><br><span class="line">  std::vector&lt;<span class="type">int</span>&gt; first;</span><br><span class="line">    </span><br><span class="line">  <span class="comment">//2. 构造一个size为 100 的Vector，每个元素被初始化为 0</span></span><br><span class="line">  <span class="function">std::vector&lt;<span class="type">int</span>&gt; <span class="title">second</span> <span class="params">(<span class="number">100</span>)</span></span>;     </span><br><span class="line">    </span><br><span class="line">  <span class="comment">//3. 构造一个含有4个值100的元素的Vector</span></span><br><span class="line">  <span class="function">std::vector&lt;<span class="type">int</span>&gt; <span class="title">second</span> <span class="params">(<span class="number">4</span>,<span class="number">100</span>)</span></span>;</span><br><span class="line">    </span><br><span class="line">  <span class="comment">//4. 通过迭代器限制范围，按顺序将范围内的元素重新在 Vector 中构造</span></span><br><span class="line">  <span class="function">std::vector&lt;<span class="type">int</span>&gt; <span class="title">third</span> <span class="params">(second.begin(),second.end())</span></span>; </span><br><span class="line">    </span><br><span class="line">  <span class="comment">//5. 拷贝构造函数</span></span><br><span class="line">  <span class="comment">//6. 当参数是一个右值引用时，会使用移动构造函数。详见：上一篇文章</span></span><br><span class="line">  <span class="function">std::vector&lt;<span class="type">int</span>&gt; <span class="title">fourth</span> <span class="params">(third)</span></span>;   </span><br><span class="line">    </span><br><span class="line">  <span class="comment">//7. 也可以使用数组或其他列表构造 Vector</span></span><br><span class="line">  <span class="type">int</span> myints[] = &#123;<span class="number">16</span>,<span class="number">2</span>,<span class="number">77</span>,<span class="number">29</span>&#125;;</span><br><span class="line">  <span class="function">std::vector&lt;<span class="type">int</span>&gt; <span class="title">fifth</span> <span class="params">(myints, myints + <span class="keyword">sizeof</span>(myints) / <span class="keyword">sizeof</span>(<span class="type">int</span>) )</span></span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>时间复杂度</strong>：</p>
+<ul>
+<li>构造函数 1. 6. 使用常数时间。</li>
+<li>其他构造函数时间与元素个数成正比。其中 4. 参数若不是一个正向迭代器，无法知道元素个数，可能会出现重新分配空间带来的时间消耗。</li>
+</ul>
+<p><strong>注意</strong>：构造函数2. 虽然没有指定元素初始化的值，但元素已经被创建并初始化。此时，Vector的capacity与size相等。使用 <code>push_back()</code> 会增大 Vector 的容量并往之后添加元素。需要修改前面的元素应该直接用 <code>[]</code> 或 <code>at()</code>。</p>
+<h5 id="赋值函数"><a href="#赋值函数" class="headerlink" title="赋值函数"></a>赋值函数</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span> <span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="function">std::vector&lt;<span class="type">int</span>&gt; <span class="title">foo</span> <span class="params">(<span class="number">3</span>,<span class="number">0</span>)</span></span>;</span><br><span class="line">  <span class="function">std::vector&lt;<span class="type">int</span>&gt; <span class="title">bar</span> <span class="params">(<span class="number">5</span>,<span class="number">0</span>)</span></span>;</span><br><span class="line">   </span><br><span class="line">  <span class="comment">//1. 拷贝赋值函数</span></span><br><span class="line">  <span class="comment">//2. 当参数是一个右值引用时，会使用移动赋值函数。</span></span><br><span class="line">  bar = foo;</span><br><span class="line">    </span><br><span class="line">  <span class="comment">//3. 也可以使用数组或其他列表构造 Vector</span></span><br><span class="line">  foo = &#123;<span class="number">16</span>,<span class="number">2</span>,<span class="number">77</span>,<span class="number">29</span>&#125;;</span><br><span class="line">  foo = std::<span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;();</span><br><span class="line">  foo = std::<span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(bar.<span class="built_in">begin</span>(),bar.<span class="built_in">end</span>());</span><br><span class="line">  <span class="comment">//......</span></span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="迭代器相关函数"><a href="#迭代器相关函数" class="headerlink" title="迭代器相关函数"></a>迭代器相关函数</h4><p>迭代器使得我们可以用一致的方法遍历不同的容器类型。经典的使用迭代器的方法为：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">auto</span> it = myvector.<span class="built_in">cbegin</span>(); it != myvector.<span class="built_in">cend</span>(); ++it)</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&#x27; &#x27;</span> &lt;&lt; *it;</span><br></pre></td></tr></table></figure>
+
+<p><code>begin()</code>, <code>end()</code> 返回正向迭代器的第一个和最后一个元素。<code>rbegin()</code>, <code>rend()</code> 返回反向迭代器的第一个和最后一个元素。即：<code>rbegin()</code> 返回的迭代器指向的元素与 <code>end()</code> 相同，但通过 <code>it++</code> 操作会到达前一个迭代器。</p>
+<p>C++11之后，在迭代器前加 <code>c </code> (如 <code>cbegin()</code>) 可以返回 <code>const_iterator</code>，此时不允许通过返回的迭代器修改容器内的内容，但可以通过递增和递减移动迭代器。使得操作更加安全。</p>
+<h4 id="容量相关函数"><a href="#容量相关函数" class="headerlink" title="容量相关函数"></a>容量相关函数</h4><h5 id="查询函数"><a href="#查询函数" class="headerlink" title="查询函数"></a>查询函数</h5><ul>
+<li><code>size()</code> 返回当前容器内元素的数量</li>
+<li><code>capacity()</code> 返回当前为 Vector分配的存储空间的大小，以可以存储的元素数量表示。</li>
+<li><code>max_size()</code> 返回 Vector 可以容纳的最大元素数，由系统或库实现限制。</li>
+<li><code>empty()</code> 返回 Vector 是否为空</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span> <span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  std::vector&lt;<span class="type">int</span>&gt; myvector;</span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">0</span>; i&lt;<span class="number">100</span>; i++) myvector.<span class="built_in">push_back</span>(i);</span><br><span class="line"></span><br><span class="line">  std::cout &lt;&lt; <span class="string">&quot;size: &quot;</span> &lt;&lt; myvector.<span class="built_in">size</span>() &lt;&lt; <span class="string">&quot;\n&quot;</span>;			<span class="comment">//100</span></span><br><span class="line">  std::cout &lt;&lt; <span class="string">&quot;capacity: &quot;</span> &lt;&lt; myvector.<span class="built_in">capacity</span>() &lt;&lt; <span class="string">&quot;\n&quot;</span>;	<span class="comment">//128</span></span><br><span class="line">  std::cout &lt;&lt; <span class="string">&quot;max_size: &quot;</span> &lt;&lt; myvector.<span class="built_in">max_size</span>() &lt;&lt; <span class="string">&quot;\n&quot;</span>;	<span class="comment">//1073741823</span></span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="操作函数"><a href="#操作函数" class="headerlink" title="操作函数"></a>操作函数</h5><ul>
+<li><p><code>resize()</code> 改变 Vector 的 size。</p>
+<ul>
+<li>如果n小于当前 Vector 的 size，则将内容减少到其前n个元素，并删除超出范围的元素，销毁它们。</li>
+<li>如果n大于当前 Vector 的 size，则通过在末尾插入所需数量的元素来扩展内容，以达到n的大小。如果指定了 val，则将新元素初始化为 val 的副本，否则，将对它们进行值初始化。</li>
+<li>如果n也大于当前 Vector 的 capacity，将自动重新分配存储空间。</li>
+</ul>
+<p>消耗时间与插入&#x2F;删除的元素数量成正比</p>
+</li>
+<li><p><code>reserve()</code> 改变 Vector 的capacity，使得 capacity 至少足以包含n个元素。</p>
+<ul>
+<li>如果 n 大于当前capacity，则该函数使容器重新分配其存储，将其 capacity 增加到 n（或更大）。</li>
+<li>在所有其他情况下，函数调用不会导致重新分配，capacity 也不会受到影响。</li>
+</ul>
+<p>这个函数对 Vector 的 size 没有影响，并且不能更改其元素。如果发生重新分配，会造成线性时间。</p>
+</li>
+<li><p><code>shrink_to_fit()</code> 要求Vector 减小其 capacity 以适合其 size 。</p>
+<p>这可能会导致重新分配，但对 Vector 的 size 没有影响，并且无法更改其元素。</p>
+</li>
+</ul>
+<h4 id="元素访问函数"><a href="#元素访问函数" class="headerlink" title="元素访问函数"></a>元素访问函数</h4><ul>
+<li><p><code>[]</code> 与 <code>at()</code></p>
+<p>返回对vector中位置n处元素的引用。 <code>[]</code> 不检查边界。而 <code>at()</code>函数自动检查 n 是否在Vector的有效元素范围内，如果不存在，则抛出 out_of_range 异常。</p>
+</li>
+<li><p><code>front()</code> 与 <code>back()</code></p>
+<p>返回 vector 中第一个与最后一个元素的引用。与迭代器不同。</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://www.cplusplus.com/reference/vector/vector/data/"><code>data()</code></a></p>
+</li>
+</ul>
+<h4 id="修改函数"><a href="#修改函数" class="headerlink" title="修改函数"></a>修改函数</h4><h5 id="末尾修改"><a href="#末尾修改" class="headerlink" title="末尾修改"></a>末尾修改</h5><ul>
+<li><code>push_back()</code> 调用拷贝构造函数将参数复制到Vector最后一个元素之后。当参数为右值引用时，先构建一个临时变量，调用移动构造函数将临时变量移动到最后一个元素之后。均摊时间为常数。</li>
+<li><code>emplace_back()</code> 在Vector末尾插入新元素，使用 args 作为其构造函数的参数就地构造新元素。均摊时间为常数。</li>
+<li><code>pop_back()</code> 删除最后一个元素。常数时间。</li>
+</ul>
+<h5 id="其他修改"><a href="#其他修改" class="headerlink" title="其他修改"></a>其他修改</h5><ul>
+<li><p><a target="_blank" rel="noopener" href="http://www.cplusplus.com/reference/vector/vector/assign/"><code>assign()</code></a> </p>
+</li>
+<li><p><code>swap()</code>  <code>a.swap(b)</code> 交换两个 Vector。常数时间。</p>
+</li>
+<li><p><code>clear()</code> 线性时间，清除所有元素。不保证重新分配。强制重新分配的典型替代方法是使用<code>swap()</code>: <code>vector&lt;T&gt;().swap(x);   // clear x reallocating </code></p>
+</li>
+<li><p><code>insert()</code>, <code>erase()</code>, <code>emplace()</code> 通过迭代器定位，在指定位置插入、删除元素。由于需要移动插入、删除元素后的所有元素，需要线性时间。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">it = myvector.<span class="built_in">begin</span>();</span><br><span class="line">it = myvector.<span class="built_in">insert</span> ( it , <span class="number">200</span> );</span><br><span class="line">myvector.<span class="built_in">insert</span> (it,<span class="number">2</span>,<span class="number">300</span>);</span><br><span class="line"><span class="comment">// &quot;it&quot; no longer valid, get a new one:</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="vector-lt-bool-gt"><a href="#vector-lt-bool-gt" class="headerlink" title="vector&lt;bool&gt;"></a>vector&lt;bool&gt;</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>vector&lt;bool&gt; 是vector对于bool类型的特殊版本，进行了空间的优化，将每个值存储在单个位中。元素不是使用分配器构造的，而是将它们的值直接设置在内部存储器的适当位上。</p>
+<h3 id="成员函数-1"><a href="#成员函数-1" class="headerlink" title="成员函数"></a>成员函数</h3><p>vector&lt;bool&gt; 大部分成员函数与 vector 相同，但是没有 <code>data()</code>, <code>emplace()</code>, <code>emplace_back()</code> 函数。此外，增加了 <code>flip()</code> 函数。</p>
+<p><code>a.flip()</code> 将所有元素翻转：所有 true 元素变为 false，所有 false 元素变为 true。 </p>
+<p>参考资料：</p>
+<blockquote>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://www.cplusplus.com/reference/vector/">CPlusPlus - Vector</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.runoob.com/w3cnote/cpp-vector-container-analysis.html">C++ vector 容器浅析</a></li>
+</ul>
+</blockquote>
+<p>最后编辑：2020-08-06</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Joey Lian</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://joeylian.github.io/2020/07/26/2020-07-27-C++STL-Vector%E4%BB%8B%E7%BB%8D/">http://joeylian.github.io/2020/07/26/2020-07-27-C++STL-Vector%E4%BB%8B%E7%BB%8D/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://joeylian.github.io" target="_blank">OneTime</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/C/">C++</a><a class="post-meta__tags" href="/tags/STL%E6%A0%87%E5%87%86%E5%BA%93/">STL标准库</a><a class="post-meta__tags" href="/tags/Vector/">Vector</a></div><div class="post_share"><div class="social-share" data-image="/images/Cpp.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/"><img class="prev-cover" src="/images/Cpp.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">C++右值引用与移动语义</div></div></a></div><div class="next-post pull-right"><a href="/2020/06/29/2020-06-30-%E5%9B%BE%E7%9A%84%E6%A0%91%E5%88%86%E8%A7%A3/"><img class="next-cover" src="/images/AlgDesign.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">图的树分解</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="【EffectiveC++】资源管理"><img class="cover" src="/images/Cpp.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-01-22</div><div class="title">【EffectiveC++】资源管理</div></div></a></div><div><a href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明"><img class="cover" src="/images/Cpp.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-01-23</div><div class="title">【EffectiveC++】设计与声明</div></div></a></div><div><a href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/" title="【EffectiveC++】让自己习惯C++"><img class="cover" src="/images/Cpp.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-28</div><div class="title">【EffectiveC++】让自己习惯C++</div></div></a></div><div><a href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" title="【EffectiveC++】构造/析构/赋值运算"><img class="cover" src="/images/Cpp.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-30</div><div class="title">【EffectiveC++】构造/析构/赋值运算</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/me.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Joey Lian</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/joeylian" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:lianjy9976@163.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Vector"><span class="toc-number">1.</span> <span class="toc-text">Vector</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0"><span class="toc-number">1.2.</span> <span class="toc-text">成员函数</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="toc-number">1.2.0.1.</span> <span class="toc-text">构造函数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%B5%8B%E5%80%BC%E5%87%BD%E6%95%B0"><span class="toc-number">1.2.0.2.</span> <span class="toc-text">赋值函数</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%AD%E4%BB%A3%E5%99%A8%E7%9B%B8%E5%85%B3%E5%87%BD%E6%95%B0"><span class="toc-number">1.2.1.</span> <span class="toc-text">迭代器相关函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%B9%E9%87%8F%E7%9B%B8%E5%85%B3%E5%87%BD%E6%95%B0"><span class="toc-number">1.2.2.</span> <span class="toc-text">容量相关函数</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E5%87%BD%E6%95%B0"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">查询函数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E5%87%BD%E6%95%B0"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">操作函数</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%83%E7%B4%A0%E8%AE%BF%E9%97%AE%E5%87%BD%E6%95%B0"><span class="toc-number">1.2.3.</span> <span class="toc-text">元素访问函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E5%87%BD%E6%95%B0"><span class="toc-number">1.2.4.</span> <span class="toc-text">修改函数</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9C%AB%E5%B0%BE%E4%BF%AE%E6%94%B9"><span class="toc-number">1.2.4.1.</span> <span class="toc-text">末尾修改</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E4%BF%AE%E6%94%B9"><span class="toc-number">1.2.4.2.</span> <span class="toc-text">其他修改</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vector-lt-bool-gt"><span class="toc-number">2.</span> <span class="toc-text">vector&lt;bool&gt;</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-number">2.1.</span> <span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0-1"><span class="toc-number">2.2.</span> <span class="toc-text">成员函数</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" title="【EffectiveC++】构造/析构/赋值运算"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】构造/析构/赋值运算"/></a><div class="content"><a class="title" href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" title="【EffectiveC++】构造/析构/赋值运算">【EffectiveC++】构造/析构/赋值运算</a><time datetime="2021-12-29T16:00:00.000Z" title="发表于 2021-12-30 00:00:00">2021-12-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/" title="【EffectiveC++】让自己习惯C++"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】让自己习惯C++"/></a><div class="content"><a class="title" href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/" title="【EffectiveC++】让自己习惯C++">【EffectiveC++】让自己习惯C++</a><time datetime="2021-12-27T16:00:00.000Z" title="发表于 2021-12-28 00:00:00">2021-12-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】设计与声明"/></a><div class="content"><a class="title" href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明">【EffectiveC++】设计与声明</a><time datetime="2021-01-22T16:00:00.000Z" title="发表于 2021-01-23 00:00:00">2021-01-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="【EffectiveC++】资源管理"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】资源管理"/></a><div class="content"><a class="title" href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="【EffectiveC++】资源管理">【EffectiveC++】资源管理</a><time datetime="2021-01-21T16:00:00.000Z" title="发表于 2021-01-22 00:00:00">2021-01-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/" title="C++右值引用与移动语义"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C++右值引用与移动语义"/></a><div class="content"><a class="title" href="/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/" title="C++右值引用与移动语义">C++右值引用与移动语义</a><time datetime="2020-08-01T16:00:00.000Z" title="发表于 2020-08-02 00:00:00">2020-08-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/images/top.jpeg')"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2022 By Joey Lian</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.2
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container:not\([display]\)').forEach(node => {
+            const target = node.parentNode
+            if (target.nodeName.toLowerCase() === 'li') {
+              target.parentNode.classList.add('has-jax')
+            } else {
+              target.classList.add('has-jax')
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd9d8e97d1c1701a3d53b',
+      clientSecret: '52ab8c95467a938ecb0cfb1c3ca318d6574a806d',
+      repo: 'JoeyLian.github.io',
+      owner: 'JoeyLian',
+      admin: ['JoeyLian'],
+      id: 'bfd66a580551de04321d089dbae021a9',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !false) {
+  if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = false;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

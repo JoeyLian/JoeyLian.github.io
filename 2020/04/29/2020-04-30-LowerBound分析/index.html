@@ -1,0 +1,393 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>LowerBound分析 | OneTime</title><meta name="keywords" content="Lower_Bound,算法下界,算法分析"><meta name="author" content="Joey Lian"><meta name="copyright" content="Joey Lian"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Lower Bound 说明了对于相关问题我们无法找到更优的算法。得到一个问题的 Lower Bound主要优有两种方法：  Decision tree  Adversary (Oracle)  需要注意的是， Lower Bound 只说明了一个下界，我们证明了无法找到更优的算法，但不一定存在复杂度为 Lower Bound 的算法。 Decision treeDecision tree 的主要">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LowerBound分析">
+<meta property="og:url" content="http://joeylian.github.io/2020/04/29/2020-04-30-LowerBound%E5%88%86%E6%9E%90/index.html">
+<meta property="og:site_name" content="OneTime">
+<meta property="og:description" content="Lower Bound 说明了对于相关问题我们无法找到更优的算法。得到一个问题的 Lower Bound主要优有两种方法：  Decision tree  Adversary (Oracle)  需要注意的是， Lower Bound 只说明了一个下界，我们证明了无法找到更优的算法，但不一定存在复杂度为 Lower Bound 的算法。 Decision treeDecision tree 的主要">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://joeylian.github.io/images/AlgDesign.png">
+<meta property="article:published_time" content="2020-04-29T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-29T12:57:04.720Z">
+<meta property="article:author" content="Joey Lian">
+<meta property="article:tag" content="Lower_Bound">
+<meta property="article:tag" content="算法下界">
+<meta property="article:tag" content="算法分析">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://joeylian.github.io/images/AlgDesign.png"><link rel="shortcut icon" href="/img/me.jpeg"><link rel="canonical" href="http://joeylian.github.io/2020/04/29/2020-04-30-LowerBound%E5%88%86%E6%9E%90/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'LowerBound分析',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-03-29 20:57:04'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.1.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/me.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 总览</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/images/top.jpeg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">OneTime</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 总览</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">LowerBound分析<a class="post-edit-link" href="https://github.com/JoeyLian/githubio/edit/master/source/_posts/2020-04-30-LowerBound分析.md" title="编辑" target="_blank"><i class="fas fa-pencil-alt"></i></a></h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-04-29T16:00:00.000Z" title="发表于 2020-04-30 00:00:00">2020-04-30</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-03-29T12:57:04.720Z" title="更新于 2022-03-29 20:57:04">2022-03-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%AE%97%E6%B3%95%E8%AE%BE%E8%AE%A1/">算法设计</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="LowerBound分析"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/2020/04/29/2020-04-30-LowerBound%E5%88%86%E6%9E%90/#post-comment"><span class="gitalk-comment-count"></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>Lower Bound 说明了对于相关问题我们无法找到更优的算法。得到一个问题的 Lower Bound主要优有两种方法：</p>
+<ul>
+<li>Decision tree </li>
+<li>Adversary (Oracle)</li>
+</ul>
+<p>需要注意的是， Lower Bound 只说明了一个下界，我们证明了无法找到更优的算法，但不一定存在复杂度为 Lower Bound 的算法。</p>
+<h2 id="Decision-tree"><a href="#Decision-tree" class="headerlink" title="Decision tree"></a>Decision tree</h2><p>Decision tree 的主要想法是将所有可能的结果作为树的叶子，树的高度是需要进行判断的次数。任意行为产生的结果作为一个分支。需要知道的是，在叶结点数确定时，平衡树的高度最低。因此构造一棵平衡树可以得到最少的判断次数，但不可能更少：所有的结果都有可能。</p>
+<h3 id="有序数列中查找"><a href="#有序数列中查找" class="headerlink" title="有序数列中查找"></a>有序数列中查找</h3><p>有一个数列${A_n}$, $A_1 &lt; A_2&lt;…&lt;A_n$, 给定 $x$, 问 $x$ 是否在${A_n}$ 中，要求给出 $i$ 或者说明  $x$ 不在数列中。</p>
+<p>每次比较可以得到三种结果 ： &lt; &#x3D; &gt;</p>
+<ul>
+<li>当结果为 &#x3D; 是，得到一个叶节点：输出问题答案</li>
+<li>当结果为 &lt; 或 &gt; 时，得到一个分支，进行下一次比较</li>
+</ul>
+<p><img src="/images/image-20200430174720082.png" alt="image-20200430174720082"></p>
+<p>每个内部节点有两个不是叶子的分支和一个叶节点。因此，在第 $k$ 层最多有 个 $2^k$ 节点。$k$ 层的决策树的叶节点树为</p>
+<p>$$<br>n \le 2^0 + 2^1+…+2^{k-1} &#x3D; 2^k-1<br>$$</p>
+<p>需要比较的次数即为决策树的高度：</p>
+<p>$$<br>2^k-1 \ge n\<br>k \ge \log_2(n+1)<br>$$</p>
+<p>因此，有序数列中查找的一个 Lower Bound 为 $\lceil log_2(n+1) \rceil$ ，这也是二分查找的时间复杂度。</p>
+<h3 id="排序问题"><a href="#排序问题" class="headerlink" title="排序问题"></a>排序问题</h3><p>先找一个 Lower Bound：</p>
+<p>每次比较会形成两个分支。对于排序问题，比较的结果只需要分为大于和小于等于（或 大于等于和小于）（相等的两个元素可以随意排列）叶节点都在最后一层，当决策树有 $k$ 层时，有 $2^k$ 个叶节点。对于 $n$  个元素的排序问题， 一共有 $A_n^n&#x3D; n!$ 种可能的结果。因此，需要比较的次数即为决策树的高度：</p>
+<p>$$<br>2^k \ge n!\<br>k \ge \log_2(n!)<br>$$</p>
+<p>因此，排序问题的一个 Lower Bound 为 $\lceil log_2(n!) \rceil$ </p>
+<p>一个常见的排序方法是插入排序，由于每次插入操作都是一次有序数列中的查找操作，因此他的时间复杂度为 $\sum_{k&#x3D;1}^n \log_2k$ . 在 $n&#x3D;5$ 时， 插入排序需要 8 次比较，而前面我们得到的下界为 $\lceil log_2(5!) \rceil &#x3D;7$ 次比较。</p>
+<p><strong>五个元素的排序</strong></p>
+<ul>
+<li><p>比较 $(a_1, a_2)$ 中的最大值和 $(a_3,a_4)$ 中的最大值 （3次排序）</p>
+<p><img src="/images/image-20200511210234796.png" alt="image-20200511210234796"></p>
+</li>
+<li><p>将元素 $y$ 插入到其中：先与 $a_2$ 比较，再与 $a_1$ 或 $a_4$ 比较（2次比较）</p>
+<p><img src="/images/image-20200511210512589.png" alt="image-20200511210512589"></p>
+</li>
+<li><p>将元素 $x$ 插入到其中：先与 $\beta_2$ 比较，再与 $\beta_1$ 或 $\beta_3$ 比较（2次比较）</p>
+</li>
+</ul>
+<h2 id="Adversary-strategy"><a href="#Adversary-strategy" class="headerlink" title="Adversary strategy"></a>Adversary strategy</h2><p>对任意的算法，它的复杂度指的是对任何实例的最坏运行时间。Adversary strategy 使得对任意算法最坏的情况出现，通过根据算法动态调整实例以使算法花费较长时间，从而给出算法的一个 Lower Bound。</p>
+<h3 id="Find-x"><a href="#Find-x" class="headerlink" title="Find x"></a>Find x</h3><p>一个简单的例子，在一个无序的数列中查找一个元素，我们只需要对前 $n-1$ 次询问都回答 <em>否</em>，就可以使算法花费时间更多。因此在一个无序的数列中查找元素，至少需要 $n$ 次询问（询问数列中的每个数是否为查找的元素）</p>
+<h3 id="Find-Max"><a href="#Find-Max" class="headerlink" title="Find Max"></a>Find Max</h3><p>在 $n$ 个元素的数组中寻找最大值，至少需要 $n-1$ 次比较：</p>
+<p>如果少于 $n-1$ 次比较，则比较图（就是上面那种用箭头表示大小关系的图）是不连通的：$n$ 个顶点，少于 $n-1$ 条边。</p>
+<p>比较图不连通，因此我们可以修改图中点的值使得最大值可以改变。如将一个连通分量中的每个数据都增大或减小一个数，连通分量中点的大小关系不变，但数组中的最大值可以改变。</p>
+<h3 id="Find-Second-Maximum"><a href="#Find-Second-Maximum" class="headerlink" title="Find Second Maximum"></a>Find Second Maximum</h3><p>（我觉得这个 Lower bound 不是很严谨但是不知道为什么（</p>
+<p>找到第二大的元素的时候必须知道最大的元素，因此至少需要 $n-1$ 次比较。</p>
+<p>第二大的元素一定直接和最大的元素比较过 (是一个direct  loser)：否则，存在另一个元素大于 “第二大的元素” 而小于最大的元素，矛盾。</p>
+<p>对于任意的算法，可以通过 Adversary strategy 使得最大的元素的 direct  losers 最多：对于每次 x,y 之间的比较，令 losers (即所有已知的比它小的元素) 更多的元素更大，这样，每次直接比较最多使得它的 losers 变成原来的两倍，$k$ 次直接比较最多有 $2^k$ 个losers。要得到最大元素，至少需要 $k$ 次直接比较：</p>
+<p>$$<br>2^k \ge n\<br>k \ge \lceil log_2n\rceil<br>$$</p>
+<p>第二大的元素即为这 k 个 $direct  losers$ 中的最大值，至少需要 $k-1 &#x3D; \lceil log_2n\rceil-1$ 次比较。</p>
+<p>因此，找到第二大的元素的算法的一个 Lower bound 为：</p>
+<p>$$<br>n-1+\lceil log_2n\rceil-1 &#x3D; n+\lceil log_2n\rceil-2<br>$$</p>
+<p>达到这个 Lower bound 的一个算法为：</p>
+<p><img src="/images/image-20200511223330368.png" alt="image-20200511223330368"></p>
+<p>97 是最大元素，第二大元素则是绿色圈出来的元素的最大值。</p>
+<h3 id="Find-Median"><a href="#Find-Median" class="headerlink" title="Find Median"></a>Find Median</h3><p>寻找一个数列中的中位数。（Adversary strategy 终于开始奇幻了（x</p>
+<p>设有一个n个元素的数列，中位数指第 $(n+1)&#x2F;2$ 大的数。假设数列中的元素都不相同。</p>
+<p>要得到中位数，需要有数列中的每个数与中位数的大小关系：若有一个元素与已知的中位数的大小关系未知，中位数无法同时满足在该元素比它大或比它小时仍是中位数的条件。可以通过直接或间接的比较：</p>
+<p>Crucial comparison（下图中的实线部分）：</p>
+<ul>
+<li>$x &gt; y$ for some $y \ge median$</li>
+<li>$x &lt; y$ for some $y \le median$</li>
+</ul>
+<p>Crucial comparison 得到元素和中位数的大小关系，为了得到中位数，至少需要进行 $n-1$ 次。</p>
+<p>但在还不知道中位数时，有一些比较是 Non-crucial 的（图中的虚线部分）</p>
+<p><img src="/images/image-20200514191104532.png" alt="image-20200514191104532"></p>
+<p>Adversary strategy 的主要思想，就是对于任何的比较方法，定义一个实例使得 Non-crucial comparison 的数量较多。</p>
+<p>下面证明对任意的算法，存在一个实例使得至少需要 $(n-1)&#x2F;2$ 次 Non-crucial comparison 。</p>
+<p>定义元素的标签：</p>
+<ul>
+<li>N: no value</li>
+<li>L: large value，表示比中位数大</li>
+<li>S: small value，表示小于中位数</li>
+</ul>
+<p>初始化时所有元素均为 N，对于最初的比较，按一下规则生成一个实例：</p>
+<ul>
+<li>N 与 N 比较时，令一个元素为 L，一个元素为 S</li>
+<li>N 与 L 比较时，令 N 的元素为 S</li>
+<li>N 与 S 比较时，令 N 的元素为 L</li>
+</ul>
+<p>知道数列中有 $(n-1)&#x2F;2$ 个 L (或 S)，则不再进行上述规则，而是让所有的 N 都为 S (或 L)。直到剩下的一个数为中位数。</p>
+<p>可以看到，按照上述规则与 N 的元素进行的比较都是 Non-crucial comparison。至少需要进行  $(n-1)&#x2F;2$ 次。</p>
+<p>因此对任意的算法，存在一个实例使得至少需要 $(n-1)&#x2F;2$ 次 Non-crucial comparison 。</p>
+<p>寻找中位数算法的一个 Lower bound 为 $n-1+(n-1)&#x2F;2 &#x3D; 3(n-1)&#x2F;2$</p>
+<h3 id="Max-amp-Min"><a href="#Max-amp-Min" class="headerlink" title="Max &amp; Min"></a>Max &amp; Min</h3><p>找到数列的最大值和最小值。用分治的方法可以得到时间复杂度为 $3n&#x2F;2-2$ 的算法。下面用 Adversary strategy 证明这是它的 Lower bound </p>
+<p>定义元素的标签：</p>
+<ul>
+<li>N: no compare</li>
+<li>W: at least one win, never lost </li>
+<li>L: – at least one lost, never won </li>
+<li>WL: at least one win and one lost</li>
+</ul>
+<p>要得到数列的最大值和最小值，就是得到标签为 W 和 L 的元素，而其他的元素都应该是 WL：否则若存在两个元素标签为 W，无法确定谁是最大值.</p>
+<p>初始化时所有元素均为 N，为了得到最终结果，至少需要 $2n-2$ 个信息 (WL 算两个)</p>
+<p>当两个标记为 N 的元素比较时，一次比较可以得到两个信息，最多只能有 $n&#x2F;2$ 次，得到 $n$ 个信息</p>
+<p>对于其他情况，都可以通过 Adversary strategy 得到一个实例使得只增加一个信息：</p>
+<ul>
+<li>N 与 W 比较时，令 N &lt; W，则 N 变为 L，W不变</li>
+<li>W 与 W 比较时，一个变为 WL，另一个不变</li>
+<li>W 与 L 比较时，令 W &gt; L, 不会增加信息：这是可以做到的，W的信息限制了它需要大于某个数，而 L 的信息限制它需要小于某个数，总是可以取得两个值使得 W &gt; L</li>
+</ul>
+<p>因此，至少还需要进行 $2n-2-n$ 次比较。</p>
+<p>因此，找到 max&amp;min 的一个 Lower bound 为 $n&#x2F;2+2n-2-n &#x3D; 3n&#x2F;2-2$</p>
+<h3 id="Find-X-in-a-Sorted-Matrix"><a href="#Find-X-in-a-Sorted-Matrix" class="headerlink" title="Find X in a Sorted Matrix"></a>Find X in a Sorted Matrix</h3><p>有序的矩阵满足：</p>
+<p><img src="/images/image-20200514201640276.png" alt="image-20200514201640276"></p>
+<p>需要查找元素 X 是否在矩阵中：</p>
+<p>一个简单的算法是从右上角开始查找，当矩阵中的元素大于 X 时，往左移动；当矩阵中的元素小于 X 时，往下移动。可以验证算法是正确的，且时间复杂度为 $2n-1$</p>
+<p>下面说明 $2n-1$ 是这个问题的一个 Lower bound 。在下面的矩阵中，任何一个等于6或8的元素均可以改为 7，而不改变矩阵有序。</p>
+<p><img src="/images/image-20200514201917612.png" alt="image-20200514201917612"></p>
+<p>因此如果查找 7 这个元素，至少需要把所有等于 6 和 8 的元素访问过，需要 $2n-1$ 次比较。</p>
+<h3 id="Merge-Sorted-Lists"><a href="#Merge-Sorted-Lists" class="headerlink" title="Merge Sorted Lists"></a>Merge Sorted Lists</h3><p>将两个有序的数列合并为一个有序数列。</p>
+<p>这也是一个简单问题，将数列遍历一遍依次比较即可。需要 $2n-1$ 次比较。</p>
+<p>下面说明 $2n-1$ 是这个问题的一个 Lower bound 。</p>
+<p>假设存在一个算法的时间复杂度为 $2n-2$ .</p>
+<p>假设有两个数列 $X: X_i &#x3D; 2_i-1$,  $Y:Y_i&#x3D;2i$, $i &#x3D; 1,…,n$。则合并生成的数列为 $X_1, Y_1, X_2, Y_2 ,…, X_n, Y_n$ </p>
+<p>由于进行了 $2n-2$ 次比较，至少存在一个 $X_i$，没有同时和 $Y_i, Y_{i+1}$ 比较过 (对于 $X_1$，只需要和 $Y_1$ 比较)。不妨假设 $X_i, Y_i$ 没有比较过</p>
+<p>令 $X_i&#x3D;2i, Y_i&#x3D;2i-1$，则算法会给出和原来一直的结果，但不是正确结果</p>
+<p>因此， $2n-1$ 是这个问题的一个 Lower bound 。</p>
+<h3 id="Graph-Connectivity"><a href="#Graph-Connectivity" class="headerlink" title="Graph Connectivity"></a>Graph Connectivity</h3><p>给出图的邻接矩阵，判断图是否连通。问是否需要访问邻接矩阵中的每个元素才能确定是否连通。显然在一些实例中不需要访问每个元素，但我们可以证明，对任意的算法，存在实例使得必须访问每个元素才能确定是否连通。即该问题的 Lower bound 为 $n(n-1)&#x2F;2$</p>
+<p>Adversary strategy 构造出一个连通图。在算法的运行中维持两张图 Y(Yes) 和 M(Maybe): Y 表示确定在实例中的边，M包含了在实例中的边和还没有被访问过的边。</p>
+<p>初始化 Y 为空，M 为完全图。</p>
+<p>对任意对边 e &#x3D; (i,j) 的访问，如果将 e 移出图 M 后 M 仍连通，则返回 0，并将其移出 M；否则返回 1 并加入到 Y 中。</p>
+<p>可以验证需要访问到最后一条边才能确定图连通。</p>
+<p>假设 M 中还有唯一一条边 e &#x3D;(i,j) 未访问，证明若访问结果为 0，则构造的实例不连通；若访问结果为 1，则构造的实例连通，即最后一条边确定了问题答案。由于其他边都已访问过，若存在另一条 i 到 j 的路径，对于路径上的其中一条边 e’ &#x3D; (i’,j’), 访问时将其移出图 M 后 M 仍连通，因此访问的结果是 0，即需要从图 M 中移除这条边。因此，不存在另一条 i 到 j 的路径。（有一点点绕 QAQ</p>
+<h3 id="Find-Patterns-in-Bit-Strings"><a href="#Find-Patterns-in-Bit-Strings" class="headerlink" title="Find Patterns in Bit Strings"></a>Find Patterns in Bit Strings</h3><p>查找一个有 n 个字符的 bit 串中是否含有子串 01。求问任意的算法最坏情况是否需要对每个字符进行查询。</p>
+<p>当 n 为奇数时，可以通过一些小 tips 减少至少一次的访问：先访问偶数位上的字符 B(2), B(4),…,B(n-1)</p>
+<ul>
+<li>如果存在 $j &gt; i, B(2i) &#x3D; 0, B(2j) &#x3D; 1 $, 无需继续访问，一定存在字符 01 </li>
+<li>如果任意的 $i, B(2i) &#x3D; 0$ ，无需访问 B(1)</li>
+<li>如果对任意的 $i, B(2i) &#x3D; 1$ ，无需访问 B(n)</li>
+<li>如果存在 $k, B(2i) &#x3D; 1, i &lt; k, B(2j) &#x3D; 0, j\ge k$ ，无需访问 B(2k-1)</li>
+</ul>
+<p>当 n 是偶数时，可以证明存在实例使得需要访问到最后一个字符才能确定是否存在子串 01。</p>
+<p>Adversary strategy 构造一个不含有子串01的序列 111,…,10,…,000。在算法中维持两个编号 s&lt;t</p>
+<p><img src="/images/image-20200515093131729.png" alt="image-20200515093131729"></p>
+<ul>
+<li>所有小于 s 的字符需要被查询，因为他们可能为 0 </li>
+<li>所有大于 t 的字符需要被查询，因为他们可能为 1</li>
+<li>当 s 和 t 直接有偶数个字符时，中间的每个数都需要被查询</li>
+</ul>
+<p>初始化 s 为0，t 为 n+1。Adversary strategy 维持 s 和 t 之间始终有偶数个字符 (即 t-s-1为偶数)：对任意对第 i 个字符的查询，构造实例：</p>
+<ul>
+<li>i  &lt; s, B(i) &#x3D; 1</li>
+<li>i &gt; t, B(i) &#x3D; 0</li>
+<li>s &lt; i &lt; t, i-s 是偶数， B(i) &#x3D; 1, s &#x3D; i</li>
+<li>s &lt; i &lt; t, i-s 是奇数， B(i) &#x3D; 0, t &#x3D; i</li>
+</ul>
+<p>因此，序列中的任何一个元素需要被访问才能确定字符串中不包含子列 01。该问题的 Lower bound 为 n。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Joey Lian</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://joeylian.github.io/2020/04/29/2020-04-30-LowerBound%E5%88%86%E6%9E%90/">http://joeylian.github.io/2020/04/29/2020-04-30-LowerBound%E5%88%86%E6%9E%90/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://joeylian.github.io" target="_blank">OneTime</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Lower-Bound/">Lower_Bound</a><a class="post-meta__tags" href="/tags/%E7%AE%97%E6%B3%95%E4%B8%8B%E7%95%8C/">算法下界</a><a class="post-meta__tags" href="/tags/%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/">算法分析</a></div><div class="post_share"><div class="social-share" data-image="/images/AlgDesign.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/05/15/2020-05-16-%E5%85%B8%E5%9E%8BNPC%E9%97%AE%E9%A2%98%E5%8F%8A%E5%85%B6%E8%AF%81%E6%98%8E/"><img class="prev-cover" src="/images/AlgDesign.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">典型NPC问题及其证明</div></div></a></div><div class="next-post pull-right"><a href="/2020/04/05/2020-04-06-%E7%BD%91%E7%BB%9C%E6%B5%81(%E4%BA%8C)-The_Preflow-Push_Algorithm/"><img class="next-cover" src="/images/AlgDesign.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">网络流(二)-The_Preflow-Push_Algorithm</div></div></a></div></nav><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/me.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Joey Lian</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/joeylian" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:lianjy9976@163.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Decision-tree"><span class="toc-number">1.</span> <span class="toc-text">Decision tree</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%89%E5%BA%8F%E6%95%B0%E5%88%97%E4%B8%AD%E6%9F%A5%E6%89%BE"><span class="toc-number">1.1.</span> <span class="toc-text">有序数列中查找</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%92%E5%BA%8F%E9%97%AE%E9%A2%98"><span class="toc-number">1.2.</span> <span class="toc-text">排序问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Adversary-strategy"><span class="toc-number">2.</span> <span class="toc-text">Adversary strategy</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Find-x"><span class="toc-number">2.1.</span> <span class="toc-text">Find x</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Find-Max"><span class="toc-number">2.2.</span> <span class="toc-text">Find Max</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Find-Second-Maximum"><span class="toc-number">2.3.</span> <span class="toc-text">Find Second Maximum</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Find-Median"><span class="toc-number">2.4.</span> <span class="toc-text">Find Median</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Max-amp-Min"><span class="toc-number">2.5.</span> <span class="toc-text">Max &amp; Min</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Find-X-in-a-Sorted-Matrix"><span class="toc-number">2.6.</span> <span class="toc-text">Find X in a Sorted Matrix</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Merge-Sorted-Lists"><span class="toc-number">2.7.</span> <span class="toc-text">Merge Sorted Lists</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Graph-Connectivity"><span class="toc-number">2.8.</span> <span class="toc-text">Graph Connectivity</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Find-Patterns-in-Bit-Strings"><span class="toc-number">2.9.</span> <span class="toc-text">Find Patterns in Bit Strings</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" title="【EffectiveC++】构造/析构/赋值运算"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】构造/析构/赋值运算"/></a><div class="content"><a class="title" href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" title="【EffectiveC++】构造/析构/赋值运算">【EffectiveC++】构造/析构/赋值运算</a><time datetime="2021-12-29T16:00:00.000Z" title="发表于 2021-12-30 00:00:00">2021-12-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/" title="【EffectiveC++】让自己习惯C++"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】让自己习惯C++"/></a><div class="content"><a class="title" href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/" title="【EffectiveC++】让自己习惯C++">【EffectiveC++】让自己习惯C++</a><time datetime="2021-12-27T16:00:00.000Z" title="发表于 2021-12-28 00:00:00">2021-12-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】设计与声明"/></a><div class="content"><a class="title" href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明">【EffectiveC++】设计与声明</a><time datetime="2021-01-22T16:00:00.000Z" title="发表于 2021-01-23 00:00:00">2021-01-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="【EffectiveC++】资源管理"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】资源管理"/></a><div class="content"><a class="title" href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="【EffectiveC++】资源管理">【EffectiveC++】资源管理</a><time datetime="2021-01-21T16:00:00.000Z" title="发表于 2021-01-22 00:00:00">2021-01-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/" title="C++右值引用与移动语义"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C++右值引用与移动语义"/></a><div class="content"><a class="title" href="/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/" title="C++右值引用与移动语义">C++右值引用与移动语义</a><time datetime="2020-08-01T16:00:00.000Z" title="发表于 2020-08-02 00:00:00">2020-08-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/images/top.jpeg')"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2022 By Joey Lian</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.2
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container:not\([display]\)').forEach(node => {
+            const target = node.parentNode
+            if (target.nodeName.toLowerCase() === 'li') {
+              target.parentNode.classList.add('has-jax')
+            } else {
+              target.classList.add('has-jax')
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd9d8e97d1c1701a3d53b',
+      clientSecret: '52ab8c95467a938ecb0cfb1c3ca318d6574a806d',
+      repo: 'JoeyLian.github.io',
+      owner: 'JoeyLian',
+      admin: ['JoeyLian'],
+      id: '0d1e9edd18589f496ad135024457a626',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !false) {
+  if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = false;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

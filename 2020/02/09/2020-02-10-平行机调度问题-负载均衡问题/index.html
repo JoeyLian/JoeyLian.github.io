@@ -1,0 +1,295 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>平行机调度问题-负载均衡问题 | OneTime</title><meta name="keywords" content="近似算法,平行机调度问题,负载均衡问题"><meta name="author" content="Joey Lian"><meta name="copyright" content="Joey Lian"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="问题定义平行机调度问题 （负载均衡问题）：记机器数量为 $m$ ，工件数量为 $n$ ，$x_{ij}$ 表示第 $j$ 个工件是否安排在机器 $i$ 上，$P_{ij}$ 表示第 $j$ 个工件在机器 $i$ 上的负载。求完成所有工件需要的最少负载 $T$ 。整数规划为： $$\begin{align*}\min \ &amp;T\\\sum_{j&#x3D;1}^nP_{ij}x_{ij}\l">
+<meta property="og:type" content="article">
+<meta property="og:title" content="平行机调度问题-负载均衡问题">
+<meta property="og:url" content="http://joeylian.github.io/2020/02/09/2020-02-10-%E5%B9%B3%E8%A1%8C%E6%9C%BA%E8%B0%83%E5%BA%A6%E9%97%AE%E9%A2%98-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:site_name" content="OneTime">
+<meta property="og:description" content="问题定义平行机调度问题 （负载均衡问题）：记机器数量为 $m$ ，工件数量为 $n$ ，$x_{ij}$ 表示第 $j$ 个工件是否安排在机器 $i$ 上，$P_{ij}$ 表示第 $j$ 个工件在机器 $i$ 上的负载。求完成所有工件需要的最少负载 $T$ 。整数规划为： $$\begin{align*}\min \ &amp;T\\\sum_{j&#x3D;1}^nP_{ij}x_{ij}\l">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://joeylian.github.io/images/AOR.png">
+<meta property="article:published_time" content="2020-02-09T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-29T12:57:04.720Z">
+<meta property="article:author" content="Joey Lian">
+<meta property="article:tag" content="近似算法">
+<meta property="article:tag" content="平行机调度问题">
+<meta property="article:tag" content="负载均衡问题">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://joeylian.github.io/images/AOR.png"><link rel="shortcut icon" href="/img/me.jpeg"><link rel="canonical" href="http://joeylian.github.io/2020/02/09/2020-02-10-%E5%B9%B3%E8%A1%8C%E6%9C%BA%E8%B0%83%E5%BA%A6%E9%97%AE%E9%A2%98-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E9%97%AE%E9%A2%98/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '平行机调度问题-负载均衡问题',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-03-29 20:57:04'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.1.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/me.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 总览</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/images/top.jpeg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">OneTime</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 总览</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">平行机调度问题-负载均衡问题<a class="post-edit-link" href="https://github.com/JoeyLian/githubio/edit/master/source/_posts/2020-02-10-平行机调度问题-负载均衡问题.md" title="编辑" target="_blank"><i class="fas fa-pencil-alt"></i></a></h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-02-09T16:00:00.000Z" title="发表于 2020-02-10 00:00:00">2020-02-10</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-03-29T12:57:04.720Z" title="更新于 2022-03-29 20:57:04">2022-03-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/AOR/">AOR</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="平行机调度问题-负载均衡问题"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/2020/02/09/2020-02-10-%E5%B9%B3%E8%A1%8C%E6%9C%BA%E8%B0%83%E5%BA%A6%E9%97%AE%E9%A2%98-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E9%97%AE%E9%A2%98/#post-comment"><span class="gitalk-comment-count"></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h3 id="问题定义"><a href="#问题定义" class="headerlink" title="问题定义"></a>问题定义</h3><p><strong>平行机调度问题 （负载均衡问题）</strong>：记机器数量为 $m$ ，工件数量为 $n$ ，$x_{ij}$ 表示第 $j$ 个工件是否安排在机器 $i$ 上，$P_{ij}$ 表示第 $j$ 个工件在机器 $i$ 上的负载。求完成所有工件需要的最少负载 $T$ 。整数规划为：</p>
+<p>$$<br>\begin{align*}<br>\min \ &amp;T\\<br>\sum_{j&#x3D;1}^nP_{ij}x_{ij}\le T,&amp;\ i&#x3D;1,…,m\\<br>\sum_{i&#x3D;1}^mx_{ij}&#x3D; 1,&amp;\ j&#x3D;1,…,n\\<br>x_{ij} &#x3D;&amp; {0,1}<br>\end{align*}<br>$$</p>
+<p>直接将整数规划转化为线性规划的结果并不好：<br>如： $m$ 个机器， ⼀个工件,其⻓度为 $m$ 则整数规划的解为， 这个工件放到⼀个机器上， $T&#x3D;m$；⽽线性规划的解为： 拆分工件到 $m$ 个机器，$ T&#x3D;1$。线性规划给出的下界太松。</p>
+<h3 id="参数修剪的线性规划"><a href="#参数修剪的线性规划" class="headerlink" title="参数修剪的线性规划"></a>参数修剪的线性规划</h3><ol>
+<li>得到初始的负载 $T_0$ ：可以将所有工件放到⼀个机器上或者⽤ greedy 算法将每个工件放到       最⼩的机器，满足 $T_0\le \sum_{i,j} P_{ij}\le mn P_\max$</li>
+<li>从 $T_0$ 开始对 $T$ 进行二分查找：若$P_{ij} &gt; T$，则加入 $x_{ij} &#x3D; 0$ 的约束【这个约束的含义是：当第 $j$ 个工件在第 $i$ 个机器上的负载大于总负载时，第 $j$ 个工件不可能放在第 $i$ 个机器上工作，从而去除一些整数规划中不可能成立的解】。等价的，定义 $S_T &#x3D; {(i,j),\vert p_{ij}\le T}$ ，加入新约束：$x_{ij}\ge 0,\quad (i,j)\in S_T$, 再解线性规划判断 $T$ 是否有可⾏解【用解线性规划两阶段法的第一阶段即可】：<ul>
+<li>若有可行解：对 $T$ ⼆分变⼩后继续迭代</li>
+<li>若没有可行解：对 $T$ ⼆分变⼤后继续迭代</li>
+</ul>
+</li>
+<li>二分查找的复杂度为 $\log n$ ，由于  $T_0\le mn P_\max$，只需查找 $\log m + \log n + \log P_\max$ 次即可。得到的 $T^*$ 构成了整数规划问题的下界: $T^*\le T_{OPT}$ 。</li>
+</ol>
+<p>接下来，可以得到一个负载 $T\le 2T^*$ 的整数解，从而得到一个近似比为 2 的近似算法。</p>
+<h3 id="Rounding-算法"><a href="#Rounding-算法" class="headerlink" title="Rounding 算法"></a>Rounding 算法</h3><p>构造二分图 $G&#x3D;(J,M,E)$，左边表示 $m$ 台机器，右边表示 $n$ 个工件。$x_{ij} &gt;0$ 则在机器 $i$ 和工件 $j$ 之间有⼀条边。</p>
+<p><img src="/images/image-20200210110511417.png" alt="image-20200210110511417"></p>
+<p>考虑二分图连通的情况：如果不连通，则对各连通分量分别进行算法，可以得到结果【证明见下】。</p>
+<ol>
+<li>先考虑只分配到一个机器的工件 $x_{ij} &#x3D; 1$，将那个工件 $j$ 分配给机器 $i$ ，并删除工件 $j$ 的点与 $(i,j)$ 这条边。二分图的连通性不变。<br><img src="/images/image-20200210111618635.png" alt="image-20200210111618635"></li>
+<li>图中只剩下在 $T^*$ 中分配到多个机器上的工件，考虑度为 1 的机器 $i$, 假设唯⼀连的边为 $(i,j)$ ， 那么就将整个工件 $j$ 分配给机器 $i$ 然后去掉机器 $i$, 工件 $j$ 以及 $j$ 连的所有边。二分图连通性不变。<br><img src="/images/image-20200210111857994.png" alt="image-20200210111857994"></li>
+<li>剩下的图只能有偶环 ，可以得到一个完美匹配：⼀个 工件匹配到⼀台机器<br><img src="/images/image-20200210111946945.png" alt="image-20200210111946945"></li>
+</ol>
+<p>这样，每台机器除了分配到的完整工件外，最多分配到⼀个原解中拆分到包括自身在内的多个机器的工件。而根据 $T^*$ 的求法，拆分的工件在自身的负载一定小于等于 $T^*$ 。因此，每台机器的总负载最多为  $2T^*$ 。</p>
+<h3 id="证明"><a href="#证明" class="headerlink" title="证明"></a>证明</h3><p>记可行解  $x$ 为 $T^*$ 中的极点的解，$x$ 对应的二分图为 $G&#x3D;(J,M,E)$</p>
+<h5 id="LP-T-问题的极点中最多有-n-m-个非零变量"><a href="#LP-T-问题的极点中最多有-n-m-个非零变量" class="headerlink" title="$LP(T)$ 问题的极点中最多有 $n+m$ 个非零变量"></a>$LP(T)$ 问题的极点中最多有 $n+m$ 个非零变量</h5><p>分析问题$LP(T)$ ：</p>
+<p>$$<br>\begin{align*}<br>\sum_{j&#x3D;1}^nP_{ij}x_{ij}\le T,\ i&#x3D;1,…,m\\<br>\sum_{i&#x3D;1}^mx_{ij}&#x3D; 1,\ j&#x3D;1,…,n\\<br>x_{ij}\ge 0,\quad (i,j)\in S_T<br>\end{align*}<br>$$</p>
+<p>有 $r &#x3D; \vert S_T\vert$ 个变量。可行解 $x$ 是问题的极点，当且仅当有至少 $r$ 个线性独立约束取等号 【在  $r$ 维线性空间中， $r$ 个线性无关的方程才能确定一个点】。则在第三种约束中，至少有  $r-(n+m)$ 个约束取等号。因此，$LP(T)$ 问题的极值点最多有 $n+m$ 个非零变量。</p>
+<h5 id="x-中最多有-m-个工件被拆开"><a href="#x-中最多有-m-个工件被拆开" class="headerlink" title="$x$ 中最多有 $m$ 个工件被拆开"></a>$x$ 中最多有 $m$ 个工件被拆开</h5><p>记 $x$ 为 $T^*$ 中的极点，在 $x$ 中，$n$ 个工件有 $n_1$ 个工件没有拆分 [对应 1 个非零变量]， $n_2$ 个工件拆分到不同机器上 [对应 2 个及以上非零变量]。由于最多有 $n+m$ 个非零变量，有：</p>
+<p>$$<br>\begin{cases}<br>n_1+2n_2\le m+n  \\<br>n &#x3D; n_1+n_2<br> \end{cases} \Rightarrow n_2\le m<br>$$</p>
+<h5 id="图-G-x3D-J-M-E-是伪森林-pseudo-forest"><a href="#图-G-x3D-J-M-E-是伪森林-pseudo-forest" class="headerlink" title="图 $G&#x3D;(J,M,E)$ 是伪森林 (pseudo-forest)"></a>图 $G&#x3D;(J,M,E)$ 是伪森林 (pseudo-forest)</h5><ul>
+<li>伪树 (pseudo-tree)：一个连通图中，边的数量少于等于顶点的数量，则成图为伪树。也就是树或者树加上一条边。一棵伪树中最多只有一个环</li>
+<li>伪森林 (pseudo-forest)：图中每个连通分量都是伪树，则称它是伪森林</li>
+</ul>
+<p>考虑 $G$ 中的连通分量 $G_c$ 。将 $LP(T)$ 和 $x$ 限制在 $G_c$ 中的机器和工件上，得到新的问题与极点 $LP_c(T)$ 和 $x_c$ 。令 $x_\bar{c}$ 代表 $x$ 的其余部分。则，$x_c$ 必须是 $LP_c(T)$ 的极点:  否则，$x_c$ 是 $LP_c(T)$ 的两个可行解的凸组合。两个可行解分别与  $x_\bar{c}$  一起构成 $LP(T)$ 的可行解。则 $x$ 是  $LP(T)$ 的两个可行解的凸组合，矛盾。</p>
+<p>由于$LP(T)$ 问题的极点中最多有 $n+m$ 个非零变量，因此$LP_c(T)$ 的极点形成的二分图边数少于等于顶点数。 $G_c$ 是伪树。</p>
+<p>将分配到一个机器的工件 ($x_{ij} &#x3D; 1$) $j$ 分配给机器 $i$ ，并删除工件 $j$ 的点与 $(i,j)$ 这条边。设当前的图为 $H$ 【步骤1】</p>
+<h5 id="图-H-有一个完美匹配"><a href="#图-H-有一个完美匹配" class="headerlink" title="图 $H$ 有一个完美匹配"></a>图 $H$ 有一个完美匹配</h5><p>由于删除了相等数量的边和顶点，因此 $H$ 也是伪森林。</p>
+<p>在 $H$ 中，工件的度至少为 2。因此， $H$ 的叶节点都是机器。接着进行步骤 2，将叶节点的机器匹配一个工件后删除机器，工件以及工件连着的所有边。此时，叶节点依然只能是机器，且图依然是伪森林。由于是二分图，最后只会剩下偶环【也有可能没有剩】。</p>
+<p>对于偶环，可以找到一个完全匹配，将一个工件匹配到一个机器。</p>
+<p><img src="/images/image-20200211114419859.png" alt="image-20200211114419859"></p>
+<p>图源：Vijay Vazirani, Approximation Algorithms, Chapter 17，Springer Verlag, 2001.</p>
+<p>参考文献：</p>
+<ul>
+<li>Vijay Vazirani, Approximation Algorithms, Springer Verlag, 2001.</li>
+<li><a target="_blank" rel="noopener" href="https://courses.engr.illinois.edu/cs598csc/sp2011/Lectures/lectures_10-11.pdf">https://courses.engr.illinois.edu/cs598csc/sp2011/Lectures/lectures_10-11.pdf</a></li>
+<li>mcl 的笔记 : )</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Joey Lian</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://joeylian.github.io/2020/02/09/2020-02-10-%E5%B9%B3%E8%A1%8C%E6%9C%BA%E8%B0%83%E5%BA%A6%E9%97%AE%E9%A2%98-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E9%97%AE%E9%A2%98/">http://joeylian.github.io/2020/02/09/2020-02-10-%E5%B9%B3%E8%A1%8C%E6%9C%BA%E8%B0%83%E5%BA%A6%E9%97%AE%E9%A2%98-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E9%97%AE%E9%A2%98/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://joeylian.github.io" target="_blank">OneTime</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%BF%91%E4%BC%BC%E7%AE%97%E6%B3%95/">近似算法</a><a class="post-meta__tags" href="/tags/%E5%B9%B3%E8%A1%8C%E6%9C%BA%E8%B0%83%E5%BA%A6%E9%97%AE%E9%A2%98/">平行机调度问题</a><a class="post-meta__tags" href="/tags/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E9%97%AE%E9%A2%98/">负载均衡问题</a></div><div class="post_share"><div class="social-share" data-image="/images/AOR.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/02/16/2020-02-17-Git%E5%85%A5%E9%97%A8%E4%B8%8E%E7%90%86%E8%A7%A3/"><img class="prev-cover" src="/images/git2.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Git入门与理解</div></div></a></div><div class="next-post pull-right"><a href="/2020/02/08/2020-02-09-%E9%A1%B6%E7%82%B9%E8%A6%86%E7%9B%96%E9%97%AE%E9%A2%98-%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E6%9D%BE%E5%BC%9B/"><img class="next-cover" src="/images/AOR.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">原始对偶方法近似-最小顶点覆盖问题</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2020/01/28/2020-01-29-%E8%A3%85%E7%AE%B1%E9%97%AE%E9%A2%98%E8%BF%91%E4%BC%BC%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/" title="装箱问题近似算法分析"><img class="cover" src="/images/AOR.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-01-29</div><div class="title">装箱问题近似算法分析</div></div></a></div><div><a href="/2020/02/07/2020-02-08-%E6%97%85%E8%A1%8C%E5%95%86%E9%97%AE%E9%A2%98%E8%BF%91%E4%BC%BC%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/" title="旅行商问题近似算法分析"><img class="cover" src="/images/AOR.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-02-08</div><div class="title">旅行商问题近似算法分析</div></div></a></div><div><a href="/2020/02/08/2020-02-09-%E9%A1%B6%E7%82%B9%E8%A6%86%E7%9B%96%E9%97%AE%E9%A2%98-%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E6%9D%BE%E5%BC%9B/" title="原始对偶方法近似-最小顶点覆盖问题"><img class="cover" src="/images/AOR.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-02-09</div><div class="title">原始对偶方法近似-最小顶点覆盖问题</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/me.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Joey Lian</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/joeylian" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:lianjy9976@163.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E5%AE%9A%E4%B9%89"><span class="toc-number">1.</span> <span class="toc-text">问题定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E6%95%B0%E4%BF%AE%E5%89%AA%E7%9A%84%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92"><span class="toc-number">2.</span> <span class="toc-text">参数修剪的线性规划</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Rounding-%E7%AE%97%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">Rounding 算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%81%E6%98%8E"><span class="toc-number">4.</span> <span class="toc-text">证明</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#LP-T-%E9%97%AE%E9%A2%98%E7%9A%84%E6%9E%81%E7%82%B9%E4%B8%AD%E6%9C%80%E5%A4%9A%E6%9C%89-n-m-%E4%B8%AA%E9%9D%9E%E9%9B%B6%E5%8F%98%E9%87%8F"><span class="toc-number">4.0.1.</span> <span class="toc-text">$LP(T)$ 问题的极点中最多有 $n+m$ 个非零变量</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#x-%E4%B8%AD%E6%9C%80%E5%A4%9A%E6%9C%89-m-%E4%B8%AA%E5%B7%A5%E4%BB%B6%E8%A2%AB%E6%8B%86%E5%BC%80"><span class="toc-number">4.0.2.</span> <span class="toc-text">$x$ 中最多有 $m$ 个工件被拆开</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9B%BE-G-x3D-J-M-E-%E6%98%AF%E4%BC%AA%E6%A3%AE%E6%9E%97-pseudo-forest"><span class="toc-number">4.0.3.</span> <span class="toc-text">图 $G&#x3D;(J,M,E)$ 是伪森林 (pseudo-forest)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9B%BE-H-%E6%9C%89%E4%B8%80%E4%B8%AA%E5%AE%8C%E7%BE%8E%E5%8C%B9%E9%85%8D"><span class="toc-number">4.0.4.</span> <span class="toc-text">图 $H$ 有一个完美匹配</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" title="【EffectiveC++】构造/析构/赋值运算"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】构造/析构/赋值运算"/></a><div class="content"><a class="title" href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" title="【EffectiveC++】构造/析构/赋值运算">【EffectiveC++】构造/析构/赋值运算</a><time datetime="2021-12-29T16:00:00.000Z" title="发表于 2021-12-30 00:00:00">2021-12-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/" title="【EffectiveC++】让自己习惯C++"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】让自己习惯C++"/></a><div class="content"><a class="title" href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/" title="【EffectiveC++】让自己习惯C++">【EffectiveC++】让自己习惯C++</a><time datetime="2021-12-27T16:00:00.000Z" title="发表于 2021-12-28 00:00:00">2021-12-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】设计与声明"/></a><div class="content"><a class="title" href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明">【EffectiveC++】设计与声明</a><time datetime="2021-01-22T16:00:00.000Z" title="发表于 2021-01-23 00:00:00">2021-01-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="【EffectiveC++】资源管理"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】资源管理"/></a><div class="content"><a class="title" href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="【EffectiveC++】资源管理">【EffectiveC++】资源管理</a><time datetime="2021-01-21T16:00:00.000Z" title="发表于 2021-01-22 00:00:00">2021-01-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/" title="C++右值引用与移动语义"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C++右值引用与移动语义"/></a><div class="content"><a class="title" href="/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/" title="C++右值引用与移动语义">C++右值引用与移动语义</a><time datetime="2020-08-01T16:00:00.000Z" title="发表于 2020-08-02 00:00:00">2020-08-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/images/top.jpeg')"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2022 By Joey Lian</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.2
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container:not\([display]\)').forEach(node => {
+            const target = node.parentNode
+            if (target.nodeName.toLowerCase() === 'li') {
+              target.parentNode.classList.add('has-jax')
+            } else {
+              target.classList.add('has-jax')
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd9d8e97d1c1701a3d53b',
+      clientSecret: '52ab8c95467a938ecb0cfb1c3ca318d6574a806d',
+      repo: 'JoeyLian.github.io',
+      owner: 'JoeyLian',
+      admin: ['JoeyLian'],
+      id: 'c61212497a6a7054aa376dcd0d7ddd79',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !false) {
+  if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = false;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

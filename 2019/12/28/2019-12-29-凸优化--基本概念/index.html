@@ -1,0 +1,337 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>凸优化--基本概念 | OneTime</title><meta name="keywords" content="应用运筹学,凸优化"><meta name="author" content="Joey Lian"><meta name="copyright" content="Joey Lian"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="由于凸优化相关内容较多，本文从基础开始，介绍凸优化中的几个主要问题。 首先介绍凸优化中的基础知识： 凸集集合**仿射集合 (Affine set)**：如果通过集合 $C\subseteq \mathbb{R}^n$ 中任意两个不同点的直线仍然在集合 $C$ 中，那么称集合 $C$ 是仿射的。是仿射 $C\subseteq \mathbb{R}^n$ 的等价于：对于任意 $x_1, x_2 \in">
+<meta property="og:type" content="article">
+<meta property="og:title" content="凸优化--基本概念">
+<meta property="og:url" content="http://joeylian.github.io/2019/12/28/2019-12-29-%E5%87%B8%E4%BC%98%E5%8C%96--%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/index.html">
+<meta property="og:site_name" content="OneTime">
+<meta property="og:description" content="由于凸优化相关内容较多，本文从基础开始，介绍凸优化中的几个主要问题。 首先介绍凸优化中的基础知识： 凸集集合**仿射集合 (Affine set)**：如果通过集合 $C\subseteq \mathbb{R}^n$ 中任意两个不同点的直线仍然在集合 $C$ 中，那么称集合 $C$ 是仿射的。是仿射 $C\subseteq \mathbb{R}^n$ 的等价于：对于任意 $x_1, x_2 \in">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://joeylian.github.io/img/top.jpeg">
+<meta property="article:published_time" content="2019-12-28T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-29T12:57:04.720Z">
+<meta property="article:author" content="Joey Lian">
+<meta property="article:tag" content="应用运筹学">
+<meta property="article:tag" content="凸优化">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://joeylian.github.io/img/top.jpeg"><link rel="shortcut icon" href="/img/me.jpeg"><link rel="canonical" href="http://joeylian.github.io/2019/12/28/2019-12-29-%E5%87%B8%E4%BC%98%E5%8C%96--%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '凸优化--基本概念',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-03-29 20:57:04'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.1.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/me.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 总览</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/top.jpeg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">OneTime</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 总览</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">凸优化--基本概念<a class="post-edit-link" href="https://github.com/JoeyLian/githubio/edit/master/source/_posts/2019-12-29-凸优化--基本概念.md" title="编辑" target="_blank"><i class="fas fa-pencil-alt"></i></a></h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2019-12-28T16:00:00.000Z" title="发表于 2019-12-29 00:00:00">2019-12-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-03-29T12:57:04.720Z" title="更新于 2022-03-29 20:57:04">2022-03-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/AOR/">AOR</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="凸优化--基本概念"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/2019/12/28/2019-12-29-%E5%87%B8%E4%BC%98%E5%8C%96--%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/#post-comment"><span class="gitalk-comment-count"></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>由于凸优化相关内容较多，本文从基础开始，介绍凸优化中的几个主要问题。</p>
+<p>首先介绍凸优化中的基础知识：</p>
+<h3 id="凸集"><a href="#凸集" class="headerlink" title="凸集"></a>凸集</h3><h5 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h5><p>**仿射集合 (Affine set)**：如果通过集合 $C\subseteq \mathbb{R}^n$ 中任意两个不同点的直线仍然在集合 $C$ 中，那么称集合 $C$ 是仿射的。是仿射 $C\subseteq \mathbb{R}^n$ 的等价于：对于任意 $x_1, x_2 \in C$  及 $\theta \in \mathbb{R} $  有 </p>
+<p>$$<br>\theta x_1+(1-\theta)x_2 \in C<br>$$</p>
+<p><strong>凸集 (Convex Set)：</strong> 集合 $C$ 被称为凸集，如果 $C$ 中任意两点间的线段仍然在 $ C$ 中，即对于任意 $x_1, x_2 \in C$ 和满足 $0\le \theta \le 1 $ 的 $\theta$, 都有 </p>
+<p>$$<br>\theta x_1+(1-\theta)x_2 \in C<br>$$</p>
+<p><strong>凸组合：</strong>称点 $ \theta_1x_1 + … + \theta_kx_k$ 为点 $x_1, …, x_k$ 的一个凸组合，其中 $\theta_1 + … + \theta_k &#x3D; 1$ 并且 $\theta _i \ge 0, i &#x3D;1 ,…,k$。一个集合是凸集<strong>等价于</strong>集合包含其中所有点的凸组合。点的凸组合可以看做它们的混合或加权平均， $\theta_i$ 代表混合时 $x_i$ 所占的份数。</p>
+<p><strong>凸包：</strong>集合 $C$ 中所有点的凸组合的集合为其凸包，记为 $\mathbf{conv} C$</p>
+<p><strong>凸锥 (Convex cone)：</strong>如果对于任意 $x\in C$ 和 $\theta \ge 0$ 都有 $\theta x\in C $ . 我们称集合 $C$ 是<strong>锥</strong>。如 果集合 $C$ 是锥，并且是凸的，则称$C$为凸锥，即对于任意 $x_1, x_2\in C$ 和 $\theta_1 ,\theta_2 \ge 0$ 都有 $\theta_1 x_1+\theta_2x_2 \in C $</p>
+<p><strong>超平面</strong>：超平面是具有 $${x \vert \alpha^T x &#x3D; b}$$ 形式的集合 , 其中 $\alpha \in \mathbb{R}^n, \alpha \neq 0, b\in \mathbb{R}$。超平面是仿射的 (也是凸的)。</p>
+<p><strong>半空间：</strong>半空间是具有 $${x \vert \alpha^T x \le b}$$ 形式的集合，即(非平凡的)线性不等式的解空间，其中 $\alpha \neq 0$, 半空间是凸的。</p>
+<p><strong>多面体 (Polyhedra):</strong> 定义为有限个线性等式和不等式的解集。多面体是有限个半空间和超平面的交集。仿射集合、射线、线段和半空间都是多面体。多面体是凸集。</p>
+<p>$$<br>\cal P &#x3D; { x \vert \alpha_j^Tx \le b_j, j &#x3D; 1,…,m, c_j^Tx &#x3D; d_j, j &#x3D; 1,…,p }<br>$$</p>
+<h5 id="保凸运算-Operations-that-preserve-convexity"><a href="#保凸运算-Operations-that-preserve-convexity" class="headerlink" title="保凸运算 (Operations that preserve convexity)"></a><strong>保凸运算 (Operations that preserve convexity)</strong></h5><ul>
+<li><p>交集：如果 $S_1 $ 和 $S_2 $ 是凸集，那么 $S_1 \cap S_2$ 也是凸集</p>
+</li>
+<li><p>仿射函数：如果函数 $f: \mathbb{R}^n → \mathbb{R}^m$ 具有 $f(x) &#x3D; Ax + b$ 的形式, 是一个线性函数和一个常数的和，则它是仿射的，其中 $A\in \mathbb{R}^{m\times n}，b \in \mathbb{R}^m$。假设 $S\in\mathbb{R}^n$ 是凸的，是仿射函 $f: \mathbb{R}^n → \mathbb{R}^m$ 数， $S$ 在 f 下的象是凸的。如果 $f: \mathbb{R}^m → \mathbb{R}^n$  是仿射函数，那么 S 在 f 下的原象是凸的。</p>
+</li>
+<li><p>透视函数：$ P: \mathbb{R}^{n+1} → \mathbb{R}^n, P(z, t) &#x3D; z&#x2F;t $为透视函数，其定义域为 $\mathbf{dom} P &#x3D; R^n \times R_{++}$, 其中 $R_{++} &#x3D; {x\in \mathbb{R} \vert x &gt; 0}$</p>
+</li>
+<li><p>线性分式函数：线性分式函数由透视函数和仿射函数复合而成。设 $g: \mathbb{R}^n → \mathbb{R}^{m+1} $ 是仿射的，即 $$ g(x) &#x3D; \left[  \begin{array}{}  A  \c^T \end{array} \right]x + \left[ \begin{array}{} b\d\end{array} \right] $$, 其中  $A\in \mathbb{R}^{m\times n}，b \in \mathbb{R}^m, c\in \mathbb{R}^n, d\in\mathbb{R}$。则由复合 $f &#x3D;P\circ g$ 给出的函数</p>
+</li>
+</ul>
+<p>$$<br>  f: \mathbb{R}^n → \mathbb{R}^m: f(x) &#x3D; \frac{Ax + b)}{c^Tx + d}, \mathbf{dom}f&#x3D;{x\vert c^Tx+d&gt;O}<br>$$</p>
+<p>  称为线性分式(或投射)函数。如果$ c &#x3D; 0, d &gt; 0$，则 $f$ 的定义域为 $\mathbb{R}^n$ ， 并且 $f$ 是仿射函数。可以将仿射和线性函数视为特殊的线性分式函数。</p>
+<p>线性分式函数可以表示为 $f &#x3D; \cal P^{-1}(Q\cal P(x))$  从 $x\in  \mathbf{dom}f$ 出发，可以得到 $\mathbb{R}^{n+1}$ 空间的 一条射线 $\cal P(x)$。将线性变换矩阵 $Q$ 作用于这条射线，就可以得到另一条射线 $Q\cal P(x)$。因 为  $x\in  \mathbf{dom}f$ . 这条射线的最后一个分量为正,可以通过逆投射变换恢复出 $f(x)$。 </p>
+<h5 id="平面"><a href="#平面" class="headerlink" title="平面"></a>平面</h5><p>**超平面分离定理 (Separating hyperplane theorem)**：假设 $C$ 和 $D$ 是两个不相交的凸 集，即 $C \cap D&#x3D; \emptyset $，那么存在 $\alpha \neq 0$ 和 $b$ 使得对于所有 $x\in C$ 有 $\alpha^Tx\le b$， 对于所有 $x\in D$ 有 $\alpha^Tx\ge b$。换言之，仿射函数 $\alpha^Tx-b$ 在 $C$ 中非正，而在 $D$ 中非负。超平面 ${x \vert\alpha^Tx &#x3D; b}$ 称为集合$C$ 和 $D$ 的分离超平面。</p>
+<p><strong>支撑超平面(Supporting hyperplane):</strong> 设 $C\subseteq \mathbb{R}^n$ 而 $x_0$ 是其边界 $\mathbf{bd} C$ 上的一点，如果 $\alpha \neq 0$ ，并且对任意 $x\in C$ 满足 $\alpha^Tx \le \alpha^Tx_0 $ 那么称超平面 $${x\vert\alpha^Tx &#x3D;\alpha^Tx_0}$$ 为集合 $C$ 在点 $X_0$ 处的支撑超平面。几何解释是超平面 $${x\vert\alpha^Tx &#x3D;\alpha^Tx_0}$$ 与 $C$  相切于点$X_0 $ ，而且半空间 $${x\vert\alpha^Tx \le\alpha^Tx_0}$$ 包含 C。 (图源：<em>《凸优化》，Stephen Boyd等著，王书宁等译</em>)</p>
+<p><img src="/images/image-20191229154840338.png" alt="image-20191229154840338"></p>
+<p><strong>支撑超平面定理</strong>：表明对于任意非空的凸集 $C$ 和任意 $x_0 \in \mathbf{bd}C$，在 $x_0$ 处存在 $C$ 的支撑超平面。</p>
+<h3 id="凸函数"><a href="#凸函数" class="headerlink" title="凸函数"></a>凸函数</h3><h5 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h5><p>函数 $f: \mathbb{R}^n → \mathbb{R}$ 是凸的，如果 $\mathbf{dom}f$  是凸集，且对于任意$x, y \in \mathbf{dom}f$ 和任意 $0\le \ \theta\le 1$，有</p>
+<p>$$<br>f(\theta x + (1-\theta )y) \le \theta f(x) +(1-\theta)f(y)<br>$$</p>
+<p>从几何意义上看，上述不等式意味着点 $(x, f(x))$ 和 $(y, f(y))$ 之间的线段，即在函数 $f$ 的图像上方。如果不等式当 $x \neq y$ 以及 $0&lt;\theta &lt;1$ 时严格成立称函数 f 是严格凸的。如果函数 $-f$ 是凸的, 称函数 $f$ 是凹的，如果 $-f$ 严格凸称函数 $f$ 是严格凹的。</p>
+<p>函数是凸的，<strong>当且仅当</strong>其在与其定义域相交的任何直线上都是凸的。也就是说，函数 $f$ 是凸的，<strong>当且仅当</strong>对于任意 $x\in \mathbf{dom} f$ 和任意向量 $v$， 函数 $g(t) &#x3D; f(x + tv)$ 是凸的 (其定义域为 $${t \vert x + tv\in \mathbf{dom} f}$$)。</p>
+<p>这个性质容许我们通过将函数限制在直线上来判断其是否是凸函数。即，即使 $f: \mathbb{R}^n → \mathbb{R}$，我们也可以通过判断  $g: \mathbb{R} → \mathbb{R}$ 来判断它的凹凸性。</p>
+<h5 id="一阶条件"><a href="#一阶条件" class="headerlink" title="一阶条件"></a><strong>一阶条件</strong></h5><p>假设 $f$ 可微(即其梯度 $\nabla f$ 在开集 $\mathbf{dom}f$ 内处处存在) ，则函数 $f$ 是凸函数的充要条件是  $\mathbf{dom}f$  是凸集且对于任意  $x, y \in \mathbf{dom}f$ ， 下式成立</p>
+<p>$$<br>f(y) \ge f(x) + \nabla f(x)^T(y-x)<br>$$</p>
+<h5 id="二阶条件"><a href="#二阶条件" class="headerlink" title="二阶条件"></a><strong>二阶条件</strong></h5><p>现在假设函数 $f$ 二阶可微，即对于开集  $\mathbf{dom}f$ 内的任意一点，它的 Hessian 矩阵或者二阶导数 $\nabla^2f$ 存在，则函数 $f$ 是凸函数的充要条件是，其 Hessian 矩阵是半正定阵:即对于所有的$x \in\mathbf{dom}f$ 有 </p>
+<p>$$<br>\nabla^2 f \succeq 0<br>$$</p>
+<p>对于 $\mathbb{R}$ 上的函数，上式可以简化为一个简单的条件 $f’’\ge  0$,  ($\mathbf{dom}f$ 是凸的，即一 个区间)</p>
+<h5 id="下水平集-sublevel-set"><a href="#下水平集-sublevel-set" class="headerlink" title="下水平集(sublevel set)"></a><strong>下水平集</strong>(sublevel set)</h5><p>函数  $f: \mathbb{R}^n → \mathbb{R}$ 的 $\alpha -$下水平集定义为</p>
+<p>$$<br>C_{\alpha} &#x3D; {x \in \mathbf{dom}f \vert f(x) \le \alpha}<br>$$</p>
+<p>对于任意 $\alpha $  值，凸函数的下水平集是凸集。反过来不一定正确。</p>
+<h5 id="上境图-Epigraph"><a href="#上境图-Epigraph" class="headerlink" title="上境图 (Epigraph)"></a><strong>上境图</strong> (Epigraph)</h5><p>函数 $f: \mathbb{R}^n → \mathbb{R}$  的图像定义为 $${(x,f(x))\vert x\in \mathbf{dom}f}$$， 它是 $\mathbb{R}^{n+1}$空间的一个子集。函数   $f: \mathbb{R}^n → \mathbb{R}$   的上境图定义为 </p>
+<p>$$<br>\mathbf{epi} f &#x3D; { (x,t)\vert x\in\mathbf{dom}f, f(x)\le t }<br>$$</p>
+<p>凸集和凸函数的联系可以通过上境图来建立:一个函数是凸函数，当且仅当其上境图是凸集。一个函数是凹函数，当且仅当其亚图 $$\mathbf{hypo} f &#x3D; { (x,t)\vert x\in\mathbf{dom}f, f(x)\ge t }$$  是凸集。</p>
+<h5 id="保凸运算"><a href="#保凸运算" class="headerlink" title="保凸运算"></a>保凸运算</h5><ul>
+<li><strong>非负加权求和</strong>：凸函数的集合本身是一个凸锥: 凸函数的非负加权求和仍然是凸函数，即函数 $f&#x3D; \omega_1 f_i + … +\omega_mf_m$， 是凸函数。类似地，凹函数的非负加权求和仍然是凹函数。严格凸(凹)函数的非负，非零加权求和是严格凸(凹)函数。</li>
+<li><strong>复合仿射映射</strong>: 设函数 $f: \mathbb{R}^n → \mathbb{R}, A\in R^{n\times m}, b\in \mathbb{R}^n$， 定义 $g: \mathbb{R}^m → \mathbb{R}$: $ g(x) &#x3D; f(Ax+b)$, 其中 $\mathbf{dom} g &#x3D; {x\vert Ax+b\in \mathbf{dom} f}$。若函数 $f$ 是凸函数，则函数 $g$ 是凸函数:如果函数 $f$ 是凹函数，那么函数 $g$ 是凹函数。</li>
+<li><strong>逐点最大和逐点上确界</strong>：如果函数 $f_1$ 和 $f_2$ 均为凸函数，则二者的逐点最大函数 $$f(x) &#x3D; \max {f_1(x), f_2(x)}$$ , 其定义域为 $\mathbf{dom}f &#x3D; \mathbf{dom} f_1 \cap \mathbf{dom}f_2$，仍然是凸函数。逐点最大的性质可以扩展至无限个凸函数的逐点上确界。如果对于任意 $y\in \cal A$， 函数 $f(x， y)$ 关于 $x$ 都是凸的，则函数 $g &#x3D; \sup_{y\in\cal A} f(x,y)$ , 关于 $x$ 亦是凸的。</li>
+<li><strong>复合</strong></li>
+<li><strong>最小化</strong>：如果函数 $f$ 关于 $(x,y)$  是凸函数，集合 $C$ 是非空凸集，定义函数 $g(x) &#x3D; \inf_{y\in C}f(x,y)$,<br>若存在某个 $x$ 使得到 $g(x) &gt; -\infty$ (即对所有 x， $g(x) &gt; -\infty$) ，则函数 $g$ 关于 $x$ 是凸函数。函数 $g$ 的定义域是 $\mathbf{dom} f$ 在 $x$ 方向上的投影。</li>
+<li><strong>透视函数</strong>：给定函数 $f: \mathbb{R}^n → \mathbb{R}$ ，则 f 的透视函数 $g: \mathbb{R}^{n+1} → \mathbb{R}$  定义为$g(x,t) &#x3D; tf(x&#x2F;t)$, 其定义域为 $$\mathbf{dom}g &#x3D; {(x,t)\vert x&#x2F;t\in \mathbf{dom}f, t&gt;0} $$。透视运算是保凸运算: 如果函数 $f$ 是凸函数，则其透视函数 $g$ 也是凸函数。类似地，若 $f$ 是凹函数，则 $g$ 亦是凹函数。</li>
+</ul>
+<h5 id="共轭函数"><a href="#共轭函数" class="headerlink" title="共轭函数"></a>共轭函数</h5><p>设函数 $f: \mathbb{R}^n → \mathbb{R}$，定义函数 $f$ 的共轭函数 $f^*: \mathbb{R}^n → \mathbb{R}$ 为</p>
+<p>$$<br>f^*(y) &#x3D; \sup_{x\in \mathbf{dom}f} (y^Tx-f(x))<br>$$</p>
+<p>使上述上确界有限的所有 $y\in \mathbb{R}^n$ 构成了共轭函数的定义域。对于任意的$f$, 共轭函数是凸函数，这是因为它是一系列 $y$ 的凸函数(实质上是仿射函数)的逐点上确界。</p>
+<p>所以共轭函数有什么用？遇到再说吧 hhh</p>
+<h3 id="凸优化"><a href="#凸优化" class="headerlink" title="凸优化"></a>凸优化</h3><h5 id="优化问题"><a href="#优化问题" class="headerlink" title="优化问题"></a>优化问题</h5><p>在所有满足约束的 $x$ 中寻找极小化 $f_0(x)$ 的 $x$ 的问题标准形式 : </p>
+<p>$$<br>\min f_0(x)\<br>\mathbf{s.t.} f_i(x)\le0, i&#x3D;1,…,m\<br>h_i(x) &#x3D; 0, i &#x3D; 1,…,p<br>$$</p>
+<p><strong>局部最优</strong></p>
+<p>称可行解 $x$ 为局部最忧，如果存在 $R&gt;0$ 使得</p>
+<p>$$<br>f_0(x) &#x3D; \inf {f_0(z\vert f_i(z)\le0, i &#x3D; 1,…,m,h_i(z) &#x3D; 0, i&#x3D;1,…,p, \vert\vert z-x\vert\vert_2 \le R}<br>$$</p>
+<h5 id="凸优化-1"><a href="#凸优化-1" class="headerlink" title="凸优化"></a>凸优化</h5><p>凸优化问题的标准形式：</p>
+<p>$$<br>\min f_0(x)\<br>\mathbf{s.t.} f_i(x)\le0, i&#x3D;1,…,m\<br>a_i^Tx &#x3D; b_i, i &#x3D; 1,…,p<br>$$</p>
+<p>其中 $f_0, …, f_m $ 为凸函数。(且等式约束函数必须是仿射的)</p>
+<p>到底什么是凸优化问题？在 <em>《凸优化》，Stephen Boyd等著，王书宁等译</em> 一书中，提出了另一个例子 (4.2节 凸优化)</p>
+<p><img src="/images/image-20191229191335174.png" alt="image-20191229191335174"></p>
+<p>因此，一个问题是不是凸优化由定义确定。</p>
+<ul>
+<li>关于凸优化的定义，遇到过一个问题：以下问题</li>
+</ul>
+<p>$$<br>\min y-x\<br>\mathbf{s.t.} -xy+9 \le 0\<br>0\le y\le 6\<br>1\le x\le 2<br>$$</p>
+<p>是不是一个凸优化问题？</p>
+<p>事实上我本来希望用上面的例子解释这个例子，但后来发现似乎不太一样。下面是我的一些理解，可以继续讨论。</p>
+<p>我们可以求出第一个约束并不是一个凸函数，按照定义应该不是凸优化。但是分歧在哪里呢？如果我们在二维平面上画出它的 “可行域”， 会发现它是一个凸集。</p>
+<p>对于这个问题，我们常见 (中学) 的方法是在二维平面上画出  “可行域”，然后对直线 $ y &#x3D; x + k$ 进行平移，找到最小的 $k$ 使得直线与 “可行域” 有交点，这个时候，直线是一直在变化的。</p>
+<p>然而，这种方法并不是在解一个优化问题：一个常规的优化问题，应该是已知目标函数，求目标函数在可行域内的最小值。如果放到二维平面上，应该是给定一个函数，求函数在一个区间内的最小值。因此这个问题的常规解法，应该是在三维空间中找到可行域 (应该是非凸的)，求函数 $f(x,y) &#x3D; y-x$ 在可行域内的最小值。</p>
+<p>顺便提一些上面上境图的概念：我们在二维平面上画出 $-xy + 9 \le 0$ 的范围发现它是凸的，事实上我们画出的是函数 $ y &#x3D; 9&#x2F;x$ 的上境图，这个函数是凸函数，验证了上境图的性质。</p>
+<p><strong>局部最优解与全局最优解</strong></p>
+<p>凸优化问题的一个基础性质是其任意局部最优解也是(全局)最优解。 设 $x$ 是凸优化问题的局部最优解，即 $x$ 是可行的并且对于某些 $R&gt; 0$， 有 $$f_0(x) &#x3D; \inf {f_0(z\vert z可行, \vert\vert z-x\vert\vert_2 \le R}$$ 。现在假设 $x$  不是全局最优解，即存在一个可行的 $y$  使得 $f_0(y)&lt; f_0(x)$。显然 $\vert\vert y-x\vert\vert_2&gt;R$ 。考虑由 </p>
+<p>$$<br>z &#x3D; (1 - \theta )x +\theta y, \theta&#x3D;\frac{R}{2\vert\vert y-x\vert\vert_2}<br>$$</p>
+<p>给出的点 $z$， 我们有 $\vert\vert z - x\vert\vert_2 &#x3D; R&#x2F;2 &lt; R$。根据可行集的凸性， $z$ 是可行的。根据 $f_0$ 的凸性，我们有  $f_0(z)\le (1-\theta)f_0(x)+\theta f_0(y)&lt; f_0(x)$，出现矛盾。因此不存在满足 $f_0(y)&lt; f_0(x)$的可行解 $y$ ，即 $x$ 是全局最优解。 </p>
+<p><strong>可微函数 $f_0$ 的最优性准则</strong></p>
+<p>设凸优化问题的目标函数 $f_0$ 是可微的，对于所有的 $x,y\in \mathbf{dom}f_0$有</p>
+<p>$$<br>f_0(y)\ge f_0(x) + \nabla f_0(x)^T(y-x)<br>$$</p>
+<p>令 X 表示其可行集，那么 ， $x$ 是最优解，当且仅当 $x\in X$ 且</p>
+<p>$$<br>\nabla f_0(x)^T(y-x)\ge 0, \forall y\in X<br>$$</p>
+<p>这个最优性准则可以从几何上进行理解: 如果$\nabla f_0(x)\neq 0$，那么意味着 $\nabla f_0(x)$ 在 $x$ 处定义了可行集的一个支撑超平面。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Joey Lian</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://joeylian.github.io/2019/12/28/2019-12-29-%E5%87%B8%E4%BC%98%E5%8C%96--%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/">http://joeylian.github.io/2019/12/28/2019-12-29-%E5%87%B8%E4%BC%98%E5%8C%96--%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://joeylian.github.io" target="_blank">OneTime</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%BA%94%E7%94%A8%E8%BF%90%E7%AD%B9%E5%AD%A6/">应用运筹学</a><a class="post-meta__tags" href="/tags/%E5%87%B8%E4%BC%98%E5%8C%96/">凸优化</a></div><div class="post_share"><div class="social-share" data-image="/img/top.jpeg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2019/12/30/2019-12-31-%E5%87%B8%E4%BC%98%E5%8C%96--Lagrange%E5%AF%B9%E5%81%B6/"><img class="prev-cover" src="/img/top.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">凸优化--Lagrange对偶</div></div></a></div><div class="next-post pull-right"><a href="/2019/12/28/2019-12-30-%E5%87%B8%E4%BC%98%E5%8C%96--%E4%B8%BB%E8%A6%81%E7%AE%97%E6%B3%95/"><img class="next-cover" src="/img/top.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">凸优化--主要算法</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2019/12/28/2019-12-30-%E5%87%B8%E4%BC%98%E5%8C%96--%E4%B8%BB%E8%A6%81%E7%AE%97%E6%B3%95/" title="凸优化--主要算法"><img class="cover" src="/img/top.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-12-29</div><div class="title">凸优化--主要算法</div></div></a></div><div><a href="/2019/12/30/2019-12-31-%E5%87%B8%E4%BC%98%E5%8C%96--Lagrange%E5%AF%B9%E5%81%B6/" title="凸优化--Lagrange对偶"><img class="cover" src="/img/top.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-12-31</div><div class="title">凸优化--Lagrange对偶</div></div></a></div><div><a href="/2019/11/02/2019-11-03-%E5%8E%9F%E5%A7%8B-%E5%AF%B9%E5%81%B6%E6%96%B9%E6%B3%95%E4%B8%8E%E6%9C%80%E7%9F%AD%E8%B7%AF%E7%AE%97%E6%B3%95/" title="原始-对偶方法与最短路算法"><img class="cover" src="/images/AOR.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-11-03</div><div class="title">原始-对偶方法与最短路算法</div></div></a></div><div><a href="/2019/11/06/2019-11-07-%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E4%B8%8E%E5%8D%95%E7%BA%AF%E5%BD%A2%E6%B3%95/" title="线性规划与单纯形法"><img class="cover" src="/images/AOR.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-11-07</div><div class="title">线性规划与单纯形法</div></div></a></div><div><a href="/2019/12/25/2019-12-26-%E6%95%B4%E6%95%B0%E8%A7%84%E5%88%92/" title="整数规划"><img class="cover" src="/images/AOR.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-12-26</div><div class="title">整数规划</div></div></a></div><div><a href="/2019/12/27/2019-12-28-%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/" title="背包问题"><img class="cover" src="/images/AOR.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-12-28</div><div class="title">背包问题</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/me.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Joey Lian</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">28</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/joeylian" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:lianjy9976@163.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%B8%E9%9B%86"><span class="toc-number">1.</span> <span class="toc-text">凸集</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%9B%86%E5%90%88"><span class="toc-number">1.0.1.</span> <span class="toc-text">集合</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BF%9D%E5%87%B8%E8%BF%90%E7%AE%97-Operations-that-preserve-convexity"><span class="toc-number">1.0.2.</span> <span class="toc-text">保凸运算 (Operations that preserve convexity)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%B9%B3%E9%9D%A2"><span class="toc-number">1.0.3.</span> <span class="toc-text">平面</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%B8%E5%87%BD%E6%95%B0"><span class="toc-number">2.</span> <span class="toc-text">凸函数</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89"><span class="toc-number">2.0.1.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%80%E9%98%B6%E6%9D%A1%E4%BB%B6"><span class="toc-number">2.0.2.</span> <span class="toc-text">一阶条件</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BA%8C%E9%98%B6%E6%9D%A1%E4%BB%B6"><span class="toc-number">2.0.3.</span> <span class="toc-text">二阶条件</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%8B%E6%B0%B4%E5%B9%B3%E9%9B%86-sublevel-set"><span class="toc-number">2.0.4.</span> <span class="toc-text">下水平集(sublevel set)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%8A%E5%A2%83%E5%9B%BE-Epigraph"><span class="toc-number">2.0.5.</span> <span class="toc-text">上境图 (Epigraph)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BF%9D%E5%87%B8%E8%BF%90%E7%AE%97"><span class="toc-number">2.0.6.</span> <span class="toc-text">保凸运算</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%85%B1%E8%BD%AD%E5%87%BD%E6%95%B0"><span class="toc-number">2.0.7.</span> <span class="toc-text">共轭函数</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%B8%E4%BC%98%E5%8C%96"><span class="toc-number">3.</span> <span class="toc-text">凸优化</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E9%97%AE%E9%A2%98"><span class="toc-number">3.0.1.</span> <span class="toc-text">优化问题</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%87%B8%E4%BC%98%E5%8C%96-1"><span class="toc-number">3.0.2.</span> <span class="toc-text">凸优化</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" title="【EffectiveC++】构造/析构/赋值运算"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】构造/析构/赋值运算"/></a><div class="content"><a class="title" href="/2021/12/29/2021-12-30-EffectiveC++%E6%9E%84%E9%80%A0%E6%9E%90%E6%9E%84%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97/" title="【EffectiveC++】构造/析构/赋值运算">【EffectiveC++】构造/析构/赋值运算</a><time datetime="2021-12-29T16:00:00.000Z" title="发表于 2021-12-30 00:00:00">2021-12-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/" title="【EffectiveC++】让自己习惯C++"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】让自己习惯C++"/></a><div class="content"><a class="title" href="/2021/12/27/2021-12-28-EffectiveC++%E8%AE%A9%E8%87%AA%E5%B7%B1%E4%B9%A0%E6%83%AFC++/" title="【EffectiveC++】让自己习惯C++">【EffectiveC++】让自己习惯C++</a><time datetime="2021-12-27T16:00:00.000Z" title="发表于 2021-12-28 00:00:00">2021-12-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】设计与声明"/></a><div class="content"><a class="title" href="/2021/01/22/2021-01-23-EffectiveC++%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%A3%B0%E6%98%8E/" title="【EffectiveC++】设计与声明">【EffectiveC++】设计与声明</a><time datetime="2021-01-22T16:00:00.000Z" title="发表于 2021-01-23 00:00:00">2021-01-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="【EffectiveC++】资源管理"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【EffectiveC++】资源管理"/></a><div class="content"><a class="title" href="/2021/01/21/2021-01-22-EffectiveC++%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86/" title="【EffectiveC++】资源管理">【EffectiveC++】资源管理</a><time datetime="2021-01-21T16:00:00.000Z" title="发表于 2021-01-22 00:00:00">2021-01-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/" title="C++右值引用与移动语义"><img src="/images/Cpp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C++右值引用与移动语义"/></a><div class="content"><a class="title" href="/2020/08/01/2020-08-02-C++%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/" title="C++右值引用与移动语义">C++右值引用与移动语义</a><time datetime="2020-08-01T16:00:00.000Z" title="发表于 2020-08-02 00:00:00">2020-08-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/img/top.jpeg')"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2022 By Joey Lian</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.2
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container:not\([display]\)').forEach(node => {
+            const target = node.parentNode
+            if (target.nodeName.toLowerCase() === 'li') {
+              target.parentNode.classList.add('has-jax')
+            } else {
+              target.classList.add('has-jax')
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd9d8e97d1c1701a3d53b',
+      clientSecret: '52ab8c95467a938ecb0cfb1c3ca318d6574a806d',
+      repo: 'JoeyLian.github.io',
+      owner: 'JoeyLian',
+      admin: ['JoeyLian'],
+      id: '11f4be2bb471fd0d035f095827909ea8',
+      language: 'zh-CN',
+      perPage: 10,
+      distractionFreeMode: false,
+      pagerDirection: 'last',
+      createIssueManually: false,
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !false) {
+  if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = false;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
